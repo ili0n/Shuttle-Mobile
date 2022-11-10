@@ -4,4 +4,6 @@
     <string name="login_password">Password</string>
     <string name="login_confirm">Login</string>
     <string name="login_register">Create Account</string>
+    <string name="driver_active">Active</string>
+    <string name="driver_inactive">Inactive</string>
 </resources>
