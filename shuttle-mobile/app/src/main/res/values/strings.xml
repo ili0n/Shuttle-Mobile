@@ -6,4 +6,22 @@
     <string name="login_register">Create Account</string>
     <string name="driver_active">Active</string>
     <string name="driver_inactive">Inactive</string>
+
+    <string-array name="usernames">
+        <item>Support</item>
+        <item>Yan</item>
+        <item>Ghostblade</item>
+        <item>Robute Guilliman</item>
+        <item>Ulfric Stormclocak</item>
+    </string-array>
+
+    <string-array name="last_messages">
+        <item>Issue resovled</item>
+        <item>Ghostblade</item>
+        <item>lone</item>
+        <item>Ultramar</item>
+        <item>Emperor</item>
+    </string-array>
+
+
 </resources>

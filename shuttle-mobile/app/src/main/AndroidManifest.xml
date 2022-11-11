@@ -13,6 +13,13 @@
         android:theme="@style/Theme.ShuttleMobile"
         tools:targetApi="31">
         <activity
+            android:name=".inbox.InboxActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activity.driver.DriverMainActivity"
             android:exported="false">
             <meta-data
