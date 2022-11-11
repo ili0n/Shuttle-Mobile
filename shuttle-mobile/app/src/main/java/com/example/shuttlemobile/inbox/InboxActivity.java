@@ -28,6 +28,7 @@ public class InboxActivity extends AppCompatActivity {
         contacts.setAdapter(adapter);
         contacts.setLayoutManager(new LinearLayoutManager(this));
 
+
     }
 }
 

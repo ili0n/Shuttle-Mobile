@@ -38,6 +38,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         holder.chatUsername.setText(usernames[position]);
         holder.lastMessage.setText(lastMessages[position]);
         holder.profile.setImageResource(profiles[position]);
+
     }
 
     @Override

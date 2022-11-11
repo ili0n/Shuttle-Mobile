@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.DriverMainActivity;
+import com.example.shuttlemobile.inbox.InboxActivity;
 
 public class UserLoginActivity extends AppCompatActivity {
 
@@ -25,7 +26,7 @@ public class UserLoginActivity extends AppCompatActivity {
     }
 
     private void onLoginClick() {
-        startActivity(new Intent(this, DriverMainActivity.class));
+        startActivity(new Intent(this, InboxActivity.class));
     }
 
     private void onRegisterClick() {
