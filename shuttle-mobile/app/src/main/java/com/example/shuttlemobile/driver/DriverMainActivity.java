@@ -15,7 +15,7 @@ public class DriverMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_main);
 
-        setVisibleFragment(DriverRideHistoryFragment.newInstance());
+        setVisibleFragment(DriverMainFragment.newInstance());
     }
 
     private void setVisibleFragment(Fragment fragment) {

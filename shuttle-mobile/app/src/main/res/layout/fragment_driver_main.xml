@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".driver.DriverMainActivity">
+    tools:context=".driver.DriverMainFragment">
 
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/driver_fragment_frame"
-        android:name="com.example.shuttlemobile.driver.DriverMainFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+    <ToggleButton
+        android:id="@+id/driver_main_activity_toggle"
+        android:layout_width="170dp"
+        android:layout_height="48dp"
+        android:textColor="#455A64"
+        android:textOff="@string/driver_active"
+        android:textOn="@string/driver_inactive"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_driver_ride_history" />
-
+        app:layout_constraintVertical_bias="0.060000002"
+        tools:ignore="TextContrastCheck,TextContrastCheck" />
 </androidx.constraintlayout.widget.ConstraintLayout>
