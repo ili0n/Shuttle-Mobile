@@ -21,9 +21,10 @@ public class DriverMainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_driver);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         toolbar.setOnMenuItemClickListener(item -> toolbarOnItemClick(item));
+        getSupportActionBar().setTitle(R.string.titleHome);
 
         setVisibleFragment(DriverMainFragment.newInstance());
     }
@@ -46,15 +47,19 @@ public class DriverMainActivity extends AppCompatActivity {
         switch (itemId) {
             case R.id.driver_main_menu_home:
                 setVisibleFragment(DriverMainFragment.newInstance());
+                getSupportActionBar().setTitle(R.string.titleHome);
                 break;
             case R.id.driver_main_menu_history:
                 setVisibleFragment(DriverRideHistoryFragment.newInstance());
+                getSupportActionBar().setTitle(R.string.titleHistory);
                 break;
             case R.id.driver_main_menu_inbox:
                 setVisibleFragment(DriverInboxFragment.newInstance());
+                getSupportActionBar().setTitle(R.string.titleInbox);
                 break;
             case R.id.driver_main_menu_account:
                 setVisibleFragment(DriverAccountFragment.newInstance());
+                getSupportActionBar().setTitle(R.string.titleAccount);
                 break;
             default:
                 break;

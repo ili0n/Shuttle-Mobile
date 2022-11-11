@@ -19,4 +19,6 @@
     <style name="Theme.ShuttleMobile.Splash" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
+
 </resources>
