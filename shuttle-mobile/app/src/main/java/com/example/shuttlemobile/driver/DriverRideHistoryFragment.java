@@ -2,7 +2,6 @@ package com.example.shuttlemobile.driver;
 
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -18,6 +17,7 @@ import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.util.MockupData;
 
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class DriverRideHistoryFragment extends Fragment {
     public DriverRideHistoryFragment() {}
@@ -67,9 +67,17 @@ public class DriverRideHistoryFragment extends Fragment {
                 }
 
                 Ride obj = (Ride)getItem(i);
+                long durMinutes = ChronoUnit.MINUTES.between(obj.getStart(), obj.getFinish());
 
-                TextView textView = vi.findViewById(R.id.driver_ride_history_list_begin_date);
-                textView.setText(obj.getStart().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                TextView start = vi.findViewById(R.id.driver_ride_history_list_begin_date);
+                TextView duration = vi.findViewById(R.id.driver_ride_history_list_duration);
+                TextView userCount = vi.findViewById(R.id.driver_ride_history_list_passanger_count);
+                TextView price = vi.findViewById(R.id.driver_ride_history_list_price);
+
+                start.setText(obj.getStart().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                duration.setText(Long.toString(durMinutes) + " min");
+                userCount.setText(Integer.toString(obj.getPassengers().size()));
+                price.setText(Double.toString(obj.getPrice()) + " RSD");
 
                 return vi;
             }

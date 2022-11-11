@@ -32,21 +32,48 @@ public class MockupData {
         Passenger[] passengers = new Passenger[]{passenger1};
         Route[] routes = new Route[]{route1};
 
-        Ride r = new Ride(
-                LocalDateTime.of(2022, 11, 11, 17, 00),
-                LocalDateTime.of(2022, 11, 11, 18, 00),
-                LocalTime.of(0, 50, 0),
-                400,
-                Ride.RideStatus.COMPLETED,
-                new ArrayList<>(Arrays.asList(passengers)),
-                driver1,
-                12,
-                new ArrayList<>(Arrays.asList(routes))
-        );
+        for (int j = 0; j < 7; j++) {
+            Ride r1 = new Ride(
+                    LocalDateTime.of(2022, 11, 11, 17, 00),
+                    LocalDateTime.of(2022, 11, 11, 18, 00),
+                    LocalTime.of(0, 50, 0),
+                    400,
+                    Ride.RideStatus.COMPLETED,
+                    new ArrayList<>(Arrays.asList(passengers)),
+                    driver1,
+                    12,
+                    new ArrayList<>(Arrays.asList(routes))
+            );
 
-        rides.add(r);
-        rides.add(r);
-        rides.add(r);
+            Ride r2 = new Ride(
+                    LocalDateTime.of(2022, 11, 11, 23, 32),
+                    LocalDateTime.of(2022, 11, 11, 23, 59),
+                    LocalTime.of(0, 25, 0),
+                    300,
+                    Ride.RideStatus.COMPLETED,
+                    new ArrayList<>(Arrays.asList(passengers)),
+                    driver1,
+                    8,
+                    new ArrayList<>(Arrays.asList(routes))
+            );
+
+            Ride r3 = new Ride(
+                    LocalDateTime.of(2022, 11, 12, 7, 15),
+                    LocalDateTime.of(2022, 11, 12, 9, 0),
+                    LocalTime.of(2, 10, 0),
+                    1100,
+                    Ride.RideStatus.COMPLETED,
+                    new ArrayList<>(Arrays.asList(passengers)),
+                    driver1,
+                    32,
+                    new ArrayList<>(Arrays.asList(routes))
+            );
+
+            rides.add(r1);
+            rides.add(r2);
+            rides.add(r3);
+
+        }
 
         return rides;
     }
