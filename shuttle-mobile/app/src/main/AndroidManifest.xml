@@ -13,28 +13,28 @@
         android:theme="@style/Theme.ShuttleMobile"
         tools:targetApi="31">
         <activity
-            android:name=".activity.driver.DriverMainActivity"
+            android:name=".driver.DriverMainActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.passenger.PassengerMainActivity"
+            android:name=".passenger.PassengerMainActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.UserLoginActivity"
+            android:name=".user.UserLoginActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.ShuttleMobile.Splash">
             <intent-filter>
