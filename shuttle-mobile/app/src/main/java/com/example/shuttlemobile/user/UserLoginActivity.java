@@ -1,15 +1,14 @@
-package com.example.shuttlemobile.activity;
+package com.example.shuttlemobile.user;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.activity.driver.DriverMainActivity;
+import com.example.shuttlemobile.driver.DriverMainActivity;
 
 public class UserLoginActivity extends AppCompatActivity {
 

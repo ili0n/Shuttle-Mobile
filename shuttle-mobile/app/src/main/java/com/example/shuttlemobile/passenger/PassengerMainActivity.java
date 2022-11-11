@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.activity.driver;
+package com.example.shuttlemobile.passenger;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.example.shuttlemobile.R;
 
-public class DriverMainActivity extends AppCompatActivity {
+public class PassengerMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_driver_main);
+        setContentView(R.layout.activity_passenger_main);
     }
 }
