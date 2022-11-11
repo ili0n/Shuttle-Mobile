@@ -51,10 +51,10 @@ public class DriverMainActivity extends AppCompatActivity {
                 setVisibleFragment(DriverRideHistoryFragment.newInstance());
                 break;
             case R.id.driver_main_menu_inbox:
-                Toast.makeText(this, "TODO: Inbox Fragment", Toast.LENGTH_SHORT).show();
+                setVisibleFragment(DriverInboxFragment.newInstance());
                 break;
             case R.id.driver_main_menu_account:
-                Toast.makeText(this, "TODO: Account Fragment", Toast.LENGTH_SHORT).show();
+                setVisibleFragment(DriverAccountFragment.newInstance());
                 break;
             default:
                 break;
