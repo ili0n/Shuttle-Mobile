@@ -6,17 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".driver.DriverMainActivity">
 
+    <include
+        android:id="@+id/activity_driver_main_toolbar"
+        layout="@layout/toolbar_driver" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/driver_fragment_frame"
         android:name="com.example.shuttlemobile.driver.DriverMainFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activity_driver_main_toolbar"
         tools:layout="@layout/fragment_driver_ride_history" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
