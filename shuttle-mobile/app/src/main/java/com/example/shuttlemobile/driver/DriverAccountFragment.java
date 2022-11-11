@@ -2,6 +2,7 @@ package com.example.shuttlemobile.driver;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -16,6 +17,12 @@ public class DriverAccountFragment extends Fragment {
 
     public static DriverAccountFragment newInstance() {
         return new DriverAccountFragment();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.titleAccount);
     }
 
     @Override
