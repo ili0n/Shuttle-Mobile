@@ -6,6 +6,12 @@
     <string name="login_register">Create Account</string>
     <string name="driver_active">Active</string>
     <string name="driver_inactive">Inactive</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="titleHome">Home</string>
+    <string name="titleHistory">Ride History</string>
+    <string name="titleInbox">Inbox</string>
+    <string name="titleAccount">Account</string>
 
     <string-array name="usernames">
         <item>Support</item>

@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.activity.passenger;
+package com.example.shuttlemobile.passenger;
 
 import androidx.appcompat.app.AppCompatActivity;
 

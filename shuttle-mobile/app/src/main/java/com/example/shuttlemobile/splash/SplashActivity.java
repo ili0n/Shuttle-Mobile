@@ -1,12 +1,12 @@
-package com.example.shuttlemobile.activity;
+package com.example.shuttlemobile.splash;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.shuttlemobile.MainActivity;
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.user.UserLoginActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;

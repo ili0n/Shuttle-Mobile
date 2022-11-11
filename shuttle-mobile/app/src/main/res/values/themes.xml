@@ -12,9 +12,13 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Theme.ShuttleMobile.Splash" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
+
 </resources>
