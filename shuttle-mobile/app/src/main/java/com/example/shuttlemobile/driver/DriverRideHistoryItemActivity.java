@@ -1,11 +1,7 @@
 package com.example.shuttlemobile.driver;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.ride.Ride;
@@ -89,5 +88,38 @@ public class DriverRideHistoryItemActivity extends AppCompatActivity {
                 }
             });
         }
+
+        routes.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return ride.getRoutes().size();
+            }
+
+            @Override
+            public Object getItem(int i) {
+                return ride.getRoutes().get(i);
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return i;
+            }
+
+            @Override
+            public View getView(int i, View view, ViewGroup viewGroup) {
+                View vi;
+                if (view == null) {
+                    vi = DriverRideHistoryItemActivity.this.getLayoutInflater().inflate(R.layout.list_route_string, null);
+                } else {
+                    vi = view;
+                }
+
+                Route route = (Route)getItem(i);
+                TextView strVal = vi.findViewById(R.id.route_string);
+                strVal.setText(route.getPlaceName());
+
+                return vi;
+            }
+        });
     }
 }
