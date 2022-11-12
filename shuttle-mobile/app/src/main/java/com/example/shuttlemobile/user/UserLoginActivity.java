@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.DriverMainActivity;
+import com.example.shuttlemobile.passenger.PassengerMainActivity;
+import com.example.shuttlemobile.passenger.PassengerRideHistoryFragment;
 
 public class UserLoginActivity extends AppCompatActivity {
 
@@ -22,6 +25,13 @@ public class UserLoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(view -> onLoginClick());
         btnRegister.setOnClickListener(view -> onRegisterClick());
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));
+            }
+        });
     }
 
     private void onLoginClick() {

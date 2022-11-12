@@ -1,17 +1,12 @@
 package com.example.shuttlemobile.passenger;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.example.shuttlemobile.R;
 
@@ -19,17 +14,16 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class RideAdapter extends ArrayAdapter<Ride> {
     private final Context context;
     private List<Ride> rides;
 
+
     public RideAdapter(List<Ride> rides, Context context) {
-        super(context, 0, rides);
+        super(context, -1, rides);
         this.context = context;
         this.rides = rides;
     }
@@ -54,7 +48,7 @@ public class RideAdapter extends ArrayAdapter<Ride> {
         Ride ride = rides.get(i);
         View listView = view;
         if(listView == null) {
-            listView = LayoutInflater.from(context).inflate(R.layout.passenger_ride_history_item, null);
+            listView = LayoutInflater.from(this.context).inflate(R.layout.fragment_passenger_ride_history_item, null);
         }
         DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss", Locale.US);
 

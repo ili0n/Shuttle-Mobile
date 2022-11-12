@@ -4,4 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".passenger.PassengerMainActivity"/>
+    tools:context=".passenger.PassengerMainActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        tools:layout="@layout/fragment_passenger_ride_history"
+        />
+<!--    app:layout_constraintTop_toBottomOf="@id/activity_driver_main_toolbar"-->
+</androidx.constraintlayout.widget.ConstraintLayout>
