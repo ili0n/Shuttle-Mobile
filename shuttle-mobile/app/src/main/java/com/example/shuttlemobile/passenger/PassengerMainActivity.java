@@ -84,10 +84,10 @@ public class PassengerMainActivity extends AppCompatActivity {
                 setVisibleFragment(PassengerRideHistoryFragment.newInstance());
                 break;
             case R.id.driver_main_menu_inbox:
-                setVisibleFragment(PassengerMainFragment.newInstance());
+                setVisibleFragment(PassengerInboxFragment.newInstance());
                 break;
             case R.id.driver_main_menu_account:
-                setVisibleFragment(PassengerMainFragment.newInstance());
+                setVisibleFragment(PassengerAccountFragment.newInstance());
                 break;
             default:
                 break;
