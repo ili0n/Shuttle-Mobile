@@ -73,7 +73,7 @@ public class DriverRideHistoryFragment extends Fragment {
 
                 TextView start = vi.findViewById(R.id.driver_ride_history_list_begin_date);
                 TextView duration = vi.findViewById(R.id.driver_ride_history_list_duration);
-                TextView userCount = vi.findViewById(R.id.driver_ride_history_list_passanger_count);
+                TextView userCount = vi.findViewById(R.id.driver_ride_history_list_passenger_count);
                 TextView price = vi.findViewById(R.id.driver_ride_history_list_price);
 
                 start.setText(obj.getStart().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
