@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.driver;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -80,6 +82,17 @@ public class DriverRideHistoryFragment extends Fragment {
                 price.setText(Double.toString(obj.getPrice()) + " RSD");
 
                 return vi;
+            }
+        });
+        
+        ridesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Ride obj = (Ride)ridesView.getItemAtPosition(i);
+
+                Intent intent = new Intent(getActivity(), DriverRideHistoryItemActivity.class);
+                intent.putExtra("ride", obj);
+                startActivity(intent);
             }
         });
     }

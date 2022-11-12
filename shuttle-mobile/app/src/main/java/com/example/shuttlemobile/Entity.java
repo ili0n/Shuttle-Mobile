@@ -1,6 +1,8 @@
 package com.example.shuttlemobile;
 
-public class Entity {
+import java.io.Serializable;
+
+public class Entity implements Serializable {
     private int ID;
 
     public int getID() {
