@@ -12,6 +12,21 @@
     <string name="titleHistory">Ride History</string>
     <string name="titleInbox">Inbox</string>
     <string name="titleAccount">Account</string>
+    <string name="rideBegin">Begin</string>
+    <string name="rideEnd">End</string>
+    <string name="rideDistance">Distance</string>
+    <string name="ridePrice">Price</string>
+    <string name="rideRating">Rating</string>
+    <string name="rideComment">Comment</string>
+    <string name="ridePassengers">Passengers</string>
+    <string name="rideOpenChat">Open Chat</string>
+    <string name="rideRoute">Route</string>
+    <string name="login">Login</string>
+    <string name="loginForgotPassword">Forgot Password?</string>
+    <string name="contentDescPfp">Profile Picture</string>
+    <string name="openReviews">Open Reviews</string>
+    <string name="rideNoReviews">No Reviews</string>
+    <string name="reviews">Reviews</string>
 
     <string-array name="usernames">
         <item>Support</item>
@@ -36,6 +51,5 @@
         <item>0|Ultramar</item>
         <item>0|Emperorasojaushdddddddddd ddddddddddddddd dddddddddddd ddddd</item>
     </string-array>
-
 
 </resources>
