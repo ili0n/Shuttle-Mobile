@@ -4,22 +4,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.driver.DriverRideHistoryFragment;
+import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.util.MockupData;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class PassengerRideHistoryFragment extends Fragment {
-    ListView lvHistory;
 
     public static PassengerRideHistoryFragment newInstance() {
         return new PassengerRideHistoryFragment();
@@ -37,45 +41,60 @@ public class PassengerRideHistoryFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View contentView = inflater.inflate(R.layout.fragment_passenger_ride_history, container, false);
 
-        lvHistory = contentView.findViewById(R.id.passenger_history_list);
-
-        ArrayList<Ride> rides = new ArrayList<Ride>();
-        rides.add(new Ride(1, new Date(), new Date(), true, false, true, 100, 360));
-        rides.add(new Ride(2, new Date(), new Date(), false, false, true, 100, 150));
-        rides.add(new Ride(3, new Date(), new Date(), true, true, true, 100, 90));
-        RideAdapter adapter = new RideAdapter(rides, getActivity());
-        lvHistory.setAdapter(adapter);
         return contentView;
     }
 
-    @NonNull
     @Override
-    public Lifecycle getLifecycle() {
-        return super.getLifecycle();
-    }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        ListView listView = getView().findViewById(R.id.passenger_history_list);
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
+        List<Ride> rides = MockupData.getRidesForPassenger();
+        listView.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return rides.size();
+            }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+            @Override
+            public Object getItem(int i) {
+                return rides.get(i);
+            }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
+            @Override
+            public long getItemId(int i) {
+                return i;
+            }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
+            @Override
+            public View getView(int i, View view, ViewGroup viewGroup) {
+                View vi;
+                if (view == null) {
+                    vi = PassengerRideHistoryFragment.this.getLayoutInflater().inflate(R.layout.fragment_passenger_ride_history_item, null);
+                } else {
+                    vi = view;
+                }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+                Ride obj = (Ride)getItem(i);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+                TextView tvStart = vi.findViewById(R.id.start);
+                TextView tvEnd = vi.findViewById(R.id.end);
+                ImageView ivBaby = vi.findViewById(R.id.baby);
+                ImageView ivPets = vi.findViewById(R.id.pets);
+                ImageView ivFair = vi.findViewById(R.id.fair);
+                TextView tvPrice = vi.findViewById(R.id.price);
+                TextView tvEvaluatedTime = vi.findViewById(R.id.evaluatedTime);
+
+                tvStart.setText(obj.getStart().format(formatter));
+                tvEnd.setText(obj.getFinish().format(formatter));
+                ivBaby.setVisibility(obj.isHasBaby() ? View.VISIBLE: View.INVISIBLE);
+                ivPets.setVisibility(obj.isHasPets() ? View.VISIBLE: View.INVISIBLE);
+                ivFair.setVisibility(obj.getPassengers().size() > 1 ? View.VISIBLE: View.INVISIBLE);
+                tvPrice.setText(Double.toString(obj.getPrice()) + " RSD");
+                tvEvaluatedTime.setText(obj.getEstimation().format(DateTimeFormatter.ofPattern("HH:mm")));
+
+                return vi;
+            }
+        });
     }
 }

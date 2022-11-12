@@ -43,7 +43,9 @@ public class MockupData {
                     new ArrayList<Passenger>(Arrays.asList(passengers)),
                     driver1,
                     12,
-                    new ArrayList<Route>(Arrays.asList(routes))
+                    new ArrayList<Route>(Arrays.asList(routes)),
+                    j % 2 == 0,
+                    j % 3 == 0
             );
 
             Ride r2 = new Ride(
@@ -55,7 +57,9 @@ public class MockupData {
                     new ArrayList<Passenger>(Arrays.asList(passengers)),
                     driver1,
                     8,
-                    new ArrayList<Route>(Arrays.asList(routes))
+                    new ArrayList<Route>(Arrays.asList(routes)),
+                    j % 4 == 0,
+                    j % 5 == 0
             );
 
             Ride r3 = new Ride(
@@ -67,16 +71,21 @@ public class MockupData {
                     new ArrayList<Passenger>(Arrays.asList(passengers)),
                     driver1,
                     32,
-                    new ArrayList<Route>(Arrays.asList(routes))
+                    new ArrayList<Route>(Arrays.asList(routes)),
+                    j % 6 == 0,
+                    j % 7 == 0
             );
 
             rides.add(r1);
             rides.add(r2);
             rides.add(r3);
-
         }
 
         return rides;
+    }
+
+    public static List<Ride> getRidesForPassenger() {
+        return getRides(); // This is only allowed because every ride in getRides has the same lone passenger. Otherwise, rewrite.
     }
 
     public static List<Review> getReviews(Ride ride) {
