@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.route.Route;
 
@@ -61,6 +64,7 @@ public class DriverRideHistoryItemActivity extends AppCompatActivity {
         TextView comment = findViewById(R.id.driver_ride_history_item_comment);
         Button chat = findViewById(R.id.driver_ride_history_item_inbox);
         ListView routes = findViewById(R.id.driver_ride_history_item_routes);
+        ListView passengers = findViewById(R.id.driver_ride_history_item_passengers);
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm");
 
@@ -76,7 +80,52 @@ public class DriverRideHistoryItemActivity extends AppCompatActivity {
         comment.setText(rating_comment);
 
 
-        // TODO: Passengers.
+
+        passengers.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return ride.getPassengers().size();
+            }
+
+            @Override
+            public Object getItem(int i) {
+                return ride.getPassengers().get(i);
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return i;
+            }
+
+            @Override
+            public View getView(int i, View view, ViewGroup viewGroup) {
+                View vi;
+                if (view == null) {
+                    vi = DriverRideHistoryItemActivity.this.getLayoutInflater().inflate(R.layout.list_passengers, null);
+                } else {
+                    vi = view;
+                }
+
+                Passenger obj = (Passenger)getItem(i);
+
+                ImageView pfp = vi.findViewById(R.id.list_passenger_pfp);
+                TextView name = vi.findViewById(R.id.list_passenger_name);
+                // pfp.setImageResource();  // TODO
+                name.setText("Name Surname"); // TODO
+
+                return vi;
+            }
+        });
+
+        passengers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Passenger obj = (Passenger)passengers.getItemAtPosition(i);
+                Intent in = new Intent(getApplicationContext(), DriverPassengerInfoActivity.class);
+                in.putExtra("passenger", obj);
+                startActivity(in);
+            }
+        });
 
         if (chat_ref == null) {
             chat.setEnabled(false);
