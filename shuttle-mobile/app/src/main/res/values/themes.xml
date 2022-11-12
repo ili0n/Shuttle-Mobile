@@ -14,6 +14,8 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <item name="colorControlNormal">?colorOnPrimary</item>
     </style>
 
     <style name="Theme.ShuttleMobile.Splash" parent="@style/Theme.AppCompat.DayNight.NoActionBar">

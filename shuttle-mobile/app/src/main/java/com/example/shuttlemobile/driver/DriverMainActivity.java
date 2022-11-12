@@ -23,6 +23,11 @@ public class DriverMainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_driver);
         setSupportActionBar(toolbar);
 
+        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         toolbar.setOnMenuItemClickListener(item -> toolbarOnItemClick(item));
         getSupportActionBar().setTitle(R.string.titleHome);
     }
@@ -35,6 +40,17 @@ public class DriverMainActivity extends AppCompatActivity {
                 .replace(R.id.driver_fragment_frame, fragment);
         fragmentTransaction.addToBackStack(STACK_FRAGMENTS);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
