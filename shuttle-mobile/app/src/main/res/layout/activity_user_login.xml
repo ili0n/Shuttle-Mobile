@@ -10,7 +10,7 @@
         android:id="@+id/login_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/login"
         android:textAllCaps="true"
         android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:drawableRight="@drawable/ic_baseline_email_24"
+        android:drawableEnd="@drawable/ic_baseline_email_24"
         android:drawableTint="?colorButtonNormal"
         android:hint="@string/login_email"
         android:inputType="textEmailAddress"
@@ -34,7 +34,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_label"
-        app:layout_constraintVertical_bias="0.24000001" />
+        app:layout_constraintVertical_bias="0.24000001"
+        android:autofillHints="emailAddress" />
 
     <EditText
         android:id="@+id/login_password"
@@ -43,7 +44,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:drawableRight="@drawable/ic_baseline_lock_24"
+        android:drawableEnd="@drawable/ic_baseline_lock_24"
         android:drawableTint="?colorButtonNormal"
         android:ems="10"
         android:hint="@string/login_password"
@@ -53,7 +54,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_email"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:importantForAutofill="noExcludeDescendants" />
 
     <Button
         android:id="@+id/login_confirm"
@@ -89,7 +91,7 @@
         android:id="@+id/login_forgot_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot Password?"
+        android:text="@string/loginForgotPassword"
         android:textAllCaps="false"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/login_confirm"
