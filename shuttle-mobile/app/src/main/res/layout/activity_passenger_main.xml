@@ -4,4 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".passenger.PassengerMainActivity"/>
+    tools:context=".passenger.PassengerMainActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentPassengerAccount"
+        android:name="com.example.shuttlemobile.passenger.PassengerAccountFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_passenger_account" />
+</androidx.constraintlayout.widget.ConstraintLayout>
