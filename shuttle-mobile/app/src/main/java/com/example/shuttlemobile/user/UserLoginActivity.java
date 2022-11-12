@@ -39,7 +39,7 @@ public class UserLoginActivity extends AppCompatActivity {
         } else if (email.compareTo("passenger") == 0) {
             startActivity(new Intent(this, PassengerMainActivity.class));
         } else {
-            startActivity(new Intent(this, InboxActivity.class));
+            Toast.makeText(this, "Put 'driver' or 'passenger' in email field", Toast.LENGTH_SHORT).show();
         }
     }
 
