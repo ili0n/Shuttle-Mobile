@@ -27,6 +27,10 @@ public class Route extends Entity {
         this.pointEnd = pointEnd;
     }
 
+    public String getPlaceName() {
+        return "Town ABC Street 123";
+    }
+
     public long getDistance() {
         return distance;
     }

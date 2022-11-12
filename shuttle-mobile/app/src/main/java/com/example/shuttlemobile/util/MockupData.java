@@ -39,10 +39,10 @@ public class MockupData {
                     LocalTime.of(0, 50, 0),
                     400,
                     Ride.RideStatus.COMPLETED,
-                    new ArrayList<>(Arrays.asList(passengers)),
+                    new ArrayList<Passenger>(Arrays.asList(passengers)),
                     driver1,
                     12,
-                    new ArrayList<>(Arrays.asList(routes))
+                    new ArrayList<Route>(Arrays.asList(routes))
             );
 
             Ride r2 = new Ride(
@@ -51,10 +51,10 @@ public class MockupData {
                     LocalTime.of(0, 25, 0),
                     300,
                     Ride.RideStatus.COMPLETED,
-                    new ArrayList<>(Arrays.asList(passengers)),
+                    new ArrayList<Passenger>(Arrays.asList(passengers)),
                     driver1,
                     8,
-                    new ArrayList<>(Arrays.asList(routes))
+                    new ArrayList<Route>(Arrays.asList(routes))
             );
 
             Ride r3 = new Ride(
@@ -63,10 +63,10 @@ public class MockupData {
                     LocalTime.of(2, 10, 0),
                     1100,
                     Ride.RideStatus.COMPLETED,
-                    new ArrayList<>(Arrays.asList(passengers)),
+                    new ArrayList<Passenger>(Arrays.asList(passengers)),
                     driver1,
                     32,
-                    new ArrayList<>(Arrays.asList(routes))
+                    new ArrayList<Route>(Arrays.asList(routes))
             );
 
             rides.add(r1);
