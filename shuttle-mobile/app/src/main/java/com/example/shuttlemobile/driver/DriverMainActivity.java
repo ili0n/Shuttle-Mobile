@@ -29,7 +29,7 @@ public class DriverMainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         toolbar.setOnMenuItemClickListener(item -> toolbarOnItemClick(item));
-        getSupportActionBar().setTitle(R.string.titleHome);
+        //getSupportActionBar().setTitle(R.string.titleHome);
     }
 
     private void setVisibleFragment(Fragment fragment) {

@@ -23,8 +23,10 @@ public class Ride extends Entity {
     private Driver driver;
     private long distancePassed;
     private ArrayList<Route> routes;
+    private boolean hasBaby;
+    private boolean hasPets;
 
-    public Ride(LocalDateTime start, LocalDateTime finish, LocalTime estimation, double price, RideStatus status, ArrayList<Passenger> passengers, Driver driver, long distancePassed, ArrayList<Route> routes) {
+    public Ride(LocalDateTime start, LocalDateTime finish, LocalTime estimation, double price, RideStatus status, ArrayList<Passenger> passengers, Driver driver, long distancePassed, ArrayList<Route> routes, boolean hasBaby, boolean hasPets) {
         this.start = start;
         this.finish = finish;
         this.estimation = estimation;
@@ -34,6 +36,8 @@ public class Ride extends Entity {
         this.driver = driver;
         this.distancePassed = distancePassed;
         this.routes = routes;
+        this.hasBaby = hasBaby;
+        this.hasPets = hasPets;
     }
 
     public ArrayList<Route> getRoutes() {
@@ -106,5 +110,21 @@ public class Ride extends Entity {
 
     public void setDriver(Driver driver) {
         this.driver = driver;
+    }
+
+    public boolean isHasBaby() {
+        return hasBaby;
+    }
+
+    public void setHasBaby(boolean hasBaby) {
+        this.hasBaby = hasBaby;
+    }
+
+    public boolean isHasPets() {
+        return hasPets;
+    }
+
+    public void setHasPets(boolean hasPets) {
+        this.hasPets = hasPets;
     }
 }

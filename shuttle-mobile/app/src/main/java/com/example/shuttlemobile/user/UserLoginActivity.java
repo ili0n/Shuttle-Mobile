@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.provider.Telephony;
 import android.util.Log;
 import android.widget.Button;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.DriverMainActivity;
+import com.example.shuttlemobile.passenger.PassengerMainActivity;
+import com.example.shuttlemobile.passenger.PassengerRideHistoryFragment;
 import com.example.shuttlemobile.inbox.ChatActivity;
 import com.example.shuttlemobile.inbox.InboxActivity;
 
@@ -33,8 +36,10 @@ public class UserLoginActivity extends AppCompatActivity {
         String email = ((EditText) findViewById(R.id.login_email)).getText().toString();
         if (email.compareTo("driver") == 0) {
             startActivity(new Intent(this, DriverMainActivity.class));
+        } else if (email.compareTo("passenger") == 0) {
+            startActivity(new Intent(this, PassengerMainActivity.class));
         } else {
-            startActivity(new Intent(this, InboxActivity.class));
+            Toast.makeText(this, "Put 'driver' or 'passenger' in email field", Toast.LENGTH_SHORT).show();
         }
     }
 

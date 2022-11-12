@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="15"
+>
+    <TextView
+        android:id="@+id/start"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:text="Hello"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/end"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:layout_gravity="center"
+        android:text="Hello"
+        />
+
+    <ImageView
+        android:id="@+id/baby"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:src="@drawable/baby"
+        android:contentDescription="baby"
+        android:layout_gravity="center"
+        android:padding="5sp"/>
+    <ImageView
+        android:id="@+id/pets"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:src="@drawable/pets"
+        android:contentDescription="pets"
+        android:layout_gravity="center"
+        android:padding="5sp"/>
+    <ImageView
+        android:id="@+id/fair"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:src="@drawable/fair"
+        android:contentDescription="fair"
+        android:layout_gravity="center"
+        android:padding="5sp"/>
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:text="Hello"
+        android:padding="5sp"
+        />
+    <TextView
+        android:id="@+id/evaluatedTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:text="Hello"
+        android:padding="5sp"
+        />
+</LinearLayout>
