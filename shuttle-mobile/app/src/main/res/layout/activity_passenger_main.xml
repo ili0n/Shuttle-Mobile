@@ -7,10 +7,12 @@
     tools:context=".passenger.PassengerMainActivity">
 
     <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/passenger_fragment_frame"
+        android:name="com.example.shuttlemobile.passenger.PassengerRideHistoryFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
-        tools:layout="@layout/fragment_passenger_ride_history"
-        />
-<!--    app:layout_constraintTop_toBottomOf="@id/activity_driver_main_toolbar"-->
+    </androidx.fragment.app.FragmentContainerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

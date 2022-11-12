@@ -25,13 +25,6 @@ public class UserLoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(view -> onLoginClick());
         btnRegister.setOnClickListener(view -> onRegisterClick());
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));
-            }
-        });
     }
 
     private void onLoginClick() {
