@@ -24,4 +24,7 @@
     <string name="login">Login</string>
     <string name="loginForgotPassword">Forgot Password?</string>
     <string name="contentDescPfp">Profile Picture</string>
+    <string name="openReviews">Open Reviews</string>
+    <string name="rideNoReviews">No Reviews</string>
+    <string name="reviews">Reviews</string>
 </resources>

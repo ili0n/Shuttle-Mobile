@@ -2,12 +2,13 @@
 
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".driver.DriverRideHistoryItemActivity">
@@ -41,7 +42,7 @@
             android:layout_height="wrap_content"
             android:text="@string/ridePassengers"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/driver_ride_history_item_lbl_7"
+            app:layout_constraintStart_toStartOf="@+id/driver_ride_history_item_lbl_6"
             app:layout_constraintTop_toTopOf="@+id/imageView6" />
 
         <TextView
@@ -141,27 +142,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:background="#393939"
-            android:src="@drawable/ic_baseline_account_circle_24"
-            app:layout_constraintStart_toStartOf="@+id/imageView7"
-            app:layout_constraintTop_toBottomOf="@+id/imageView7"
-            app:srcCompat="@drawable/ic_baseline_rate_review_24"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:id="@+id/driver_ride_history_item_lbl_7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rideComment"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/driver_ride_history_item_lbl_6"
-            app:layout_constraintTop_toTopOf="@+id/imageView2" />
-
-        <ImageView
             android:id="@+id/imageView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -176,11 +156,11 @@
             android:id="@+id/imageView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="128dp"
+            android:layout_marginTop="32dp"
             android:background="#393939"
             android:src="@drawable/ic_baseline_account_circle_24"
-            app:layout_constraintStart_toStartOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+            app:layout_constraintStart_toStartOf="@+id/imageView7"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7"
             tools:ignore="ContentDescription" />
 
         <ImageView
@@ -212,40 +192,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/driver_ride_history_item_lbl_4"
             app:layout_constraintTop_toTopOf="@+id/driver_ride_history_item_lbl_4" />
-
-        <TextView
-            android:id="@+id/driver_ride_history_item_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5/5"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/driver_ride_history_item_lbl_6"
-            app:layout_constraintTop_toTopOf="@+id/driver_ride_history_item_lbl_6" />
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="224dp"
-            android:layout_height="128dp"
-            android:clipToPadding="true"
-            android:fillViewport="true"
-            android:scrollbarStyle="outsideOverlay"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/driver_ride_history_item_lbl_7"
-            app:layout_constraintTop_toTopOf="@+id/driver_ride_history_item_lbl_7">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/driver_ride_history_item_comment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Lorem Ipsum"
-                    android:textSize="20sp"/>
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
 
         <ImageView
             android:id="@+id/imageView4"
@@ -282,6 +228,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/driver_ride_history_item_lbl_3"
             app:layout_constraintTop_toTopOf="@+id/driver_ride_history_item_lbl_3" />
+
+        <Button
+            android:id="@+id/driver_ride_history_item_open_ratings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rating 4.5/5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/driver_ride_history_item_lbl_6"
+            app:layout_constraintTop_toTopOf="@+id/driver_ride_history_item_lbl_6" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

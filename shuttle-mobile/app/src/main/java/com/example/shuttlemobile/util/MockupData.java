@@ -2,6 +2,7 @@ package com.example.shuttlemobile.util;
 
 import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.passenger.Passenger;
+import com.example.shuttlemobile.review.Review;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.route.Location;
 import com.example.shuttlemobile.route.Route;
@@ -76,5 +77,17 @@ public class MockupData {
         }
 
         return rides;
+    }
+
+    public static List<Review> getReviews(Ride ride) {
+        List<Review> res = new ArrayList<>();
+
+        String lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+        for (int i = 0; i < 3; i++) {
+            res.add(new Review((5 - i) % 5 + 1, lorem, ride, ride.getPassengers().get(i % ride.getPassengers().size())));
+        }
+
+        return res;
     }
 }
