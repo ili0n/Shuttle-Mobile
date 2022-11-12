@@ -28,7 +28,7 @@ public class UserLoginActivity extends AppCompatActivity {
     }
 
     private void onLoginClick() {
-        startActivity(new Intent(this, ChatActivity.class));
+        startActivity(new Intent(this, InboxActivity.class));
     }
 
     private void onRegisterClick() {

@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/contact"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
@@ -44,9 +45,9 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
-                android:textStyle="italic"
-                android:textSize="12sp"
                 android:text="TextView"
+                android:textSize="12sp"
+                android:textStyle="italic"
                 app:layout_constraintStart_toEndOf="@+id/profileImg"
                 app:layout_constraintTop_toBottomOf="@+id/username" />
         </androidx.constraintlayout.widget.ConstraintLayout>

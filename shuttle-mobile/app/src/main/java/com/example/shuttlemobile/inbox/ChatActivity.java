@@ -18,7 +18,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         Log.println(Log.ASSERT,"msg2","here");
-        messages = getResources().getStringArray(R.array.messages);
+        messages = getIntent().getStringArrayExtra("messages");
 
         chat =  findViewById(R.id.chat);
 

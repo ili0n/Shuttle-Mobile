@@ -5,8 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -14,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shuttlemobile.R;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatAdapterViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapterViewHolder> {
     Context context;
     String[] messages;
 
-    public ChatAdapter(Context context, String[] messages) {
+    public ChatAdapter(Context context, String[] messages ) {
         this.context = context;
         this.messages = messages;
     }
@@ -28,7 +30,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatAdapterVie
     public ChatAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.chat_message,parent,false);
-        return new ChatAdapter.ChatAdapterViewHolder(view);
+        return new ChatAdapterViewHolder(view);
     }
 
     @Override
@@ -52,6 +54,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatAdapterVie
             constraintSet.clone(layout);
             constraintSet.connect(R.id.chat_message,ConstraintSet.LEFT,R.id.chat_layout,ConstraintSet.LEFT,5);
             constraintSet.applyTo(layout);
+            holder.message.setBackgroundColor(context.getColor(R.color.teal_700));
         }
     }
 
@@ -60,15 +63,5 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatAdapterVie
         return messages.length;
     }
 
-    public class ChatAdapterViewHolder extends RecyclerView.ViewHolder {
-        TextView message;
-        ConstraintLayout constraintLayout;
 
-        public ChatAdapterViewHolder(@NonNull View itemView) {
-            super(itemView);
-            message = itemView.findViewById(R.id.chat_message);
-            constraintLayout = itemView.findViewById(R.id.chat_layout);
-
-        }
-    }
 }

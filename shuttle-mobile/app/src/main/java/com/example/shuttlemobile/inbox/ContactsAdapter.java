@@ -4,40 +4,48 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shuttlemobile.R;
 
-public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder> {
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapterViewHolder> {
     Context context;
     String[] usernames;
     String[] lastMessages;
     int[] profiles;
+    ContactClickListener contactClickListener;
 
-    public  ContactsAdapter(Context context, String[] usernames, String[] lastMessages,int[] images){
+    public ContactsAdapter(Context context, String[] usernames, String[] lastMessages, int[] images, ContactClickListener listener) {
         this.context = context;
         this.usernames = usernames;
         this.lastMessages = lastMessages;
         this.profiles = images;
+        contactClickListener = listener;
+
     }
 
     @NonNull
     @Override
-    public ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContactsAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.contact_row,parent,false);
-        return new  ContactsViewHolder(view);
+        View view = layoutInflater.inflate(R.layout.contact_row, parent, false);
+        return new ContactsAdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ContactsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ContactsAdapterViewHolder holder, int position) {
         holder.chatUsername.setText(usernames[position]);
         holder.lastMessage.setText(lastMessages[position]);
         holder.profile.setImageResource(profiles[position]);
+        String username = usernames[position];
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                contactClickListener.onContactClicked(username);
+            }
+        });
 
     }
 
@@ -46,17 +54,5 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         return profiles.length;
     }
 
-    public class ContactsViewHolder extends RecyclerView.ViewHolder {
 
-        TextView chatUsername;
-        TextView lastMessage;
-        ImageView profile;
-
-        public ContactsViewHolder(@NonNull View itemView) {
-            super(itemView);
-            chatUsername = itemView.findViewById(R.id.username);
-            lastMessage = itemView.findViewById(R.id.lastMsg);
-            profile = itemView.findViewById(R.id.profileImg);
-        }
-    }
 }
