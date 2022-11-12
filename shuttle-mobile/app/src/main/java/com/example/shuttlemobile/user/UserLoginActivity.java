@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.DriverMainActivity;
+import com.example.shuttlemobile.inbox.ChatActivity;
 import com.example.shuttlemobile.inbox.InboxActivity;
 
 public class UserLoginActivity extends AppCompatActivity {
@@ -26,7 +28,7 @@ public class UserLoginActivity extends AppCompatActivity {
     }
 
     private void onLoginClick() {
-        startActivity(new Intent(this, InboxActivity.class));
+        startActivity(new Intent(this, ChatActivity.class));
     }
 
     private void onRegisterClick() {
