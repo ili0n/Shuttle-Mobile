@@ -27,4 +27,29 @@
     <string name="openReviews">Open Reviews</string>
     <string name="rideNoReviews">No Reviews</string>
     <string name="reviews">Reviews</string>
+
+    <string-array name="usernames">
+        <item>Support</item>
+        <item>Yan</item>
+        <item>Ghostblade</item>
+        <item>Robute Guilliman</item>
+        <item>Ulfric Stormclocak</item>
+    </string-array>
+
+    <string-array name="last_messages">
+        <item>Issue resovled</item>
+        <item>Ghostblade</item>
+        <item>lone</item>
+        <item>Ultramar</item>
+        <item>Emperor</item>
+    </string-array>
+
+    <string-array name="messages">
+        <item>1|Issue resovled</item>
+        <item>0|Ghostblade</item>
+        <item>1|lone</item>
+        <item>0|Ultramar</item>
+        <item>0|Emperorasojaushdddddddddd ddddddddddddddd dddddddddddd ddddd</item>
+    </string-array>
+
 </resources>

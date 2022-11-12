@@ -19,6 +19,12 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+            android:name=".inbox.ChatActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".driver.DriverPassengerInfoActivity"
             android:exported="false">
@@ -28,6 +34,13 @@
         </activity>
         <activity
             android:name=".driver.DriverRideHistoryItemActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".inbox.InboxActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
