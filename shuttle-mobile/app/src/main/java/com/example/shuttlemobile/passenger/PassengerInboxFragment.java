@@ -11,19 +11,19 @@ import android.view.ViewGroup;
 
 import com.example.shuttlemobile.R;
 
-public class PassengerAccountFragment extends Fragment {
-    public static PassengerAccountFragment newInstance() {
-        return new PassengerAccountFragment();
+public class PassengerInboxFragment extends Fragment {
+    public static PassengerInboxFragment newInstance() {
+        return new PassengerInboxFragment();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.titleAccount);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.titleInbox);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_passenger_account, container, false);
+        return inflater.inflate(R.layout.fragment_passenger_inbox, container, false);
     }
 }

@@ -1,17 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".passenger.PassengerMainActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentPassengerAccount"
-        android:name="com.example.shuttlemobile.passenger.PassengerAccountFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+    <include
+        android:id="@+id/activity_passenger_main_toolbar"
+        layout="@layout/toolbar_driver" />
 
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_passenger_account" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/passenger_fragment_frame"
+        android:name="com.example.shuttlemobile.passenger.PassengerMainFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activity_passenger_main_toolbar"
+        tools:layout="@layout/fragment_driver_ride_history" />
+
+<!--    <androidx.fragment.app.FragmentContainerView-->
+<!--        android:id="@+id/passenger_fragment_frame"-->
+<!--        android:name="com.example.shuttlemobile.passenger.PassengerRideHistoryFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        >-->
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    tools:context=".passenger.PassengerMainActivity"-->
+<!--    tools:layout_editor_absoluteY="81dp">-->
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="409dp"-->
+<!--        android:layout_height="601dp"-->
+<!--        android:layout_marginStart="1dp"-->
+<!--        android:layout_marginTop="1dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--        <com.google.android.gms.maps.MapView-->
+<!--            android:id="@+id/mapView2"-->
+<!--            android:layout_width="410dp"-->
+<!--            android:layout_height="557dp"-->
+<!--            android:layout_marginStart="1dp"-->
+<!--            android:layout_marginTop="1dp"-->
+<!--            android:layout_marginEnd="1dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/button7"-->
+<!--            android:layout_width="407dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_marginStart="2dp"-->
+<!--            android:layout_marginBottom="1dp"-->
+<!--            android:text="Create a Ride"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent" />-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>
