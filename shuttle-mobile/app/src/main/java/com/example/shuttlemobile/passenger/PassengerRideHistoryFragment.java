@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.driver.DriverRideHistoryFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,9 +21,14 @@ import java.util.Date;
 public class PassengerRideHistoryFragment extends Fragment {
     ListView lvHistory;
 
+    public static PassengerRideHistoryFragment newInstance() {
+        return new PassengerRideHistoryFragment();
+    }
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.titleHistory);
     }
 
     @Nullable

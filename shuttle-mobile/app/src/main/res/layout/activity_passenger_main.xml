@@ -6,15 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".passenger.PassengerMainActivity">
 
+    <include
+        android:id="@+id/activity_passenger_main_toolbar"
+        layout="@layout/toolbar_driver" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/passenger_fragment_frame"
-        android:name="com.example.shuttlemobile.passenger.PassengerRideHistoryFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        android:name="com.example.shuttlemobile.passenger.PassengerMainFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activity_passenger_main_toolbar"
+        tools:layout="@layout/fragment_driver_ride_history" />
 
-    </androidx.fragment.app.FragmentContainerView>
+<!--    <androidx.fragment.app.FragmentContainerView-->
+<!--        android:id="@+id/passenger_fragment_frame"-->
+<!--        android:name="com.example.shuttlemobile.passenger.PassengerRideHistoryFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        >-->
 <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
 <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
 <!--    tools:context=".passenger.PassengerMainActivity"-->

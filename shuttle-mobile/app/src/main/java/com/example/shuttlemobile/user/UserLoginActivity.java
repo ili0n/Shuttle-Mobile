@@ -36,7 +36,7 @@ public class UserLoginActivity extends AppCompatActivity {
         String email = ((EditText) findViewById(R.id.login_email)).getText().toString();
         if (email.compareTo("driver") == 0) {
             startActivity(new Intent(this, DriverMainActivity.class));
-        } if (email.compareTo("passenger") == 0) {
+        } else if (email.compareTo("passenger") == 0) {
             startActivity(new Intent(this, PassengerMainActivity.class));
         } else {
             startActivity(new Intent(this, InboxActivity.class));
