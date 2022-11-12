@@ -1,6 +1,7 @@
 package com.example.shuttlemobile.inbox;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapterViewHol
     String[] lastMessages;
     int[] profiles;
     ContactClickListener contactClickListener;
+    ColorStateList defaultBG;
 
     public ContactsAdapter(Context context, String[] usernames, String[] lastMessages, int[] images, ContactClickListener listener) {
         this.context = context;
@@ -40,10 +42,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapterViewHol
         holder.lastMessage.setText(lastMessages[position]);
         holder.profile.setImageResource(profiles[position]);
         String username = usernames[position];
+        holder.cardView.setCardBackgroundColor(context.getColor(R.color.teal_700_high_transparent));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 contactClickListener.onContactClicked(username);
+                defaultBG = holder.cardView.getCardBackgroundColor();
+
             }
         });
 
