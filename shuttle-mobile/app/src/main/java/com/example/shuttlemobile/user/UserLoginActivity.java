@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
@@ -28,7 +30,12 @@ public class UserLoginActivity extends AppCompatActivity {
     }
 
     private void onLoginClick() {
-        startActivity(new Intent(this, InboxActivity.class));
+        String email = ((EditText) findViewById(R.id.login_email)).getText().toString();
+        if (email.compareTo("driver") == 0) {
+            startActivity(new Intent(this, DriverMainActivity.class));
+        } else {
+            startActivity(new Intent(this, InboxActivity.class));
+        }
     }
 
     private void onRegisterClick() {
