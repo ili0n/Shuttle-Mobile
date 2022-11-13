@@ -27,11 +27,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView"
             android:layout_width="128dp"
             android:layout_height="128dp"
+            android:id="@+id/passengerProfilePicture"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="Profile picture"
+            android:contentDescription="@string/passengerProfilePicture"
             android:padding="7sp"
             android:src="@android:mipmap/sym_def_app_icon"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -47,19 +47,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/passengerProfilePicture"
             tools:layout_editor_absoluteX="25dp">
 
             <TextView
                 android:id="@+id/userNameLabel"
                 style="@style/AccountInfoText"
-                android:text="Name: " />
+                android:text="@string/userNameLabel" />
 
             <EditText
                 android:id="@+id/nameValue"
                 style="@style/AccountInfoText"
-                android:enabled="false"
-                android:hint="Name value" />
+                android:hint="@string/nameValue"
+                android:enabled="false"/>
 
             <ImageView
                 android:id="@+id/nameEdit"
@@ -80,12 +80,12 @@
             <TextView
                 android:id="@+id/surnameLabel"
                 style="@style/AccountInfoText"
-                android:text="Surname: " />
+                android:text="@string/surnameLabel" />
 
             <EditText
                 android:id="@+id/surnameValue"
                 style="@style/AccountInfoText"
-                android:hint="Surname value"
+                android:hint="@string/surnameValue"
                 android:enabled="false"/>
             <ImageView
                 android:id="@+id/surnameEdit"
@@ -105,12 +105,12 @@
             <TextView
                 android:id="@+id/phoneLabel"
                 style="@style/AccountInfoText"
-                android:text="Phone: " />
+                android:text="@string/phoneLabel" />
 
             <EditText
                 android:id="@+id/phoneValue"
                 style="@style/AccountInfoText"
-                android:hint="Phone value"
+                android:hint="@string/phoneValue"
                 android:enabled="false"/>
 
             <ImageView
@@ -132,12 +132,12 @@
             <TextView
                 android:id="@+id/emailLabel"
                 style="@style/AccountInfoText"
-                android:text="Email: " />
+                android:text="@string/emailLabel" />
 
             <EditText
                 android:id="@+id/emailValue"
                 style="@style/AccountInfoText"
-                android:hint="Email value"
+                android:hint="@string/emailValue"
                 android:enabled="false"
                 />
 
@@ -160,13 +160,13 @@
             <TextView
                 android:id="@+id/addressLabel"
                 style="@style/AccountInfoText"
-                android:text="Address: " />
+                android:text="@string/addressLabel" />
 
             <EditText
                 android:id="@+id/addressValue"
                 style="@style/AccountInfoText"
                 android:enabled="false"
-                android:hint="Address value" />
+                android:hint="@string/addressValue" />
 
             <ImageView
                 android:id="@+id/addressEdit"
@@ -183,8 +183,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:backgroundTint="#237FB5"
-            android:text="Save"
             android:textSize="18sp"
+            android:text="@string/btnSavePassenger"
             android:visibility="invisible"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -206,6 +206,29 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSavePassenger" />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/btnSavePassenger"
+            tools:layout_editor_absoluteX="25dp"
+            android:weightSum="2"
+            android:padding="5sp">
+
+            <Button
+                android:id="@+id/btnFavouriteRoutes"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/favouriteRoutes"
+                android:layout_gravity="center"
+                android:layout_margin="5sp"/>
+            <Button
+                android:id="@+id/btnReports"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/reports"
+                android:layout_gravity="center"
+                android:layout_margin="5sp"/>
+
 
         <Button
             android:id="@+id/btnReports"
