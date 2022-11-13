@@ -8,6 +8,7 @@
         android:id="@+id/toolbar_driver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="?colorOnPrimary"/>
+        app:titleTextColor="?colorOnPrimary"
+        android:background="@drawable/gradient_blue_subtle"/>
 
 </com.google.android.material.appbar.AppBarLayout>

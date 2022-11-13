@@ -8,4 +8,6 @@
     <color name="teal_700_high_transparent">#40018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="lightGray1">#EDEDED</color>
+    <color name="lightGray2">#F8F8F8</color>
 </resources>

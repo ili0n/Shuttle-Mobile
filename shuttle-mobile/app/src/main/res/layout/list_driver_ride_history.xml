@@ -5,14 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="8dp"
+    android:minHeight="48dp" >
 
 
     <TextView
         android:id="@+id/driver_ride_history_list_begin_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="120dp"
         android:text="1/1/2022 14:22"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.051"
@@ -23,22 +26,26 @@
         android:id="@+id/driver_ride_history_list_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="60dp"
         android:text="27min"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toEndOf="@+id/driver_ride_history_list_begin_date"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/driver_ride_history_list_begin_date"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/passengerProfilePicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/teal_700"
+        android:background="#237FB5"
+        app:layout_constraintBottom_toBottomOf="@+id/driver_ride_history_list_duration"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.14"
-        app:layout_constraintStart_toEndOf="@+id/driver_ride_history_list_duration"
-        app:layout_constraintTop_toTopOf="@+id/driver_ride_history_list_passenger_count"
+        app:layout_constraintHorizontal_bias="0.28"
+        app:layout_constraintStart_toEndOf="@+id/driver_ride_history_list_price"
+        app:layout_constraintTop_toTopOf="@+id/driver_ride_history_list_duration"
         app:srcCompat="@drawable/ic_baseline_account_circle_24"
         tools:ignore="ContentDescription" />
 
@@ -46,24 +53,29 @@
         android:id="@+id/driver_ride_history_list_passenger_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/teal_700"
+        android:background="#237FB5"
         android:text="2"
         android:textColor="@color/white"
+        android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/passengerProfilePicture"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/passengerProfilePicture"
         app:layout_constraintVertical_bias="0.496" />
 
     <TextView
         android:id="@+id/driver_ride_history_list_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="280 RSD"
+        android:minWidth="80dp"
+        android:text="1234,0 RSD"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/driver_ride_history_list_passenger_count"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintStart_toEndOf="@+id/driver_ride_history_list_duration"
+        app:layout_constraintTop_toTopOf="@+id/driver_ride_history_list_duration"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
