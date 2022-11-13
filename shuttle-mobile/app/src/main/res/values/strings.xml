@@ -28,6 +28,20 @@
     <string name="rideNoReviews">No Reviews</string>
     <string name="reviews">Reviews</string>
 
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="confirmEmail">Confirm Email</string>
+    <string name="password">Password</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="address">Address</string>
+    <string name="register">Register</string>
+    <string name="registerTitle">Make account</string>
+
+
+
+
     <string-array name="usernames">
         <item>Support</item>
         <item>Yan</item>
