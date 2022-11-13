@@ -1,11 +1,13 @@
 package com.example.shuttlemobile.reports;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -32,6 +34,7 @@ public class PassengerPastRidesReport extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger_past_rides_report);
+        addToolbar();
         init();
 
 
@@ -56,6 +59,18 @@ public class PassengerPastRidesReport extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void addToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar_driver);
+        setSupportActionBar(toolbar);
+
+        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setTitle("Your past rides report");
     }
 
     private void initEditTextListeners() {
@@ -126,5 +141,16 @@ public class PassengerPastRidesReport extends AppCompatActivity {
         etEndTime = findViewById(R.id.etEndTime);
         etStartTime = findViewById(R.id.etStartTime);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
