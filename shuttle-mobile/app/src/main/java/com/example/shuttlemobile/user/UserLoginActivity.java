@@ -4,9 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.provider.Telephony;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,9 +12,6 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.DriverMainActivity;
 import com.example.shuttlemobile.passenger.PassengerMainActivity;
 import com.example.shuttlemobile.passenger.PassengerRegisterActivity;
-import com.example.shuttlemobile.passenger.PassengerRideHistoryFragment;
-import com.example.shuttlemobile.inbox.ChatActivity;
-import com.example.shuttlemobile.inbox.InboxActivity;
 
 public class UserLoginActivity extends AppCompatActivity {
 
