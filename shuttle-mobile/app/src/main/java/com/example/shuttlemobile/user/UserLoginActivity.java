@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.DriverMainActivity;
 import com.example.shuttlemobile.passenger.PassengerMainActivity;
+import com.example.shuttlemobile.passenger.PassengerRegisterActivity;
 import com.example.shuttlemobile.passenger.PassengerRideHistoryFragment;
 import com.example.shuttlemobile.inbox.ChatActivity;
 import com.example.shuttlemobile.inbox.InboxActivity;
@@ -44,6 +45,6 @@ public class UserLoginActivity extends AppCompatActivity {
     }
 
     private void onRegisterClick() {
-        Toast.makeText(getApplicationContext(), "Register", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, PassengerRegisterActivity.class));
     }
 }
