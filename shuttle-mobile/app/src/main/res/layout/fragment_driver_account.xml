@@ -12,13 +12,13 @@
         android:paddingHorizontal="25sp">
 
         <TextView
-            android:id="@+id/accoutBabyData"
+            android:id="@+id/accountBabyValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="7sp"
             android:text="Baby value"
             app:layout_constraintStart_toEndOf="@+id/accountBaby"
-            app:layout_constraintTop_toBottomOf="@+id/accountSpotsData" />
+            app:layout_constraintTop_toBottomOf="@+id/accountSpotsValue" />
 
         <TextView
             android:id="@+id/accountBaby"
@@ -31,7 +31,7 @@
             app:layout_constraintTop_toBottomOf="@+id/accountSpots" />
 
         <TextView
-            android:id="@+id/accountSpotsData"
+            android:id="@+id/accountSpotsValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="7sp"
@@ -50,7 +50,7 @@
             app:layout_constraintTop_toBottomOf="@+id/accountModel" />
 
         <TextView
-            android:id="@+id/accountplateData"
+            android:id="@+id/accountplateValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -87,10 +87,10 @@
             android:padding="7sp"
             android:text="Model value"
             app:layout_constraintStart_toEndOf="@+id/accountModel"
-            app:layout_constraintTop_toBottomOf="@+id/accountplateData" />
+            app:layout_constraintTop_toBottomOf="@+id/accountplateValue" />
 
         <TextView
-            android:id="@+id/accountLicenceData"
+            android:id="@+id/accountLicenceValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="7sp"
@@ -99,7 +99,7 @@
             app:layout_constraintTop_toBottomOf="@+id/addressValue" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/driverProfilePic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -120,7 +120,7 @@
             android:text="Name: "
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/driverProfilePic" />
 
         <TextView
             android:id="@+id/nameValue"
@@ -130,7 +130,7 @@
             android:text="Name value"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/userNameLabel"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/driverProfilePic" />
 
 
         <TextView
@@ -232,7 +232,7 @@
             android:text="Driver"
             android:textAllCaps="true"
             android:textSize="34sp"
-            app:layout_constraintBottom_toTopOf="@+id/imageView"
+            app:layout_constraintBottom_toTopOf="@+id/driverProfilePic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
@@ -248,7 +248,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accountLicenceData" />
+            app:layout_constraintTop_toBottomOf="@+id/accountLicenceValue" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
