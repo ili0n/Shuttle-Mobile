@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     tools:context=".user.UserLoginActivity">
 
     <TextView
         android:id="@+id/login_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
         android:text="@string/login"
-        android:textAllCaps="true"
+        android:textColor="#FFFFFF"
         android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,17 +27,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:autofillHints="emailAddress"
+        android:background="?colorOnSecondary"
+        android:backgroundTint="#34000000"
         android:drawableEnd="@drawable/ic_baseline_email_24"
-        android:drawableTint="?colorButtonNormal"
+        android:drawableTint="?colorOnSecondary"
+        android:paddingLeft="6dp"
         android:hint="@string/login_email"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
+        android:textColor="?colorOnSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_label"
-        app:layout_constraintVertical_bias="0.24000001"
-        android:autofillHints="emailAddress" />
+        app:layout_constraintVertical_bias="0.061" />
 
     <EditText
         android:id="@+id/login_password"
@@ -44,48 +51,57 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
+        android:background="?colorOnSecondary"
+        android:backgroundTint="#34000000"
         android:drawableEnd="@drawable/ic_baseline_lock_24"
-        android:drawableTint="?colorButtonNormal"
+        android:drawableTint="?colorOnSecondary"
+        android:paddingLeft="6dp"
         android:ems="10"
         android:hint="@string/login_password"
+        android:importantForAutofill="noExcludeDescendants"
         android:inputType="textPassword"
         android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_email"
-        app:layout_constraintVertical_bias="0.0"
-        android:importantForAutofill="noExcludeDescendants" />
-
-    <Button
-        android:id="@+id/login_confirm"
-        android:layout_width="207dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="22dp"
-        android:backgroundTint="?colorAccent"
-        android:text="@string/login_confirm"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/login_password"
-        app:layout_constraintTop_toBottomOf="@+id/login_password"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
+        android:id="@+id/login_confirm"
+        android:layout_width="0dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#237FB5"
+        android:text="@string/login_confirm"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_password"
+        app:layout_constraintVertical_bias="0.045" />
+
+    <Button
         android:id="@+id/login_register"
-        android:layout_width="292dp"
-        android:layout_height="59dp"
-        android:layout_marginTop="120dp"
+        android:layout_width="148dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="?android:panelBackground"
         android:shadowRadius="0"
         android:text="@string/login_register"
-        android:textColor="?colorAccent"
-        android:textSize="20sp"
+        android:textColor="#237FB5"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/login_confirm"
-        app:layout_constraintTop_toBottomOf="@+id/login_password"
-        app:layout_constraintVertical_bias="0.0"
-        app:strokeColor="?colorAccent"
-        app:strokeWidth="4dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/login_forgot_password"
+        app:layout_constraintTop_toBottomOf="@+id/login_confirm"
+        app:layout_constraintVertical_bias="0.111"
+        app:strokeColor="#237FB5"
+        app:strokeWidth="2dp" />
 
     <TextView
         android:id="@+id/login_forgot_password"
@@ -94,8 +110,10 @@
         android:text="@string/loginForgotPassword"
         android:textAllCaps="false"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/login_confirm"
-        app:layout_constraintEnd_toEndOf="@+id/login_password"
-        app:layout_constraintTop_toTopOf="@+id/login_confirm" />
+        app:layout_constraintBottom_toBottomOf="@+id/login_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/login_register" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

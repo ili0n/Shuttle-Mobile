@@ -2,8 +2,8 @@
     <string name="app_name">ShuttleMobile</string>
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
-    <string name="login_confirm">Login</string>
-    <string name="login_register">Create Account</string>
+    <string name="login_confirm">Sign Up</string>
+    <string name="login_register">Sign Up</string>
     <string name="driver_active">Active</string>
     <string name="driver_inactive">Inactive</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -21,7 +21,7 @@
     <string name="ridePassengers">Passengers</string>
     <string name="rideOpenChat">Open Chat</string>
     <string name="rideRoute">Route</string>
-    <string name="login">Login</string>
+    <string name="login">Sign In</string>
     <string name="loginForgotPassword">Forgot Password?</string>
     <string name="contentDescPfp">Profile Picture</string>
     <string name="openReviews">Open Reviews</string>
