@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.inbox;
+package com.example.shuttlemobile.depricated;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.inbox.ChatActivity;
+import com.example.shuttlemobile.inbox.ContactClickListener;
+import com.example.shuttlemobile.inbox.ContactsAdapter;
+import com.example.shuttlemobile.inbox.MockDataProvider;
 
 public class InboxActivity extends AppCompatActivity implements ContactClickListener {
     String[] usernames;

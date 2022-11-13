@@ -39,6 +39,16 @@
     <string name="register">Register</string>
     <string name="registerTitle">Make account</string>
 
+    <string name="driverLicence">Driver Licence:</string>
+    <string name="driverLicenceData">12345678</string>
+    <string name="licencePlate">Licence plate:</string>
+    <string name="licencePlateData">AA 111 BB</string>
+    <string name="spots">Spots:</string>
+    <string name="spotsData">4</string>
+    <string name="model">Model:</string>
+    <string name="modelData">Golf 7</string>
+    <string name="baby">Babies:</string>
+    <string name="babyData">no</string>
 
 
 
