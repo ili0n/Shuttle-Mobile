@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.reports.PassengerPastRidesReport;
 import com.example.shuttlemobile.route.FavouriteRoutesActivity;
 
 public class PassengerAccountFragment extends Fragment {
@@ -96,6 +97,13 @@ public class PassengerAccountFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), FavouriteRoutesActivity.class));
+            }
+        });
+
+        btnReports.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), PassengerPastRidesReport.class));
             }
         });
     }
