@@ -75,10 +75,10 @@ public class PassengerRideHistoryFragment extends Fragment {
                 }
 
                 Ride obj = (Ride)getItem(i);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
 
                 TextView tvStart = vi.findViewById(R.id.start);
-                TextView tvEnd = vi.findViewById(R.id.end);
+                //TextView tvEnd = vi.findViewById(R.id.end);
                 ImageView ivBaby = vi.findViewById(R.id.baby);
                 ImageView ivPets = vi.findViewById(R.id.pets);
                 ImageView ivFair = vi.findViewById(R.id.fair);
@@ -86,12 +86,20 @@ public class PassengerRideHistoryFragment extends Fragment {
                 TextView tvEvaluatedTime = vi.findViewById(R.id.evaluatedTime);
 
                 tvStart.setText(obj.getStart().format(formatter));
-                tvEnd.setText(obj.getFinish().format(formatter));
+                //tvEnd.setText(obj.getFinish().format(formatter));
                 ivBaby.setVisibility(obj.isHasBaby() ? View.VISIBLE: View.INVISIBLE);
                 ivPets.setVisibility(obj.isHasPets() ? View.VISIBLE: View.INVISIBLE);
                 ivFair.setVisibility(obj.getPassengers().size() > 1 ? View.VISIBLE: View.INVISIBLE);
                 tvPrice.setText(Double.toString(obj.getPrice()) + " RSD");
-                tvEvaluatedTime.setText(obj.getEstimation().format(DateTimeFormatter.ofPattern("HH:mm")));
+                tvEvaluatedTime.setText(obj.getEstimation().format(DateTimeFormatter.ofPattern("H:mm")));
+
+                boolean odd = i % 2 == 1;
+
+                if (odd) {
+                    vi.setBackgroundColor(getResources().getColor(R.color.lightGray1));
+                } else {
+                    vi.setBackgroundColor(getResources().getColor(R.color.lightGray2));
+                }
 
                 return vi;
             }

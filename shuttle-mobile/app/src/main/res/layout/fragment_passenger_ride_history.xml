@@ -9,7 +9,8 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/passenger_history_list">
+        android:id="@+id/passenger_history_list"
+        android:padding="2dp">
 
 
     </ListView>
