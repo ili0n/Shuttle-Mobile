@@ -94,7 +94,6 @@ public class PassengerRideHistoryFragment extends Fragment {
                 tvEvaluatedTime.setText(obj.getEstimation().format(DateTimeFormatter.ofPattern("H:mm")));
 
                 boolean odd = i % 2 == 1;
-
                 if (odd) {
                     vi.setBackgroundColor(getResources().getColor(R.color.lightGray1));
                 } else {
