@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.inbox.ChatActivity;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.route.Route;
@@ -71,7 +72,7 @@ public class DriverRideHistoryItemActivity extends AppCompatActivity {
 
         double review_average = 5;
         String rating_comment = /* ratings.of(ride).comment */ "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-        Object chat_ref = null;
+        Object chat_ref = new String("Not null!!!");
 
         begin.setText(ride.getStart().format(fmt));
         end.setText(ride.getFinish().format(fmt));
@@ -150,7 +151,11 @@ public class DriverRideHistoryItemActivity extends AppCompatActivity {
             chat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Intent intent = new Intent(DriverRideHistoryItemActivity.this, ChatActivity.class);
+                    Bundle b = new Bundle();
+                    b.putStringArray("messages", getResources().getStringArray(R.array.messages));
+                    intent.putExtras(b);
+                    startActivity(intent);
                 }
             });
         }

@@ -81,6 +81,13 @@ public class DriverRideHistoryFragment extends Fragment {
                 userCount.setText(Integer.toString(obj.getPassengers().size()));
                 price.setText(Double.toString(obj.getPrice()) + " RSD");
 
+                boolean odd = i % 2 == 1;
+                if (odd) {
+                    vi.setBackgroundColor(getResources().getColor(R.color.lightGray1));
+                } else {
+                    vi.setBackgroundColor(getResources().getColor(R.color.lightGray2));
+                }
+
                 return vi;
             }
         });
