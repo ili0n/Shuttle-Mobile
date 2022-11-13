@@ -27,7 +27,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".route.FavouriteRoutesActivity"
+            android:name=".passenger.PassengerRegisterActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".passenger.PassengerRegisterActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
