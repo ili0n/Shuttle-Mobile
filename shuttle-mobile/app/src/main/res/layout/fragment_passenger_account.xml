@@ -24,109 +24,180 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.1" />
 
-        <TextView
-            android:id="@+id/userNameLabel"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Name: "
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-        <TextView
-            android:id="@+id/nameValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Name value"
-            app:layout_constraintHorizontal_weight="1"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
-            app:layout_constraintStart_toEndOf="@+id/userNameLabel" />
+            tools:layout_editor_absoluteX="25dp">
 
+            <TextView
+                android:id="@+id/userNameLabel"
+                style="@style/AccountInfoText"
+                android:text="Name: " />
 
-        <TextView
-            android:id="@+id/surnameLabel"
-            android:layout_width="0dp"
+            <EditText
+                android:id="@+id/nameValue"
+                style="@style/AccountInfoText"
+                android:hint="Name value"
+                android:enabled="false"/>
+
+            <ImageView
+                android:id="@+id/nameEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pen" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Surname: "
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userNameLabel" />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            tools:layout_editor_absoluteX="25dp">
 
-        <TextView
-            android:id="@+id/surnameValue"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/surnameLabel"
+                style="@style/AccountInfoText"
+                android:text="Surname: " />
+
+            <EditText
+                android:id="@+id/surnameValue"
+                style="@style/AccountInfoText"
+                android:hint="Surname value"
+                android:enabled="false"/>
+            <ImageView
+                android:id="@+id/surnameEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pen" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Surname value"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/surnameLabel"
-            app:layout_constraintTop_toBottomOf="@+id/nameValue" />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+            tools:layout_editor_absoluteX="25dp">
+
+            <TextView
+                android:id="@+id/phoneLabel"
+                style="@style/AccountInfoText"
+                android:text="Phone: " />
+
+            <EditText
+                android:id="@+id/phoneValue"
+                style="@style/AccountInfoText"
+                android:hint="Phone value"
+                android:enabled="false"/>
+
+            <ImageView
+                android:id="@+id/phoneEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pen" />
+        </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/phoneLabel"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Phone: "
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/surnameLabel" />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+            tools:layout_editor_absoluteX="25dp">
 
-        <TextView
-            android:id="@+id/phoneValue"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/emailLabel"
+                style="@style/AccountInfoText"
+                android:text="Email: " />
+
+            <EditText
+                android:id="@+id/emailValue"
+                style="@style/AccountInfoText"
+                android:hint="Email value"
+                android:enabled="false"
+                />
+
+            <ImageView
+                android:id="@+id/emailEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pen" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout6"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Phone value"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/phoneLabel"
-            app:layout_constraintTop_toBottomOf="@+id/surnameValue" />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+            tools:layout_editor_absoluteX="25dp">
 
+            <TextView
+                android:id="@+id/addressLabel"
+                style="@style/AccountInfoText"
+                android:text="Address: " />
 
-        <TextView
-            android:id="@+id/emailLabel"
-            android:layout_width="0dp"
+            <EditText
+                android:id="@+id/addressValue"
+                style="@style/AccountInfoText"
+                android:enabled="false"
+                android:hint="Address value" />
+
+            <ImageView
+                android:id="@+id/addressEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pen" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSavePassenger"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Email: "
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phoneLabel" />
+            android:text="Save"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+            tools:layout_editor_absoluteX="25dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
-        <TextView
-            android:id="@+id/emailValue"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Email value"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/emailLabel"
-            app:layout_constraintTop_toBottomOf="@+id/phoneValue" />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/btnSavePassenger"
+            tools:layout_editor_absoluteX="25dp"
+            android:weightSum="2"
+            android:padding="5sp">
+
+            <Button
+                android:id="@+id/btnFavouriteRoutes"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Favourite routes"
+                android:layout_gravity="center"
+                android:layout_margin="5sp"/>
+            <Button
+                android:id="@+id/btnReports"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Reports"
+                android:layout_gravity="center"
+                android:layout_margin="5sp"/>
 
 
-        <TextView
-            android:id="@+id/addressLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Address: "
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailLabel" />
 
-        <TextView
-            android:id="@+id/addressValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Address value"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/addressLabel"
-            app:layout_constraintTop_toBottomOf="@+id/emailValue" />
-
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

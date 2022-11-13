@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/routeListItem"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10sp">
+
+    <TextView
+        android:id="@+id/routeListItemDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5sp"
+        android:text="Hello"
+        />
+    <TextView
+        android:id="@+id/routeListItemStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5sp"
+        android:text="Hello"
+        />
+    <TextView
+        android:id="@+id/routeListItemEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello"
+        android:padding="5sp"
+        />
+    <TextView
+        android:id="@+id/routeListItemTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello"
+        android:padding="5sp"
+        />
+    <TextView
+        android:id="@+id/routeListItemPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello"
+        android:padding="5sp"
+        />
+
+</LinearLayout>
