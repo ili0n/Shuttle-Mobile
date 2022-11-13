@@ -50,6 +50,39 @@
     <string name="baby">Babies:</string>
     <string name="babyData">no</string>
 
+    <string name="messageInputHint">Message</string>
+    <string name="driver_ride_history_item_end">12/12/2022 11:59</string>
+    <string name="driver_ride_history_item_price">138,00 RSD</string>
+    <string name="driver_ride_history_item_distance">1.2 km</string>
+    <string name="driver_ride_history_item_open_ratings">Rating 4.5/5</string>
+
+    <string name="selectStartTimeLabel">Select start time</string>
+    <string name="etStartDate">Start date</string>
+    <string name="etStartTime">Start time</string>
+    <string name="selectEndTimeLabel">Select end time</string>
+    <string name="etEndDate">End date</string>
+    <string name="etEndTime">End time</string>
+    <string name="btnPreviewPassengerPastRidesReport"> Show report</string>
+    <string name="userNameLabel"> Name: </string>
+    <string name="nameValue"> Name value</string>
+    <string name="surnameLabel">  Surname:</string>
+    <string name="surnameValue">  Surname value</string>
+    <string name="phoneLabel"> Phone: </string>
+    <string name="phoneValue">Phone value</string>
+    <string name="emailLabel"> Email: </string>
+    <string name="emailValue">Email value</string>
+    <string name="addressLabel"> Address: </string>
+    <string name="addressValue"> Address value</string>
+    <string name="btnSavePassenger"> Save </string>
+    <string name="favouriteRoutes"> Favourite routes </string>
+    <string name="reports"> Reports </string>
+    <string name="passengerProfilePicture"> Profile picture</string>
+
+    <string name="pets"> Pets</string>
+    <string name="splitFare"> Split fare</string>
+
+
+
 
 
     <string-array name="usernames">

@@ -28,7 +28,7 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:src="@drawable/baby"
-        android:contentDescription="baby"
+        android:contentDescription="@string/baby"
         android:layout_gravity="center"
         android:padding="5sp"/>
     <ImageView
@@ -37,7 +37,7 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:src="@drawable/pets"
-        android:contentDescription="pets"
+        android:contentDescription="@string/pets"
         android:layout_gravity="center"
         android:padding="5sp"/>
     <ImageView
@@ -46,7 +46,7 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:src="@drawable/fair"
-        android:contentDescription="fair"
+        android:contentDescription="@string/splitFare"
         android:layout_gravity="center"
         android:padding="5sp"/>
 

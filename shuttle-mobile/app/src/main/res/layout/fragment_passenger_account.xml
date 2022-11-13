@@ -11,11 +11,11 @@
         android:paddingHorizontal="25sp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/passengerProfilePicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="Profile picture"
+            android:contentDescription="@string/passengerProfilePicture"
             android:padding="7sp"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -29,18 +29,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/passengerProfilePicture"
             tools:layout_editor_absoluteX="25dp">
 
             <TextView
                 android:id="@+id/userNameLabel"
                 style="@style/AccountInfoText"
-                android:text="Name: " />
+                android:text="@string/userNameLabel" />
 
             <EditText
                 android:id="@+id/nameValue"
                 style="@style/AccountInfoText"
-                android:hint="Name value"
+                android:hint="@string/nameValue"
                 android:enabled="false"/>
 
             <ImageView
@@ -62,12 +62,12 @@
             <TextView
                 android:id="@+id/surnameLabel"
                 style="@style/AccountInfoText"
-                android:text="Surname: " />
+                android:text="@string/surnameLabel" />
 
             <EditText
                 android:id="@+id/surnameValue"
                 style="@style/AccountInfoText"
-                android:hint="Surname value"
+                android:hint="@string/surnameValue"
                 android:enabled="false"/>
             <ImageView
                 android:id="@+id/surnameEdit"
@@ -87,12 +87,12 @@
             <TextView
                 android:id="@+id/phoneLabel"
                 style="@style/AccountInfoText"
-                android:text="Phone: " />
+                android:text="@string/phoneLabel" />
 
             <EditText
                 android:id="@+id/phoneValue"
                 style="@style/AccountInfoText"
-                android:hint="Phone value"
+                android:hint="@string/phoneValue"
                 android:enabled="false"/>
 
             <ImageView
@@ -114,12 +114,12 @@
             <TextView
                 android:id="@+id/emailLabel"
                 style="@style/AccountInfoText"
-                android:text="Email: " />
+                android:text="@string/emailLabel" />
 
             <EditText
                 android:id="@+id/emailValue"
                 style="@style/AccountInfoText"
-                android:hint="Email value"
+                android:hint="@string/emailValue"
                 android:enabled="false"
                 />
 
@@ -142,13 +142,13 @@
             <TextView
                 android:id="@+id/addressLabel"
                 style="@style/AccountInfoText"
-                android:text="Address: " />
+                android:text="@string/addressLabel" />
 
             <EditText
                 android:id="@+id/addressValue"
                 style="@style/AccountInfoText"
                 android:enabled="false"
-                android:hint="Address value" />
+                android:hint="@string/addressValue" />
 
             <ImageView
                 android:id="@+id/addressEdit"
@@ -162,7 +162,7 @@
             android:id="@+id/btnSavePassenger"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
+            android:text="@string/btnSavePassenger"
             android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
             tools:layout_editor_absoluteX="25dp"
@@ -183,7 +183,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Favourite routes"
+                android:text="@string/favouriteRoutes"
                 android:layout_gravity="center"
                 android:layout_margin="5sp"/>
             <Button
@@ -191,7 +191,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Reports"
+                android:text="@string/reports"
                 android:layout_gravity="center"
                 android:layout_margin="5sp"/>
 

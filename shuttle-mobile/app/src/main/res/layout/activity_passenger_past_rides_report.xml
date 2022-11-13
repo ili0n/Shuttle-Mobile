@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select start time"/>
+            android:text="@string/selectStartTimeLabel"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:id="@+id/etStartDate"
                 android:layout_width="200sp"
                 android:layout_height="wrap_content"
-                android:hint="Start date"/>
+                android:hint="@string/etStartDate"/>
         </LinearLayout>
 
         <LinearLayout
@@ -38,7 +38,7 @@
                 android:id="@+id/etStartTime"
                 android:layout_width="200sp"
                 android:layout_height="wrap_content"
-                android:hint="Start time"/>
+                android:hint="@string/etStartTime"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -52,7 +52,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select end time"/>
+            android:text="@string/selectEndTimeLabel"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                 android:id="@+id/etEndDate"
                 android:layout_width="200sp"
                 android:layout_height="wrap_content"
-                android:hint="End date"/>
+                android:hint="@string/etEndDate"/>
         </LinearLayout>
 
         <LinearLayout
@@ -73,7 +73,7 @@
                 android:id="@+id/etEndTime"
                 android:layout_width="200sp"
                 android:layout_height="wrap_content"
-                android:hint="End time"/>
+                android:hint="@string/etEndTime"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -81,7 +81,7 @@
         android:id="@+id/btnPreviewPassengerPastRidesReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show report"
+        android:text="@string/btnPreviewPassengerPastRidesReport"
         android:layout_gravity="center"
         android:layout_marginTop="30sp"/>
 
