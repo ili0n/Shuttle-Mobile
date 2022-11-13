@@ -206,28 +206,15 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSavePassenger" />
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/btnSavePassenger"
-            tools:layout_editor_absoluteX="25dp"
-            android:weightSum="2"
-            android:padding="5sp">
 
-            <Button
-                android:id="@+id/btnFavouriteRoutes"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/favouriteRoutes"
-                android:layout_gravity="center"
-                android:layout_margin="5sp"/>
-            <Button
-                android:id="@+id/btnReports"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/reports"
-                android:layout_gravity="center"
-                android:layout_margin="5sp"/>
+<!--            <Button-->
+<!--                android:id="@+id/btnReports"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="@string/reports"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_margin="5sp"/>-->
 
 
         <Button
