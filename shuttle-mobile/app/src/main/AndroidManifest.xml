@@ -13,6 +13,13 @@
         android:theme="@style/Theme.ShuttleMobile"
         tools:targetApi="31">
         <activity
+            android:name=".route.FavouriteRoutesActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".driver.DriverReviewActivity"
             android:exported="false">
             <meta-data

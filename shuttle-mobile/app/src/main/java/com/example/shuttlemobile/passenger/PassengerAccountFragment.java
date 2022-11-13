@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.passenger;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.route.FavouriteRoutesActivity;
 
 public class PassengerAccountFragment extends Fragment {
     private ImageView addressEditImage;
@@ -23,7 +25,9 @@ public class PassengerAccountFragment extends Fragment {
     private ImageView phoneEditImage;
     private ImageView emailEditImage;
     private Button btnSavePassenger;
-    
+    private Button btnFavouriteRoutes;
+    private Button btnReports;
+
     private Passenger passenger = new Passenger(123, "Pera", "Peric",
             "0642314", "pera@gmail.com", "perica123", false,
             "Sime simica 10");
@@ -68,6 +72,7 @@ public class PassengerAccountFragment extends Fragment {
         surnameEditImage.setOnClickListener(new EditImageListener(view, R.id.surnameValue));
         phoneEditImage.setOnClickListener(new EditImageListener(view, R.id.phoneValue));
         emailEditImage.setOnClickListener(new EditImageListener(view, R.id.emailValue));
+
         btnSavePassenger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View btn) {
@@ -84,6 +89,13 @@ public class PassengerAccountFragment extends Fragment {
                 etPhone.setEnabled(false);
 
                 btnSavePassenger.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        btnFavouriteRoutes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), FavouriteRoutesActivity.class));
             }
         });
     }
@@ -103,6 +115,8 @@ public class PassengerAccountFragment extends Fragment {
         etPhone = view.findViewById(R.id.phoneValue);
         etEmail = view.findViewById(R.id.emailValue);
         btnSavePassenger = view.findViewById(R.id.btnSavePassenger);
+        btnFavouriteRoutes = view.findViewById(R.id.btnFavouriteRoutes);
+        btnReports = view.findViewById(R.id.btnReports);
     }
 
     private void initImageViews(View view) {
