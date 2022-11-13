@@ -99,7 +99,7 @@
             app:layout_constraintTop_toBottomOf="@+id/addressValue" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/passengerProfilePicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -120,7 +120,7 @@
             android:text="Name: "
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/passengerProfilePicture" />
 
         <TextView
             android:id="@+id/nameValue"
@@ -130,7 +130,7 @@
             android:text="Name value"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/userNameLabel"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/passengerProfilePicture" />
 
 
         <TextView
@@ -232,7 +232,7 @@
             android:text="Driver"
             android:textAllCaps="true"
             android:textSize="34sp"
-            app:layout_constraintBottom_toTopOf="@+id/imageView"
+            app:layout_constraintBottom_toTopOf="@+id/passengerProfilePicture"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
