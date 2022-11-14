@@ -48,7 +48,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="3"
+                android:text="@string/spotsData"
                 app:layout_constraintStart_toEndOf="@+id/accountSpots"
                 app:layout_constraintTop_toBottomOf="@+id/accountModelValue" />
 
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:padding="7sp"
-                android:text="AB-123-DEF"
+                android:text="@string/licencePlateData"
                 app:layout_constraintStart_toEndOf="@+id/accountPlate"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -98,7 +98,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="Auto 123"
+                android:text="@string/modelData"
                 app:layout_constraintStart_toEndOf="@+id/accountModel"
                 app:layout_constraintTop_toBottomOf="@+id/accountplateData" />
 
@@ -107,7 +107,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="1232728192"
+                android:text="@string/driverLicenceData"
                 android:textColor="#FFFFFF"
                 app:layout_constraintStart_toEndOf="@+id/accountLicence"
                 app:layout_constraintTop_toBottomOf="@+id/addressValue" />
@@ -125,7 +125,8 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/icarus" />
 
             <TextView
                 android:id="@+id/userNameLabel"
@@ -133,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:padding="7sp"
-                android:text="Name: "
+                android:text="@string/driverName"
                 android:textColor="#FFFFFF"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="@+id/textView2"
@@ -144,7 +145,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="John"
+                android:text="@string/driverNameData"
                 android:textColor="#FFFFFF"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/userNameLabel"
@@ -156,7 +157,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="Surname: "
+                android:text="@string/driverSurname"
                 android:textColor="#FFFFFF"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="@+id/userNameLabel"
@@ -167,7 +168,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="Doe"
+                android:text="@string/driverSurnameData"
                 android:textColor="#FFFFFF"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/surnameLabel"
@@ -179,7 +180,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="Phone: "
+                android:text="@string/driverPhone"
                 android:textColor="#FFFFFF"
                 app:layout_constraintStart_toStartOf="@+id/surnameLabel"
                 app:layout_constraintTop_toBottomOf="@+id/surnameLabel" />
@@ -189,7 +190,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="+0 123 456789"
+                android:text="@string/driverPhoneData"
                 android:textColor="#FFFFFF"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/phoneLabel"
@@ -201,7 +202,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="Email: "
+                android:text="@string/driverEmail"
                 android:textColor="#FFFFFF"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="@+id/phoneLabel"
@@ -212,7 +213,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="driver@gmail.com"
+                android:text="@string/driverEmailData"
                 android:textColor="#FFFFFF"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/emailLabel"
@@ -224,7 +225,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="Address: "
+                android:text="@string/address"
                 android:textColor="#FFFFFF"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="@+id/emailLabel"
@@ -246,7 +247,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="7sp"
-                android:text="123 Street Ville"
+                android:text="@string/driverAddressData"
                 android:textColor="#FFFFFF"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/addressLabel"
