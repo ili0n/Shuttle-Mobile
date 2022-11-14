@@ -24,13 +24,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/accountBabyValue"
+            android:id="@+id/accoutBabyData"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="7sp"
             android:text="@string/yes"
             app:layout_constraintStart_toEndOf="@+id/accountBaby"
-            app:layout_constraintTop_toBottomOf="@+id/accountSpotsValue" />
+            app:layout_constraintTop_toBottomOf="@+id/accountSpotsData" />
 
         <TextView
             android:id="@+id/accountBaby"
@@ -43,7 +43,7 @@
             app:layout_constraintTop_toBottomOf="@+id/accountSpots" />
 
         <TextView
-            android:id="@+id/accountSpotsValue"
+            android:id="@+id/accountSpotsData"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="7sp"
@@ -62,7 +62,7 @@
             app:layout_constraintTop_toBottomOf="@+id/accountModel" />
 
         <TextView
-            android:id="@+id/accountplateValue"
+            android:id="@+id/accountplateData"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -99,10 +99,10 @@
             android:padding="7sp"
             android:text="Auto 123"
             app:layout_constraintStart_toEndOf="@+id/accountModel"
-            app:layout_constraintTop_toBottomOf="@+id/accountplateValue" />
+            app:layout_constraintTop_toBottomOf="@+id/accountplateData" />
 
         <TextView
-            android:id="@+id/accountLicenceValue"
+            android:id="@+id/accountLicenceData"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="7sp"
@@ -148,7 +148,7 @@
             android:textColor="#FFFFFF"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/userNameLabel"
-            app:layout_constraintTop_toBottomOf="@+id/driverProfilePic" />
+            app:layout_constraintTop_toBottomOf="@+id/passengerProfilePicture" />
 
 
         <TextView
