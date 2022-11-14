@@ -39,6 +39,12 @@
     <string name="register">Register</string>
     <string name="registerTitle">Make Account</string>
 
+
+    <string name="driverNameData">Icarus</string>
+    <string name="driverSurnameData">Doe</string>
+    <string name="driverPhoneData">+381 60 123456</string>
+    <string name="driverEmailData">driver@gmail.com</string>
+    <string name="driverAddressData">212b Bakers Street</string>
     <string name="driverLicence">Driver Licence:</string>
     <string name="driverLicenceData">12345678</string>
     <string name="licencePlate">Licence plate:</string>
@@ -49,6 +55,11 @@
     <string name="modelData">Golf 7</string>
     <string name="baby">Babies:</string>
     <string name="babyData">no</string>
+    <string name="driverAddress">Address:</string>
+    <string name="driverEmail">Email:</string>
+    <string name="driverPhone">Phone:</string>
+    <string name="driverSurname">Surname:</string>
+    <string name="driverName">Name:</string>
 
     <string name="messageInputHint">Message</string>
     <string name="driver_ride_history_item_end">12/12/2022 11:59</string>
