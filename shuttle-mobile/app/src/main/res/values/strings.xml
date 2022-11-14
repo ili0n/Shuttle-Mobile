@@ -43,7 +43,7 @@
     <string name="driverLicenceData">12345678</string>
     <string name="licencePlate">Licence plate:</string>
     <string name="licencePlateData">AA 111 BB</string>
-    <string name="spots">Spots:</string>
+    <string name="spots">Seats:</string>
     <string name="spotsData">4</string>
     <string name="model">Model:</string>
     <string name="modelData">Golf 7</string>
@@ -80,9 +80,7 @@
 
     <string name="pets"> Pets</string>
     <string name="splitFare"> Split fare</string>
-
-
-
+    <string name="yes">Yes</string>
 
 
     <string-array name="usernames">

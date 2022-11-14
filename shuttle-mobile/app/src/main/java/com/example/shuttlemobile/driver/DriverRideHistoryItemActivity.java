@@ -64,7 +64,6 @@ public class DriverRideHistoryItemActivity extends AppCompatActivity {
         //TextView rating = findViewById(R.id.driver_ride_history_item_rating);
         //TextView comment = findViewById(R.id.driver_ride_history_item_comment);
         Button openReviews = findViewById(R.id.driver_ride_history_item_open_ratings);
-        Button chat = findViewById(R.id.driver_ride_history_item_inbox);
         ListView routes = findViewById(R.id.driver_ride_history_item_routes);
         ListView passengers = findViewById(R.id.driver_ride_history_item_passengers);
 
@@ -144,21 +143,6 @@ public class DriverRideHistoryItemActivity extends AppCompatActivity {
                 startActivity(in);
             }
         });
-
-        if (chat_ref == null) {
-            chat.setEnabled(false);
-        } else {
-            chat.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(DriverRideHistoryItemActivity.this, ChatActivity.class);
-                    Bundle b = new Bundle();
-                    b.putStringArray("messages", getResources().getStringArray(R.array.messages));
-                    intent.putExtras(b);
-                    startActivity(intent);
-                }
-            });
-        }
 
         routes.setAdapter(new BaseAdapter() {
             @Override

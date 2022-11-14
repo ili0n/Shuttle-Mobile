@@ -6,250 +6,282 @@
     android:layout_height="match_parent"
     tools:context=".passenger.PassengerAccountFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="25sp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/accountBabyValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Baby value"
-            app:layout_constraintStart_toEndOf="@+id/accountBaby"
-            app:layout_constraintTop_toBottomOf="@+id/accountSpotsValue" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/accountBaby"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="@string/baby"
-            app:layout_constraintHorizontal_weight="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accountSpots" />
+            <View
+                android:id="@+id/view3"
+                android:layout_width="wrap_content"
+                android:layout_height="375dp"
+                android:background="#237FB5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/accountSpotsValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Spots value"
-            app:layout_constraintStart_toEndOf="@+id/accountSpots"
-            app:layout_constraintTop_toBottomOf="@+id/accountModelValue" />
+            <TextView
+                android:id="@+id/accoutBabyData"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="@string/yes"
+                app:layout_constraintStart_toEndOf="@+id/accountBaby"
+                app:layout_constraintTop_toBottomOf="@+id/accountSpotsData" />
 
-        <TextView
-            android:id="@+id/accountSpots"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="@string/spots"
-            app:layout_constraintHorizontal_weight="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accountModel" />
+            <TextView
+                android:id="@+id/accountBaby"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="@string/baby"
+                app:layout_constraintHorizontal_weight="0"
+                app:layout_constraintStart_toStartOf="@+id/accountSpots"
+                app:layout_constraintTop_toBottomOf="@+id/accountSpots" />
 
-        <TextView
-            android:id="@+id/accountplateValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="7sp"
-            android:text="Licence plate value"
-            app:layout_constraintStart_toEndOf="@+id/accountPlate"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            <TextView
+                android:id="@+id/accountSpotsData"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="3"
+                app:layout_constraintStart_toEndOf="@+id/accountSpots"
+                app:layout_constraintTop_toBottomOf="@+id/accountModelValue" />
 
-        <TextView
-            android:id="@+id/accountPlate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="7sp"
-            android:text="@string/licencePlate"
-            app:layout_constraintHorizontal_weight="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            <TextView
+                android:id="@+id/accountSpots"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="@string/spots"
+                app:layout_constraintHorizontal_weight="0"
+                app:layout_constraintStart_toStartOf="@+id/accountModel"
+                app:layout_constraintTop_toBottomOf="@+id/accountModel" />
 
-        <TextView
-            android:id="@+id/accountModel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="@string/model"
-            app:layout_constraintHorizontal_weight="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accountPlate" />
+            <TextView
+                android:id="@+id/accountplateData"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="7sp"
+                android:text="AB-123-DEF"
+                app:layout_constraintStart_toEndOf="@+id/accountPlate"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-        <TextView
-            android:id="@+id/accountModelValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Model value"
-            app:layout_constraintStart_toEndOf="@+id/accountModel"
-            app:layout_constraintTop_toBottomOf="@+id/accountplateValue" />
+            <TextView
+                android:id="@+id/accountPlate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="7sp"
+                android:text="@string/licencePlate"
+                app:layout_constraintHorizontal_weight="0"
+                app:layout_constraintStart_toStartOf="@+id/accountLicence"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-        <TextView
-            android:id="@+id/accountLicenceValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Licence value"
-            app:layout_constraintStart_toEndOf="@+id/accountLicence"
-            app:layout_constraintTop_toBottomOf="@+id/addressValue" />
+            <TextView
+                android:id="@+id/accountModel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="@string/model"
+                app:layout_constraintHorizontal_weight="0"
+                app:layout_constraintStart_toStartOf="@+id/accountPlate"
+                app:layout_constraintTop_toBottomOf="@+id/accountPlate" />
 
-        <ImageView
-            android:id="@+id/driverProfilePic"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="Profile picture"
-            android:padding="7sp"
-            android:src="@drawable/ic_launcher_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.1" />
+            <TextView
+                android:id="@+id/accountModelValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="Auto 123"
+                app:layout_constraintStart_toEndOf="@+id/accountModel"
+                app:layout_constraintTop_toBottomOf="@+id/accountplateData" />
 
-        <TextView
-            android:id="@+id/userNameLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Name: "
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/driverProfilePic" />
+            <TextView
+                android:id="@+id/accountLicenceData"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="1232728192"
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toEndOf="@+id/accountLicence"
+                app:layout_constraintTop_toBottomOf="@+id/addressValue" />
 
-        <TextView
-            android:id="@+id/nameValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Name value"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/userNameLabel"
-            app:layout_constraintTop_toBottomOf="@+id/driverProfilePic" />
+            <ImageView
+                android:id="@+id/driverProfilePicture"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="Profile picture"
+                android:padding="7sp"
+                android:src="@android:mipmap/sym_def_app_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintVertical_bias="0.0" />
 
+            <TextView
+                android:id="@+id/userNameLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:padding="7sp"
+                android:text="Name: "
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/driverProfilePicture" />
 
-        <TextView
-            android:id="@+id/surnameLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Surname: "
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userNameLabel" />
-
-        <TextView
-            android:id="@+id/surnameValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Surname value"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/surnameLabel"
-            app:layout_constraintTop_toBottomOf="@+id/nameValue" />
+            <TextView
+                android:id="@+id/nameValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="John"
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/userNameLabel"
+                app:layout_constraintTop_toBottomOf="@+id/driverProfilePicture" />
 
 
-        <TextView
-            android:id="@+id/phoneLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Phone: "
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/surnameLabel" />
+            <TextView
+                android:id="@+id/surnameLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="Surname: "
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="@+id/userNameLabel"
+                app:layout_constraintTop_toBottomOf="@+id/userNameLabel" />
 
-        <TextView
-            android:id="@+id/phoneValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Phone value"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/phoneLabel"
-            app:layout_constraintTop_toBottomOf="@+id/surnameValue" />
-
-
-        <TextView
-            android:id="@+id/emailLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Email: "
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phoneLabel" />
-
-        <TextView
-            android:id="@+id/emailValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Email value"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/emailLabel"
-            app:layout_constraintTop_toBottomOf="@+id/phoneValue" />
+            <TextView
+                android:id="@+id/surnameValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="Doe"
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/surnameLabel"
+                app:layout_constraintTop_toBottomOf="@+id/nameValue" />
 
 
-        <TextView
-            android:id="@+id/addressLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Address: "
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailLabel" />
+            <TextView
+                android:id="@+id/phoneLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="Phone: "
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toStartOf="@+id/surnameLabel"
+                app:layout_constraintTop_toBottomOf="@+id/surnameLabel" />
 
-        <TextView
-            android:id="@+id/accountLicence"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="@string/driverLicence"
-            app:layout_constraintHorizontal_weight="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addressLabel" />
-
-        <TextView
-            android:id="@+id/addressValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="7sp"
-            android:text="Address value"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/addressLabel"
-            app:layout_constraintTop_toBottomOf="@+id/emailValue" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Driver"
-            android:textAllCaps="true"
-            android:textSize="34sp"
-            app:layout_constraintBottom_toTopOf="@+id/driverProfilePic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="41dp"
-            android:text="Vehicle"
-            android:textAllCaps="true"
-            android:textSize="34sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accountLicenceValue" />
+            <TextView
+                android:id="@+id/phoneValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="+0 123 456789"
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/phoneLabel"
+                app:layout_constraintTop_toBottomOf="@+id/surnameValue" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/emailLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="Email: "
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="@+id/phoneLabel"
+                app:layout_constraintTop_toBottomOf="@+id/phoneLabel" />
+
+            <TextView
+                android:id="@+id/emailValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="driver@gmail.com"
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/emailLabel"
+                app:layout_constraintTop_toBottomOf="@+id/phoneValue" />
+
+
+            <TextView
+                android:id="@+id/addressLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="Address: "
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="@+id/emailLabel"
+                app:layout_constraintTop_toBottomOf="@+id/emailLabel" />
+
+            <TextView
+                android:id="@+id/accountLicence"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="@string/driverLicence"
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="0"
+                app:layout_constraintStart_toStartOf="@+id/addressLabel"
+                app:layout_constraintTop_toBottomOf="@+id/addressLabel" />
+
+            <TextView
+                android:id="@+id/addressValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="7sp"
+                android:text="123 Street Ville"
+                android:textColor="#FFFFFF"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/addressLabel"
+                app:layout_constraintTop_toBottomOf="@+id/emailValue" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Driver"
+                android:textAllCaps="true"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/view3" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Vehicle"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/accountLicenceData" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 </FrameLayout>
