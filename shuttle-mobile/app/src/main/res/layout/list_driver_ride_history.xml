@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
-        android:id="@+id/passengerProfilePicture"
+        android:id="@+id/driverProfilePicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#237FB5"
@@ -61,8 +61,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/passengerProfilePicture"
-        app:layout_constraintTop_toTopOf="@+id/passengerProfilePicture"
+        app:layout_constraintStart_toEndOf="@+id/driverProfilePicture"
+        app:layout_constraintTop_toTopOf="@+id/driverProfilePicture"
         app:layout_constraintVertical_bias="0.496" />
 
     <TextView
