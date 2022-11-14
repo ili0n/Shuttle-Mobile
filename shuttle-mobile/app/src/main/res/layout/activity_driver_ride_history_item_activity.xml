@@ -14,17 +14,6 @@
         tools:context=".driver.DriverRideHistoryItemActivity">
 
         <ImageView
-            android:id="@+id/imageView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="128dp"
-            android:background="#202020"
-            android:src="@drawable/ic_baseline_message_24"
-            app:layout_constraintStart_toStartOf="@+id/imageView6"
-            app:layout_constraintTop_toBottomOf="@+id/imageView6"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,16 +62,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/driver_ride_history_item_lbl_1"
             app:layout_constraintTop_toTopOf="@+id/driver_ride_history_item_lbl_1" />
-
-        <Button
-            android:id="@+id/driver_ride_history_item_inbox"
-            android:layout_width="91dp"
-            android:layout_height="48dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/rideOpenChat"
-            app:layout_constraintStart_toStartOf="@+id/driver_ride_history_item_lbl_3"
-            app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
         <TextView
             android:id="@+id/driver_ride_history_item_lbl_2"
@@ -197,11 +176,11 @@
             android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="32dp"
             android:background="#292929"
             android:src="@drawable/ic_baseline_route_24"
-            app:layout_constraintStart_toStartOf="@+id/imageView9"
-            app:layout_constraintTop_toBottomOf="@+id/imageView9"
+            app:layout_constraintStart_toStartOf="@+id/imageView6"
+            app:layout_constraintTop_toBottomOf="@+id/driver_ride_history_item_passengers"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -210,7 +189,7 @@
             android:layout_height="wrap_content"
             android:text="@string/rideRoute"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/driver_ride_history_item_inbox"
+            app:layout_constraintStart_toStartOf="@+id/driver_ride_history_item_lbl_3"
             app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
         <ListView
@@ -224,7 +203,7 @@
         <ListView
             android:id="@+id/driver_ride_history_item_passengers"
             android:layout_width="216dp"
-            android:layout_height="146dp"
+            android:layout_height="64dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/driver_ride_history_item_lbl_3"
             app:layout_constraintTop_toTopOf="@+id/driver_ride_history_item_lbl_3" />

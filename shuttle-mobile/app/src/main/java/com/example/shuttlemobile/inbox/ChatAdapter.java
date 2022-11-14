@@ -45,16 +45,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapterViewHolder> {
             Log.println(Log.ASSERT,"msg0",message);
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(layout);
-            constraintSet.connect(R.id.chat_message,ConstraintSet.RIGHT,R.id.chat_layout,ConstraintSet.RIGHT,5);
+            constraintSet.connect(R.id.chat_message,ConstraintSet.RIGHT,R.id.chat_layout,ConstraintSet.RIGHT,25);
             constraintSet.applyTo(layout);
         }
         else {
             Log.println(Log.ASSERT,"msg1",message);
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(layout);
-            constraintSet.connect(R.id.chat_message,ConstraintSet.LEFT,R.id.chat_layout,ConstraintSet.LEFT,5);
+            constraintSet.connect(R.id.chat_message,ConstraintSet.LEFT,R.id.chat_layout,ConstraintSet.LEFT,25);
             constraintSet.applyTo(layout);
-            holder.message.setBackgroundColor(context.getColor(R.color.teal_700));
+            holder.message.setBackgroundColor(context.getColor(R.color.purple_200));
         }
     }
 
