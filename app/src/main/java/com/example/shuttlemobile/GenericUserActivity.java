@@ -14,6 +14,8 @@ import android.view.MenuItem;
  * </p>
  * <p>
  *     Override <b>toolbarOnItemClick()</b> for custom toolbar events.
+ *     <br/>
+ *     Override <b>onCreateOptionsMenu()</b> to add toolbar buttons from a menu resource.
  * </p>
  */
 public class GenericUserActivity extends AppCompatActivity {
@@ -31,6 +33,7 @@ public class GenericUserActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setOnMenuItemClickListener(item -> toolbarOnItemClick(item));
+        getSupportActionBar().setTitle("");
     }
 
     @Override
