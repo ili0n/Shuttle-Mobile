@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".passenger.PassengerActivity">
 
-    <include layout="@layout/toolbar" />
+    <include android:id="@+id/passenger_toolbar" layout="@layout/toolbar" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/passenger_fragment_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passenger_toolbar"
+        android:name="com.example.shuttlemobile.BlankFragment"
+        tools:layout="@layout/fragment_blank"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

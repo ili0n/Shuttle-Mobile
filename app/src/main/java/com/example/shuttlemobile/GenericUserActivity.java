@@ -2,6 +2,9 @@ package com.example.shuttlemobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -16,9 +19,12 @@ import android.view.MenuItem;
  *     Override <b>toolbarOnItemClick()</b> for custom toolbar events.
  *     <br/>
  *     Override <b>onCreateOptionsMenu()</b> to add toolbar buttons from a menu resource.
+ *     <br/>
+ *     Override <b>getFragmentFrameId()</b> to identify the fragment frame for your activity.
  * </p>
  */
-public class GenericUserActivity extends AppCompatActivity {
+public abstract class GenericUserActivity extends AppCompatActivity {
+    private final String STACK_FRAGMENTS = "UserActivityFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,5 +56,30 @@ public class GenericUserActivity extends AppCompatActivity {
     protected boolean toolbarOnItemClick(MenuItem item) {
         final int itemId = item.getItemId();
         return false;
+    }
+
+    /**
+     * @return The ID of this activity's fragment frame.
+     */
+    protected abstract int getFragmentFrameId();
+    
+    protected final void setVisibleFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setReorderingAllowed(true)
+                .replace(getFragmentFrameId(), fragment);
+        fragmentTransaction.addToBackStack(STACK_FRAGMENTS);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack(STACK_FRAGMENTS, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
