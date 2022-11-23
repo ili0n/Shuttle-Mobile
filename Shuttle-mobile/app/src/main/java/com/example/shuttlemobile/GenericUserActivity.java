@@ -26,7 +26,6 @@ import java.util.Map;
  *     <br/>
  *     Override <b>onCreateOptionsMenu()</b> to add toolbar buttons from a menu resource.
  *     <br/>
- *     Override <b>getFragmentFrameId()</b> to identify the fragment frame for your activity.
  * </p>
  */
 public abstract class GenericUserActivity extends AppCompatActivity {
