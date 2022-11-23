@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.shuttlemobile.GenericUserActivity;
+import com.example.shuttlemobile.user.GenericUserActivity;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.passenger.fragments.PassengerAccount;
 import com.example.shuttlemobile.passenger.fragments.PassengerHistory;
 import com.example.shuttlemobile.passenger.fragments.PassengerHome;
-import com.example.shuttlemobile.inbox.fragments.InboxFragment;
+import com.example.shuttlemobile.user.InboxFragment;
 
 public class PassengerActivity extends GenericUserActivity {
 
@@ -35,14 +35,13 @@ public class PassengerActivity extends GenericUserActivity {
 
         if (f != null) {
             setVisibleFragment(f);
-
         }
 
         return false;
     }
 
     @Override
-    public int getFragmentFrameId() {
+    protected int getFragmentFrameId() {
         return R.id.passenger_fragment_frame;
     }
 

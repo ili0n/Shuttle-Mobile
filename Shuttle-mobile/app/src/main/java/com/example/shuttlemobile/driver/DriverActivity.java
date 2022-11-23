@@ -1,18 +1,17 @@
 package com.example.shuttlemobile.driver;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.shuttlemobile.GenericUserActivity;
+import com.example.shuttlemobile.user.GenericUserActivity;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.fragments.DriverAccount;
 import com.example.shuttlemobile.driver.fragments.DriverHistory;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
-import com.example.shuttlemobile.inbox.fragments.InboxFragment;
+import com.example.shuttlemobile.user.InboxFragment;
 
 public class DriverActivity extends GenericUserActivity {
 
@@ -36,7 +35,6 @@ public class DriverActivity extends GenericUserActivity {
 
         if (f != null) {
             setVisibleFragment(f);
-
         }
 
         return false;
@@ -49,12 +47,10 @@ public class DriverActivity extends GenericUserActivity {
 
     @Override
     protected void initializeFragmentMap() {
-
         fragments.put(R.id.toolbar_home, DriverHome.newInstance());
         fragments.put(R.id.toolbar_history, DriverHistory.newInstance());
         fragments.put(R.id.toolbar_inbox, InboxFragment.newInstance());
         fragments.put(R.id.toolbar_account, DriverAccount.newInstance());
-
     }
 
     @Override

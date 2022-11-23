@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.inbox.fragments;
+package com.example.shuttlemobile.user;
 
 import android.os.Bundle;
 

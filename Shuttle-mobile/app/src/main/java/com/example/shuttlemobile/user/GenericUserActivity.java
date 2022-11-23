@@ -1,4 +1,4 @@
-package com.example.shuttlemobile;
+package com.example.shuttlemobile.user;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.shuttlemobile.R;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
