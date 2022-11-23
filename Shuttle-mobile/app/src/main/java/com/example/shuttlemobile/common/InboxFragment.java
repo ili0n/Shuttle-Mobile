@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.user;
+package com.example.shuttlemobile.common;
 
 import android.os.Bundle;
 
@@ -9,10 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.driver.fragments.DriverHome;
 
 public class InboxFragment extends Fragment {
-    public static InboxFragment newInstance() {
-        return new InboxFragment();
+    public static InboxFragment newInstance(SessionContext session) {
+        InboxFragment fragment = new InboxFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override

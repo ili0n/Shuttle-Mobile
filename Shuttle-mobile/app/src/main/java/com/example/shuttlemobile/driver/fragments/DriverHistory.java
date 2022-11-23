@@ -2,24 +2,21 @@ package com.example.shuttlemobile.driver.fragments;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.passenger.fragments.PassengerAccount;
+import com.example.shuttlemobile.common.GenericUserFragment;
+import com.example.shuttlemobile.common.SessionContext;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DriverHistory#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DriverHistory extends Fragment {
-
-    public static DriverHistory newInstance() {
-        return new DriverHistory();
+public class DriverHistory extends GenericUserFragment {
+    public static DriverHistory newInstance(SessionContext session) {
+        DriverHistory fragment = new DriverHistory();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override

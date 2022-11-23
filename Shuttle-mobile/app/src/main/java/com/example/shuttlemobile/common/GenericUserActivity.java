@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.user;
+package com.example.shuttlemobile.common;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.media.tv.TvInputService;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -34,11 +35,15 @@ public abstract class GenericUserActivity extends AppCompatActivity {
     private final String STACK_FRAGMENTS = "UserActivityFragment";
     protected Map<Integer, Fragment> fragments = new HashMap<>();
     private Fragment currentFragment;
+    protected SessionContext session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generic_user);
+
+        // TODO: This is a temporary initialization.
+        session = new SessionContext();
 
         initializeFragmentMap();
         initializeFragmentView();

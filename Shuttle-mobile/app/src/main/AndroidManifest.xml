@@ -20,7 +20,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".user.GenericUserActivity"
+            android:name=".common.GenericUserActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

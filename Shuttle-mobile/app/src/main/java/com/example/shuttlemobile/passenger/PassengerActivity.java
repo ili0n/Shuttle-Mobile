@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.shuttlemobile.user.GenericUserActivity;
+import com.example.shuttlemobile.common.GenericUserActivity;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.passenger.fragments.PassengerAccount;
 import com.example.shuttlemobile.passenger.fragments.PassengerHistory;
 import com.example.shuttlemobile.passenger.fragments.PassengerHome;
-import com.example.shuttlemobile.user.InboxFragment;
+import com.example.shuttlemobile.common.InboxFragment;
 
 public class PassengerActivity extends GenericUserActivity {
 
@@ -47,10 +47,10 @@ public class PassengerActivity extends GenericUserActivity {
 
     @Override
     protected void initializeFragmentMap() {
-        fragments.put(R.id.toolbar_home, PassengerHome.newInstance());
-        fragments.put(R.id.toolbar_history, PassengerHistory.newInstance());
-        fragments.put(R.id.toolbar_inbox, InboxFragment.newInstance());
-        fragments.put(R.id.toolbar_account, PassengerAccount.newInstance());
+        fragments.put(R.id.toolbar_home, PassengerHome.newInstance(session));
+        fragments.put(R.id.toolbar_history, PassengerHistory.newInstance(session));
+        fragments.put(R.id.toolbar_inbox, InboxFragment.newInstance(session));
+        fragments.put(R.id.toolbar_account, PassengerAccount.newInstance(session));
     }
 
     @Override
