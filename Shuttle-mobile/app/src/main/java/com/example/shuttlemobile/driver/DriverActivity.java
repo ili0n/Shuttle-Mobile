@@ -34,10 +34,9 @@ public class DriverActivity extends GenericUserActivity {
 
         Fragment f = fragments.get(itemId);
 
-        if (f == null) {
-
-        } else {
+        if (f != null) {
             setVisibleFragment(f);
+
         }
 
         return false;
