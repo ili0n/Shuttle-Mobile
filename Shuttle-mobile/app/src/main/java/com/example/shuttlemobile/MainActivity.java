@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.shuttlemobile.driver.DriverActivity;
 import com.example.shuttlemobile.passenger.PassengerActivity;
 
 import java.util.Timer;
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
+                startActivity(new Intent(getApplicationContext(), DriverActivity.class));
                 finish();
             }
         }, 1000);

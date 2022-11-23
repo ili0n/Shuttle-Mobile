@@ -1,5 +1,6 @@
-package com.example.shuttlemobile.passenger;
+package com.example.shuttlemobile.driver;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
@@ -8,17 +9,17 @@ import android.view.MenuItem;
 
 import com.example.shuttlemobile.GenericUserActivity;
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.passenger.fragments.PassengerAccount;
-import com.example.shuttlemobile.passenger.fragments.PassengerHistory;
-import com.example.shuttlemobile.passenger.fragments.PassengerHome;
+import com.example.shuttlemobile.driver.fragments.DriverAccount;
+import com.example.shuttlemobile.driver.fragments.DriverHistory;
+import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.inbox.fragments.InboxFragment;
 
-public class PassengerActivity extends GenericUserActivity {
+public class DriverActivity extends GenericUserActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_passenger);
+        setContentView(R.layout.activity_driver);
     }
 
     @Override
@@ -43,16 +44,18 @@ public class PassengerActivity extends GenericUserActivity {
     }
 
     @Override
-    public int getFragmentFrameId() {
-        return R.id.passenger_fragment_frame;
+    protected int getFragmentFrameId() {
+        return R.id.driver_fragment_frame;
     }
 
     @Override
     protected void initializeFragmentMap() {
-        fragments.put(R.id.toolbar_home, PassengerHome.newInstance());
-        fragments.put(R.id.toolbar_history, PassengerHistory.newInstance());
+
+        fragments.put(R.id.toolbar_home, DriverHome.newInstance());
+        fragments.put(R.id.toolbar_history, DriverHistory.newInstance());
         fragments.put(R.id.toolbar_inbox, InboxFragment.newInstance());
-        fragments.put(R.id.toolbar_account, PassengerAccount.newInstance());
+        fragments.put(R.id.toolbar_account, DriverAccount.newInstance());
+
     }
 
     @Override

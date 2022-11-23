@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.passenger.fragments;
+package com.example.shuttlemobile.inbox.fragments;
 
 import android.os.Bundle;
 
@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 
 import com.example.shuttlemobile.R;
 
-public class PassengerInbox extends Fragment {
-    public static PassengerInbox newInstance() {
-        return new PassengerInbox();
+public class InboxFragment extends Fragment {
+    public static InboxFragment newInstance() {
+        return new InboxFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_passenger_inbox, container, false);
+        return inflater.inflate(R.layout.fragment_inbox, container, false);
     }
 }
