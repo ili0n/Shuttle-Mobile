@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
 import android.media.tv.TvInputService;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,7 +74,6 @@ public abstract class GenericUserActivity extends AppCompatActivity {
     }
 
     protected boolean toolbarOnItemClick(MenuItem item) {
-        final int itemId = item.getItemId();
         return false;
     }
 
