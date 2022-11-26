@@ -34,3 +34,7 @@ To reduce boilerplate, create abstract adapters.
 
 Use ListView instead of RecyclerView because it's less code.
 
+### Other ###
+
+* Don't use hardcoded strings for bundle parameter names. Use `public static final String`. 
+The value is defined inside the class which uses those parameters to READ from.

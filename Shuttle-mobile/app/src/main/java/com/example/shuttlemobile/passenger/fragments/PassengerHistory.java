@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.passenger.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
+import com.example.shuttlemobile.passenger.Passenger;
+import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
 import com.example.shuttlemobile.ride.Ride;
 
 import java.util.ArrayList;
@@ -75,7 +78,15 @@ public class PassengerHistory extends GenericUserFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Ride obj = (Ride)listView.getItemAtPosition(i);
+                openRideDetailsActivity(obj);
             }
         });
+    }
+
+    private void openRideDetailsActivity(Ride ride) {
+        Intent intent = new Intent(getActivity(), PassengerHistoryDetailsActivity.class);
+        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_SESSION, session);
+        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_RIDE, ride);
+        startActivity(intent);
     }
 }

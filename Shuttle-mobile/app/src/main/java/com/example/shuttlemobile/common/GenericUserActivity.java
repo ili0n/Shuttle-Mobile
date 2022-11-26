@@ -22,19 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>
- *     GenericUserActivity is an empty abstract activity with an empty toolbar.<br/>
- *     The toolbar has a back button.
- *     The toolbar is initialized in <b>onAttachedToWindow()</b> instead of onCreate().
- * </p>
- * <p>
- *     Override <b>toolbarOnItemClick()</b> for custom toolbar events.
- *     <br/>
- *     Override <b>onCreateOptionsMenu()</b> to add toolbar buttons from a menu resource.
- *     <br/>
- * </p>
+ * <code>GenericUserActivity</code> is an abstract activity with a toolbar and fragment view.
+ * The toolbar by default only has a back button.
+ * The fragment view is managed with <code>fragments</code> which maps toolbar IDs into instances
+ * of fragment objects, all created once during the activity's lifetime.
  */
-public abstract class GenericUserActivity extends AppCompatActivity {
+public abstract class GenericUserActivity extends SimpleToolbarActivity {
     private final String STACK_FRAGMENTS = "UserActivityFragment";
     protected Map<Integer, Fragment> fragments = new HashMap<>();
     private Fragment currentFragment;
@@ -73,6 +66,11 @@ public abstract class GenericUserActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     * @param item Which item in the toolbar.
+     * @return false.
+     */
     protected boolean toolbarOnItemClick(MenuItem item) {
         return false;
     }
