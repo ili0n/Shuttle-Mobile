@@ -36,6 +36,12 @@ public abstract class EasyListAdapter<T> extends BaseAdapter {
      */
     public abstract void applyToView(View view, T obj);
 
+    /**
+     *
+     * @return ID of the layout for each item in the list.
+     */
+    public abstract int getListItemLayoutId();
+
     @Override
     public int getCount() {
         return getList().size();
@@ -56,7 +62,7 @@ public abstract class EasyListAdapter<T> extends BaseAdapter {
         View v = null;
 
         if (view == null) {
-            v = getLayoutInflater().inflate(R.layout.list_p_history, null);
+            v = getLayoutInflater().inflate(getListItemLayoutId(), null);
         } else {
             v = view;
         }

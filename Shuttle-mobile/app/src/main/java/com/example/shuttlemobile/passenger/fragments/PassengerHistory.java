@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,11 @@ public class PassengerHistory extends GenericUserFragment {
         List<Ride> rides = new ArrayList<>();
         rides.add(new Ride());
         rides.add(new Ride());
+        rides.add(new Ride());
+        rides.add(new Ride());
+        rides.add(new Ride());
+        rides.add(new Ride());
+        rides.add(new Ride());
 
         listView.setAdapter(new EasyListAdapter<Ride>() {
             @Override
@@ -51,10 +57,18 @@ public class PassengerHistory extends GenericUserFragment {
             @Override
             public LayoutInflater getLayoutInflater() { return PassengerHistory.this.getLayoutInflater(); }
             @Override
+            public int getListItemLayoutId() { return R.layout.list_p_history; }
+            @Override
             public void applyToView(View view, Ride obj) {
-                TextView passengerName = view.findViewById(R.id.list_p_history_pname);
+                TextView routeA = view.findViewById(R.id.list_p_history_route_A);
+                TextView routeB = view.findViewById(R.id.list_p_history_route_B);
+                TextView date = view.findViewById(R.id.list_p_history_date);
+                TextView time = view.findViewById(R.id.list_p_history_time);
+                TextView cost = view.findViewById(R.id.list_p_history_cost);
+                TextView driverFullName = view.findViewById(R.id.list_p_history_dname);
+                ImageView driverPfp = view.findViewById(R.id.list_p_history_dpfp);
 
-                passengerName.setText(obj.getPassenger().getName());
+                //passengerName.setText(obj.getPassenger().getName());
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
