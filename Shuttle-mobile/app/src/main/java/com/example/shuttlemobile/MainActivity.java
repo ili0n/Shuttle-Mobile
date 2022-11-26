@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                startActivity(new Intent(getApplicationContext(), DriverActivity.class));
+                startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
                 finish();
             }
         }, 1000);

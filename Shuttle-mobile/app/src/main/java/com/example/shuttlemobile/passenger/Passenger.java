@@ -1,6 +1,6 @@
 package com.example.shuttlemobile.passenger;
 
-import com.example.shuttlemobile.common.Entity;
+import com.example.shuttlemobile.user.User;
 
-public class Passenger extends Entity {
+public class Passenger extends User {
 }

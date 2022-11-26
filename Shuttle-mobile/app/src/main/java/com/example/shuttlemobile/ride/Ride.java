@@ -19,6 +19,10 @@ public class Ride extends Entity {
     private State state;
     private Passenger passenger;
 
+    public Ride() {
+        this.passenger = new Passenger();
+    }
+
     public enum State {
         STATE_PENDING,
         STATE_ACCEPTED,
