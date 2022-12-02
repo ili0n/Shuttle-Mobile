@@ -15,7 +15,7 @@ Template: TYPE_SCOPE_DETAIL
         For now, it can be either:
             p   - passenger (used in passenger activities and fragments)
             d   - driver
-            u   - user (splash screen, log-in, register, etc.)
+            u   - user (splash screen, log-in, register, anything shared like inbox etc.)
 
     DETAIL
         Describes the intent of the element in as few words as possible.
