@@ -21,6 +21,21 @@ public class Message extends Entity {
         SUPPORT, RIDE, PANIC
     }
 
+    public Message(User sender, User recipient, String message, LocalDateTime date, @Nullable Ride ride, Type type) {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.message = message;
+        this.date = date;
+        this.ride = ride;
+        this.type = type;
+    }
+
+    public Message(User sender, User recipient, String message) {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.message = message;
+    }
+
     public Message() {
 
     }
