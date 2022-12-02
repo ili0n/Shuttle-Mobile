@@ -97,9 +97,9 @@ public class InboxFragment extends GenericUserFragment {
     }
 
     private void openChatActivity(Chat chat) {
-//        Intent intent = new Intent(getActivity(), PassengerHistoryDetailsActivity.class);
-//        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_SESSION, session);
-//        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_RIDE, ride);
-//        startActivity(intent);
+        Intent intent = new Intent(getActivity(), UserChatActivity.class);
+        intent.putExtra(UserChatActivity.PARAM_SESSION, session);
+        intent.putExtra(UserChatActivity.PARAM_CHAT, chat);
+        startActivity(intent);
     }
 }

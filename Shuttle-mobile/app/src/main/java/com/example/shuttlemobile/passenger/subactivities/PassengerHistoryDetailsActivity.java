@@ -31,5 +31,12 @@ public class PassengerHistoryDetailsActivity extends SimpleToolbarActivity {
         Intent intent = getIntent();
         session = (SessionContext) intent.getSerializableExtra(PARAM_SESSION);
         ride = (Ride)intent.getSerializableExtra(PARAM_RIDE);
+
+        if (session == null) {
+            throw new NullPointerException("Missing intent parameter " + PARAM_SESSION);
+        }
+        if (ride == null) {
+            throw new NullPointerException("Missing intent parameter " + PARAM_RIDE);
+        }
     }
 }

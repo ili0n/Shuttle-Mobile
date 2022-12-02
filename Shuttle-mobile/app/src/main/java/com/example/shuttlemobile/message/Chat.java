@@ -2,10 +2,11 @@ package com.example.shuttlemobile.message;
 
 import com.example.shuttlemobile.user.User;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Chat {
+public class Chat implements Serializable {
     private User sender;
     private User recipient;
     private List<Message> messages = new ArrayList<>();
@@ -15,7 +16,7 @@ public class Chat {
     // either of the two inside of this class.
 
     /**
-     * @return Last message in this chat or <code>null</code> if none
+     * @return Last message in this chat or <code>null</code> if none.
      */
     public Message getLastMessage() {
         if (messages == null)
