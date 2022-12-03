@@ -24,7 +24,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:singleLine="true"
-        android:text="Jones"
+        tools:text="Jones"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_p_info_surname_lbl" />
@@ -58,7 +58,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:singleLine="true"
-        android:text="Bob"
+        tools:text="Bob"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_p_info_name_lbl" />
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="123 Grove Street"
+        tools:text="123 Grove Street"
         app:layout_constraintEnd_toEndOf="@+id/txt_p_info_surname"
         app:layout_constraintStart_toStartOf="@+id/txt_p_info_surname"
         app:layout_constraintTop_toBottomOf="@+id/txt_p_info_address_lbl" />
@@ -100,7 +100,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="phone"
-        android:text="0 123 456789"
+        tools:text="0 123 456789"
         app:layout_constraintEnd_toEndOf="@+id/txt_p_info_address"
         app:layout_constraintStart_toStartOf="@+id/txt_p_info_address"
         app:layout_constraintTop_toBottomOf="@+id/txt_p_info_phone_lbl" />

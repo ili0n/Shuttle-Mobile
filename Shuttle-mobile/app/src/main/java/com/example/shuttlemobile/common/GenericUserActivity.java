@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.user.User;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -40,6 +41,9 @@ public abstract class GenericUserActivity extends SimpleToolbarActivity {
 
         // TODO: This is a temporary initialization.
         session = new SessionContext();
+        session.setUser(new User(
+                "Bob", "Jones", "123 Grove Street", "0 123 456789", "bobjones@gmail.com", "bob1234", "BCMnhqw==", false, true
+        ));
 
         initializeFragmentMap();
         initializeFragmentView();

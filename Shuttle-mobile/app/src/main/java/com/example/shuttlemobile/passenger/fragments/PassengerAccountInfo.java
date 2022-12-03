@@ -19,6 +19,10 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 
+/**
+ * Fragment for viewing and updating account info for the passenger of this session.
+ * Only certain fields are editable, while others must be changed in the web application.
+ */
 public class PassengerAccountInfo extends GenericUserFragment {
     public static PassengerAccountInfo newInstance(SessionContext session) {
         PassengerAccountInfo fragment = new PassengerAccountInfo();
@@ -36,6 +40,7 @@ public class PassengerAccountInfo extends GenericUserFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initView();
     }
 
     private void initView() {
@@ -53,14 +58,14 @@ public class PassengerAccountInfo extends GenericUserFragment {
             }
         });
 
-
-        String name = editName.getText().toString();
-        String surname = editName.getText().toString();
-        String address = editAddress.getText().toString();
-        String phone = editPhone.getText().toString();
-        // Image pfp = editPfp.
+        editName.setText(session.getUser().getName());
+        editSurname.setText(session.getUser().getLastName());
+        editAddress.setText(session.getUser().getLocation());
+        editPhone.setText(session.getUser().getPhone());
+        // editPfp.
 
         // TODO: If all the input fields are the same as the current user data, disable the button.
+        // You have to use listeners for each edit text.
         boolean canSubmit = true;
         btnSubmit.setActivated(canSubmit);
         btnSubmit.setOnClickListener(view -> pushChanges());

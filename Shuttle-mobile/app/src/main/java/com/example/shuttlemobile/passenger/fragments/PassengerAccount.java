@@ -23,6 +23,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * PassengerAccount fragment contains a <code>TabLayout</code> with 3 tabs:
+ * <br/>
+ * <ol>
+ *     <li>Account Info</li>
+ *     <li>Favorite Routes</li>
+ *     <li>Statistics</li>
+ * </ol>
+ * Each of those is a separate fragment shown in <code>fragContainer</code>
+ * and stored in the <code>fragments</code> list.
+ */
 public class PassengerAccount extends GenericUserFragment {
     TabLayout tabLayout;
     FragmentContainerView fragContainer;
