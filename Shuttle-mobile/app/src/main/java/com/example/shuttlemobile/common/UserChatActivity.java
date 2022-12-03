@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.user.User;
@@ -98,14 +99,8 @@ public class UserChatActivity extends SimpleToolbarActivity {
         }
 
         // TODO: Uncomment this once we have actual data.
-        other = new User();
-//      // Pre-condition: There's at least 1 message in this chat.
-//
-//        if (chat.getLastMessage().getRecipient() != session.getUser()) {
-//            other = chat.getLastMessage().getRecipient();
-//        } else {
-//            other = chat.getLastMessage().getSender();
-//        }
+        other = new Driver();
+//        other = chat.getLastMessage().getOther(session.getUser());
     }
 
     private void initializeList() {

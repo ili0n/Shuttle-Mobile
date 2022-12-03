@@ -1,8 +1,11 @@
 package com.example.shuttlemobile.common;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import com.example.shuttlemobile.admin.Admin;
+import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.message.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +18,16 @@ import android.widget.TextView;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.message.Chat;
+import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.user.User;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Inbox fragment is shared between all users.
@@ -46,19 +54,53 @@ public class InboxFragment extends GenericUserFragment {
     private void initializeList() {
         ListView listView = getActivity().findViewById(R.id.list_u_inbox);
 
+        Chat c = new Chat();
+        List<Message> messages = new ArrayList<>();
+        User other = new Driver();
+        messages.add(new Message(session.getUser(), other, "Hi"));
+        messages.add(new Message(other, session.getUser(), "Hey."));
+        messages.add(new Message(session.getUser(), other, "Here's a longer message. The text bubble is larger now."));
+        messages.add(new Message(other, session.getUser(), "Ok.\n\nBottom text"));
+        c.setMessages(messages);
+
+        Chat c2 = new Chat();
+        List<Message> messages2 = new ArrayList<>();
+        messages2.add(new Message(session.getUser(), other, "Hi"));
+        c2.setMessages(messages2);
+
+        Chat c3 = new Chat();
+        List<Message> messages3 = new ArrayList<>();
+        messages3.add(new Message(new Admin(), session.getUser(), "I am the support."));
+        c3.setMessages(messages3);
+
         List<Chat> chats = new ArrayList<>();
-        chats.add(new Chat());
-        chats.add(new Chat());
-        chats.add(new Chat());
-        chats.add(new Chat());
-        chats.add(new Chat());
-        chats.add(new Chat());
-        chats.add(new Chat());
+        chats.add(c2);
+        chats.add(c2);
+        chats.add(c);
+        chats.add(c3);
+        chats.add(c);
+        chats.add(c2);
+
+        // Put support chat at top.
+
+        chats = chats.stream().sorted((chat1, chat2) -> {
+            User other1 = chat1.getLastMessage().getOther(session.getUser());
+            User other2 = chat2.getLastMessage().getOther(session.getUser());
+            if (other1 instanceof Admin) {
+                return -1;
+            } else if (other2 instanceof Admin) {
+                return 1;
+            }
+            return 0;
+        }).collect(Collectors.toList());
+
+        // Prevents the "Variable is accessed within inner class. Needs to be declared final" error.
+        final List<Chat> chatsFinal = chats;
 
         listView.setAdapter(new EasyListAdapter<Chat>() {
             @Override
             public List<Chat> getList() {
-                return chats;
+                return chatsFinal;
             }
 
             @Override
@@ -78,11 +120,30 @@ public class InboxFragment extends GenericUserFragment {
                 TextView lastMsg = view.findViewById(R.id.txt_u_inbox_msg);
                 TextView lastMsgDate = view.findViewById(R.id.txt_u_inbox_date);
                 TextView lastMsgTime = view.findViewById(R.id.txt_u_inbox_time);
+                TextView otherRoleBullet = view.findViewById(R.id.txt_u_inbox_role_bullet);
 
                 final Message lastMsgObj = obj.getLastMessage();
 
                 if (lastMsgObj != null) {
+                    User o = lastMsgObj.getOther(session.getUser());
 
+                    if (o instanceof Driver) {
+                        otherRoleBullet.setTextColor(Color.RED);
+                    } else if (o instanceof Passenger) {
+                        otherRoleBullet.setTextColor(Color.GREEN);
+                    } else if (o instanceof Admin) {
+                        otherRoleBullet.setTextColor(Color.BLUE);
+                    }
+
+                    String lastMsgPrefix = "";
+                    if (lastMsgObj.getSender() == session.getUser()) {
+                        lastMsgPrefix = "You: ";
+                    }
+
+                    otherName.setText(o.getName() + " " + o.getLastName());
+                    lastMsg.setText(lastMsgPrefix + lastMsgObj.getMessage());
+                    lastMsgDate.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("d/M/yy")));
+                    lastMsgTime.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("HH:mm")));
                 }
             }
         });

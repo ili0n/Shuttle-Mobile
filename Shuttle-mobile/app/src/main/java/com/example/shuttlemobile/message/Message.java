@@ -34,10 +34,21 @@ public class Message extends Entity {
         this.sender = sender;
         this.recipient = recipient;
         this.message = message;
+        this.date = LocalDateTime.now();
     }
 
     public Message() {
 
+    }
+
+    public User getOther(User self) {
+        if (getSender() == self) {
+            return getRecipient();
+        } else if (getRecipient() == self) {
+            return getSender();
+        } else {
+            throw new IllegalArgumentException("'self' is not a sender nor a recipient of this message.");
+        }
     }
 
     public User getSender() {

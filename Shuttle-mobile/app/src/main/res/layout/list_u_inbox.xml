@@ -22,13 +22,13 @@
         android:id="@+id/txt_u_inbox_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:fontFamily="sans-serif-black"
-        android:text="Bob Jones"
 
+        android:text="Bob Jones"
         android:textSize="20sp"
         app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toEndOf="@+id/img_u_inbox_pfp"
+        app:layout_constraintStart_toEndOf="@+id/txt_u_inbox_role_bullet"
         app:layout_constraintTop_toTopOf="@+id/img_u_inbox_pfp" />
 
     <TextView
@@ -40,7 +40,7 @@
         android:maxLines="1"
         android:text="Last message from me. This text is too large though"
         app:layout_constraintEnd_toStartOf="@+id/txt_u_inbox_time"
-        app:layout_constraintStart_toStartOf="@+id/txt_u_inbox_name"
+        app:layout_constraintStart_toStartOf="@+id/txt_u_inbox_role_bullet"
         app:layout_constraintTop_toBottomOf="@+id/txt_u_inbox_name" />
 
     <TextView
@@ -60,4 +60,14 @@
         android:text="17:11"
         app:layout_constraintEnd_toEndOf="@+id/txt_u_inbox_date"
         app:layout_constraintTop_toBottomOf="@+id/txt_u_inbox_date" />
+
+    <TextView
+        android:id="@+id/txt_u_inbox_role_bullet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="⬤"
+        app:layout_constraintBottom_toTopOf="@+id/txt_u_inbox_msg"
+        app:layout_constraintStart_toEndOf="@+id/img_u_inbox_pfp"
+        app:layout_constraintTop_toTopOf="@+id/img_u_inbox_pfp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
