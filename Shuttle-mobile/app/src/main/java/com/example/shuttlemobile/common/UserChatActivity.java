@@ -23,6 +23,9 @@ import java.util.List;
 
 import kotlin.jvm.internal.TypeParameterReference;
 
+/**
+ * Activity for a chat screen.
+ */
 public class UserChatActivity extends SimpleToolbarActivity {
     protected SessionContext session;
     protected User other;
@@ -150,6 +153,9 @@ public class UserChatActivity extends SimpleToolbarActivity {
                 TextView txtDate = null;
                 TextView txtTime = null;
 
+                // Determine whether to use 'item_chat_me' or 'item_chat_other'.
+                // Since view element of each chat bubble have a different ID based
+                // on which user they belong to, we have to fetch them here as well.
                 if (view == null) {
                     if (itemType == 0) {
                         v = inflater.inflate(R.layout.item_chat_me, null);
