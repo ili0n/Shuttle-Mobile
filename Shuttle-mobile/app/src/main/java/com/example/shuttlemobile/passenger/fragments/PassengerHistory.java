@@ -34,6 +34,59 @@ public class PassengerHistory extends GenericUserFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_passenger_account_stats, container, false);
+        return inflater.inflate(R.layout.fragment_passenger_history, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        initializeList();
+    }
+
+    private void initializeList() {
+        ListView listView = getActivity().findViewById(R.id.list_p_history);
+
+        List<Ride> rides = new ArrayList<>();
+        rides.add(new Ride());
+        rides.add(new Ride());
+        rides.add(new Ride());
+        rides.add(new Ride());
+        rides.add(new Ride());
+        rides.add(new Ride());
+        rides.add(new Ride());
+
+        listView.setAdapter(new EasyListAdapter<Ride>() {
+            @Override
+            public List<Ride> getList() { return rides; }
+            @Override
+            public LayoutInflater getLayoutInflater() { return PassengerHistory.this.getLayoutInflater(); }
+            @Override
+            public int getListItemLayoutId() { return R.layout.list_p_history; }
+            @Override
+            public void applyToView(View view, Ride obj) {
+                TextView routeA = view.findViewById(R.id.list_p_history_route_A);
+                TextView routeB = view.findViewById(R.id.list_p_history_route_B);
+                TextView date = view.findViewById(R.id.list_p_history_date);
+                TextView time = view.findViewById(R.id.list_p_history_time);
+                TextView cost = view.findViewById(R.id.list_p_history_cost);
+                TextView driverFullName = view.findViewById(R.id.list_p_history_dname);
+                ImageView driverPfp = view.findViewById(R.id.list_p_history_dpfp);
+
+                //passengerName.setText(obj.getPassenger().getName());
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Ride obj = (Ride)listView.getItemAtPosition(i);
+                openRideDetailsActivity(obj);
+            }
+        });
+    }
+
+    private void openRideDetailsActivity(Ride ride) {
+        Intent intent = new Intent(getActivity(), PassengerHistoryDetailsActivity.class);
+        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_SESSION, session);
+        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_RIDE, ride);
+        startActivity(intent);
     }
 }
