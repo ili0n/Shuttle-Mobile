@@ -46,12 +46,12 @@ public class PassengerAccount extends GenericUserFragment {
         super.onViewCreated(view, savedInstanceState);
         initMap();
         buildTabLayout();
-        setVisibleFragment(fragments.get(0));
+        tabLayout.getTabAt(0).select();
     }
 
     private void initMap() {
         // We can't use TabItem id's here since they technically don't have IDs.
-        // getID() would always return -1. Therefore we use getPosition() and lists.
+        // getId() would always return -1. Therefore we use getPosition() and lists.
         // Be careful about the element order.
         fragments.add(PassengerAccountInfo.newInstance(session));
         fragments.add(PassengerAccountFavorites.newInstance(session));
