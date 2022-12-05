@@ -16,13 +16,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1179a5b1-1d4c-4a42-8665-7575a59e00ef" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/InboxFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/InboxFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/SimpleToolbarActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/SimpleToolbarActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/UserChatActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/UserChatActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/DriverActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/DriverActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/fragments/DriverAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/fragments/DriverAccount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/unregistered/RegisterActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/unregistered/RegisterActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_register.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_register.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
