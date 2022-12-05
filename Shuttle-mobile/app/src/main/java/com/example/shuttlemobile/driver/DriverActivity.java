@@ -8,7 +8,6 @@ import android.view.MenuItem;
 
 import com.example.shuttlemobile.common.GenericUserActivity;
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.driver.fragments.DriverAccount;
 import com.example.shuttlemobile.driver.fragments.DriverHistory;
 import com.example.shuttlemobile.driver.fragments.DriverHome;

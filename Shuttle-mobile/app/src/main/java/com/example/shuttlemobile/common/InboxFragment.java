@@ -19,11 +19,8 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.passenger.Passenger;
-import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
-import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.user.User;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

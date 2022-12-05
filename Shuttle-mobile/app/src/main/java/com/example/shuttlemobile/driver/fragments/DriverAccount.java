@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
-import com.example.shuttlemobile.passenger.fragments.PassengerHome;
 
 public class DriverAccount extends GenericUserFragment {
     public static DriverAccount newInstance(SessionContext session) {

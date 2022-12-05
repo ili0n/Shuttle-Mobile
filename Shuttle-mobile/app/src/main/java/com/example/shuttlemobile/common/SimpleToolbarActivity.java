@@ -9,7 +9,8 @@ import com.example.shuttlemobile.R;
 
 /**
  * <code>SimpleToolbarActivity</code> is an abstract activity with a toolbar that has
- * only the back button.
+ * only the back button. The back button is functional. You have to include the toolbar
+ * in the activity's layout file.
  */
 public abstract class SimpleToolbarActivity extends AppCompatActivity {
     @Override
