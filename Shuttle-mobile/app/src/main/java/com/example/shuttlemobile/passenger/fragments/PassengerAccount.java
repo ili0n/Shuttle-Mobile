@@ -58,6 +58,7 @@ public class PassengerAccount extends GenericUserFragment {
         initMap();
         buildTabLayout();
         tabLayout.getTabAt(0).select();
+        setVisibleFragment(fragments.get(0));
     }
 
     private void initMap() {

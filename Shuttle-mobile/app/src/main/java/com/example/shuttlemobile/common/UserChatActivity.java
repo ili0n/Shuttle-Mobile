@@ -161,7 +161,22 @@ public class UserChatActivity extends SimpleToolbarActivity {
 
                 } else {
                     v = view;
+
+                    if (itemType == 0) {
+//                        v = inflater.inflate(R.layout.item_chat_me, null);
+                        txtMessage = v.findViewById(R.id.txt_chat_me);
+                        txtDate = v.findViewById(R.id.txt_chat_date_me);
+                        txtTime = v.findViewById(R.id.txt_chat_time_me);
+                    } else if (itemType == 1) {
+//                        v = inflater.inflate(R.layout.item_chat_other, null);
+                        txtMessage = v.findViewById(R.id.txt_chat_other);
+                        txtDate = v.findViewById(R.id.txt_chat_date_other);
+                        txtTime = v.findViewById(R.id.txt_chat_time_other);
+                    }
                 }
+
+                // TODO:
+                // Use v.setTag()
 
                 // null check necessary for some reason.
                 if (txtMessage != null) {
