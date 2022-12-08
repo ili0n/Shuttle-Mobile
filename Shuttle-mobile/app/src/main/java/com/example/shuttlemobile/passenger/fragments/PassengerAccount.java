@@ -72,7 +72,7 @@ public class PassengerAccount extends GenericUserFragment {
 
     private void buildTabLayout() {
         tabLayout = getActivity().findViewById(R.id.tab_p_acc);
-        fragContainer = getActivity().findViewById(R.id.fragview_tab);
+        fragContainer = getActivity().findViewById(R.id.fragview_p_acc_tab);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
