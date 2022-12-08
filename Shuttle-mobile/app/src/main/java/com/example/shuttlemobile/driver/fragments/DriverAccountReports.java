@@ -23,6 +23,6 @@ public class DriverAccountReports extends GenericUserFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_passenger_account_favorites, container, false);
+        return inflater.inflate(R.layout.fragment_driver_account_reports, container, false);
     }
 }
