@@ -2,7 +2,6 @@ package com.example.shuttlemobile.driver.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,7 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
-import com.example.shuttlemobile.passenger.fragments.PassengerHistory;
-import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
+import com.example.shuttlemobile.driver.subactivities.DriverHistoryDetailsActivity;
 import com.example.shuttlemobile.ride.Ride;
 
 import java.util.ArrayList;
@@ -83,9 +81,9 @@ public class DriverHistory extends GenericUserFragment {
     }
 
     private void openRideDetailsActivity(Ride ride) {
-        Intent intent = new Intent(getActivity(), PassengerHistoryDetailsActivity.class);
-        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_SESSION, session);
-        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_RIDE, ride);
+        Intent intent = new Intent(getActivity(), DriverHistoryDetailsActivity.class);
+        intent.putExtra(DriverHistoryDetailsActivity.PARAM_SESSION, session);
+        intent.putExtra(DriverHistoryDetailsActivity.PARAM_RIDE, ride);
         startActivity(intent);
     }
 

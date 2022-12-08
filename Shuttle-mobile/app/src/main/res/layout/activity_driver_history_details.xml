@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".driver.subactivities.DriverHistoryDetailsActivity">
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="409dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_d_ride_map"
+                android:layout_width="256dp"
+                android:layout_height="256dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/clipart_map" />
+
+            <TextView
+                android:id="@+id/txt_d_ride_routeA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="123 Street Street"
+                app:layout_constraintStart_toEndOf="@+id/txt_d_ride_from"
+                app:layout_constraintTop_toTopOf="@+id/txt_d_ride_from" />
+
+            <TextView
+                android:id="@+id/txt_d_ride_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-light"
+                android:text="From"
+                app:layout_constraintEnd_toEndOf="@+id/img_d_ride_map"
+                app:layout_constraintHorizontal_bias="0.31"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_d_ride_map" />
+
+            <TextView
+                android:id="@+id/txt_d_ride_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-light"
+                android:text="To"
+                app:layout_constraintEnd_toEndOf="@+id/txt_d_ride_from"
+                app:layout_constraintStart_toStartOf="@+id/txt_d_ride_from"
+                app:layout_constraintTop_toBottomOf="@+id/txt_d_ride_from" />
+
+            <TextView
+                android:id="@+id/txt_d_ride_routeB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="456 Avenue Avenue"
+                app:layout_constraintStart_toStartOf="@+id/txt_d_ride_routeA"
+                app:layout_constraintTop_toTopOf="@+id/txt_d_ride_to" />
+
+            <Button
+                android:id="@+id/btn_d_ride_dchat"
+                android:layout_width="56dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="24dp"
+                app:icon="@drawable/ic_baseline_chat_24"
+                app:iconPadding="0dp"
+                app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+                app:layout_constraintStart_toStartOf="@+id/scrollView2"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+            <TextView
+                android:id="@+id/txt_d_ride_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="26/11/2022"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_d_ride_price" />
+
+            <TextView
+                android:id="@+id/txt_d_ride_tinterval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-light"
+                android:text="20.50 — 21.49"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/txt_d_ride_date"
+                app:layout_constraintStart_toStartOf="@+id/txt_d_ride_date"
+                app:layout_constraintTop_toBottomOf="@+id/txt_d_ride_date" />
+
+            <RatingBar
+                android:id="@+id/rating_d_ride_rating"
+                style="@style/Widget.AppCompat.RatingBar.Indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:indeterminate="false"
+                android:max="5"
+                android:numStars="5"
+                android:rating="4"
+                android:stepSize="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.35"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
+
+            <ScrollView
+                android:id="@+id/scrollView2"
+                android:layout_width="0dp"
+                android:layout_height="128dp"
+                app:layout_constraintEnd_toEndOf="@+id/img_d_ride_map"
+                app:layout_constraintStart_toStartOf="@+id/img_d_ride_map"
+                app:layout_constraintTop_toBottomOf="@+id/rating_d_ride_rating">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txt_d_ride_comment"
+                        android:layout_width="0dp"
+                        android:layout_height="96dp"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:text="Very good ride sir."
+                        android:singleLine="false"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+
+            <TextView
+                android:id="@+id/txt_d_ride_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:text="230 RSD"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_d_ride_distance"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.13"
+                app:layout_constraintStart_toEndOf="@+id/txt_d_ride_distance"
+                app:layout_constraintTop_toTopOf="@+id/txt_d_ride_distance" />
+
+            <TextView
+                android:id="@+id/txt_d_ride_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:fontFamily="sans-serif-light"
+                android:text="15km"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/txt_d_ride_to"
+                app:layout_constraintTop_toBottomOf="@+id/txt_d_ride_to" />
+
+            <ScrollView
+                android:id="@+id/scrollView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lbl_d_ride_passengers">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ListView
+                        android:id="@+id/li_d_ride_passengers"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:listitem="@layout/list_p_history_passengers" />
+                </LinearLayout>
+            </ScrollView>
+
+            <TextView
+                android:id="@+id/lbl_d_ride_passengers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Passengers"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/scrollView3"
+                app:layout_constraintTop_toBottomOf="@+id/txt_d_ride_tinterval" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
