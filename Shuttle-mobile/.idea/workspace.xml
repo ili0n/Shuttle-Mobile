@@ -2,7 +2,12 @@
 <project version="4">
   <component name="AndroidLayouts">
     <shared>
-      <config />
+      <config>
+        <device id="pixel_3a" />
+        <device id="pixel_3a_xl" />
+        <device id="pixel" />
+        <option name="nonWearDeviceLastStateName" value="Portrait" />
+      </config>
     </shared>
   </component>
   <component name="AndroidLogFilters">
@@ -17,8 +22,8 @@
     <list default="true" id="1179a5b1-1d4c-4a42-8665-7575a59e00ef" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetDropDown.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetDropDown.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/UserChatActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/UserChatActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/fragments/PassengerAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/fragments/PassengerAccount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/subactivities/PassengerHistoryDetailsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/subactivities/PassengerHistoryDetailsActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_passenger_history_details.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_passenger_history_details.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,8 +59,8 @@
         <option value="resourceFile" />
         <option value="Interface" />
         <option value="CMakeLists.txt" />
-        <option value="layoutResourceFile" />
         <option value="Class" />
+        <option value="layoutResourceFile" />
       </list>
     </option>
   </component>

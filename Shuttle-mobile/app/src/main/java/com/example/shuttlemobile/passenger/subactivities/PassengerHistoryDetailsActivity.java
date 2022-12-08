@@ -5,12 +5,22 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.SimpleToolbarActivity;
+import com.example.shuttlemobile.common.adapter.EasyListAdapter;
+import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.user.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PassengerHistoryDetailsActivity extends SimpleToolbarActivity {
     protected SessionContext session;
@@ -25,6 +35,7 @@ public class PassengerHistoryDetailsActivity extends SimpleToolbarActivity {
         setContentView(R.layout.activity_passenger_history_details);
 
         initParams();
+        initView();
     }
 
     private void initParams() {
@@ -38,5 +49,41 @@ public class PassengerHistoryDetailsActivity extends SimpleToolbarActivity {
         if (ride == null) {
             throw new NullPointerException("Missing intent parameter " + PARAM_RIDE);
         }
+    }
+
+    private void initView() {
+        ListView ridePassengers = findViewById(R.id.li_p_ride_passengers);
+
+        List<User> passengers = new ArrayList<>();
+        passengers.add(session.getUser());
+
+        ridePassengers.setAdapter(new EasyListAdapter<User>() {
+            @Override
+            public List<User> getList() {
+                return passengers;
+            }
+
+            @Override
+            public LayoutInflater getLayoutInflater() {
+                return PassengerHistoryDetailsActivity.this.getLayoutInflater();
+            }
+
+            @Override
+            public void applyToView(View view, User obj) {
+                TextView txtName = view.findViewById(R.id.txt_p_history_p_name);
+
+                if (obj == session.getUser()) {
+                    // TODO: Hardcoded.
+                    txtName.setText("Me");
+                } else {
+                    txtName.setText(obj.getName() + " " + obj.getLastName());
+                }
+            }
+
+            @Override
+            public int getListItemLayoutId() {
+                return R.layout.list_p_history_passengers;
+            }
+        });
     }
 }
