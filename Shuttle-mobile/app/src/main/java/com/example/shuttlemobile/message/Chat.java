@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.message;
 
+import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.user.User;
 
 import java.io.Serializable;
@@ -9,11 +10,10 @@ import java.util.List;
 public class Chat implements Serializable {
     private User sender;
     private User recipient;
+    private Ride ride;
     private List<Message> messages = new ArrayList<>();
 
-    // sender and recipient are a controlled redundancy.
-    // For all messages, the sender and recipient can be only
-    // either of the two inside of this class.
+    // sender, recipient and ride are a controlled redundancy.
 
     /**
      * @return Last message in this chat or <code>null</code> if none.

@@ -13,6 +13,8 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.message.Message;
+import com.example.shuttlemobile.passenger.Passenger;
+import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.user.User;
 
 import java.time.LocalDateTime;
@@ -46,10 +48,15 @@ public class UserChatActivity extends SimpleToolbarActivity {
         // During early stages of the development, we wouldn't put this here,
         // but in the ListView's anonymous adapter. To show that sending messages
         // "works", an exception is made by making the messages list persist in-memory.
-        messages.add(new Message(session.getUser(), other, "Hi"));
-        messages.add(new Message(other, session.getUser(), "Hey."));
-        messages.add(new Message(session.getUser(), other, "Here's a longer message. The text bubble is larger now."));
-        messages.add(new Message(other, session.getUser(), "Ok.\n\nBottom text"));
+
+        Ride r = new Ride();
+        r.setPassenger((Passenger)session.getUser());
+        r.setDriver((Driver)other);
+
+        messages.add(new Message(session.getUser(), other, "Hi", LocalDateTime.now(), r, Message.Type.RIDE));
+        messages.add(new Message(other, session.getUser(), "Hey.", LocalDateTime.now(), r, Message.Type.RIDE));
+        messages.add(new Message(session.getUser(), other, "Here's a longer message. The text bubble is larger now.", LocalDateTime.now(), r, Message.Type.RIDE));
+        messages.add(new Message(other, session.getUser(), "Ok.\n\nBottom text", LocalDateTime.now(), r, Message.Type.RIDE));
 
     }
 

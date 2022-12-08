@@ -19,8 +19,10 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.passenger.Passenger;
+import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.user.User;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,20 +56,21 @@ public class InboxFragment extends GenericUserFragment {
         Chat c = new Chat();
         List<Message> messages = new ArrayList<>();
         User other = new Driver();
-        messages.add(new Message(session.getUser(), other, "Hi"));
-        messages.add(new Message(other, session.getUser(), "Hey."));
-        messages.add(new Message(session.getUser(), other, "Here's a longer message. The text bubble is larger now."));
-        messages.add(new Message(other, session.getUser(), "Ok.\n\nBottom text"));
+        Ride r = new Ride();
+        messages.add(new Message(session.getUser(), other, "Hi", LocalDateTime.now(), r, Message.Type.RIDE));
+        messages.add(new Message(other, session.getUser(), "Hey.", LocalDateTime.now(), r, Message.Type.RIDE));
+        messages.add(new Message(session.getUser(), other, "Here's a longer message. The text bubble is larger now.", LocalDateTime.now(), r, Message.Type.RIDE));
+        messages.add(new Message(other, session.getUser(), "Ok.\n\nBottom text", LocalDateTime.now(), r, Message.Type.RIDE));
         c.setMessages(messages);
 
         Chat c2 = new Chat();
         List<Message> messages2 = new ArrayList<>();
-        messages2.add(new Message(session.getUser(), other, "Hi"));
+        messages2.add(new Message(session.getUser(), other, "Hi", LocalDateTime.now(), r, Message.Type.RIDE));
         c2.setMessages(messages2);
 
         Chat c3 = new Chat();
         List<Message> messages3 = new ArrayList<>();
-        messages3.add(new Message(new Admin(), session.getUser(), "I am the support."));
+        messages3.add(new Message(new Admin(), session.getUser(), "I am the support.", LocalDateTime.now(), null, Message.Type.SUPPORT));
         c3.setMessages(messages3);
 
         List<Chat> chats = new ArrayList<>();

@@ -15,9 +15,9 @@ public class Ride extends Entity {
     private LocalDateTime start;
     private LocalDateTime end;
     private double cost;
-    private Vehicle vehicle;
     private State state;
     private Passenger passenger;
+    private Driver driver;
 
     public Ride() {
         this.passenger = new Passenger();
@@ -31,9 +31,9 @@ public class Ride extends Entity {
         STATE_FINISHED
     };
 
-    public Driver getDriver() {
-        return getVehicle().getDriver();
-    }
+    public Driver getDriver() { return driver; }
+
+    public void setDriver(Driver d) { this.driver = d; }
 
     public boolean isHasBaby() {
         return hasBaby;
@@ -81,14 +81,6 @@ public class Ride extends Entity {
 
     public void setCost(double cost) {
         this.cost = cost;
-    }
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
     }
 
     public State getState() {

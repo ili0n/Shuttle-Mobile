@@ -30,12 +30,12 @@ public class Message extends Entity {
         this.type = type;
     }
 
-    public Message(User sender, User recipient, String message) {
-        this.sender = sender;
-        this.recipient = recipient;
-        this.message = message;
-        this.date = LocalDateTime.now();
-    }
+//    public Message(User sender, User recipient, String message) {
+//        this.sender = sender;
+//        this.recipient = recipient;
+//        this.message = message;
+//        this.date = LocalDateTime.now();
+//    }
 
     public Message() {
 
