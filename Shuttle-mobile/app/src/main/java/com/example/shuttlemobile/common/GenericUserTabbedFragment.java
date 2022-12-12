@@ -1,10 +1,12 @@
 package com.example.shuttlemobile.common;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentTransaction;
@@ -37,6 +39,21 @@ public abstract class GenericUserTabbedFragment extends GenericUserFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (fragments.size() == 0) {
+            initFragmentList();
+            buildTabLayout();
+        }
+        tabLayout.getTabAt(getDefaultTab()).select();
+        setVisibleFragment(fragments.get(getDefaultTab()));
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        // HACK: Is this the best way to do this? The fragments won't show up otherwise.
+        fragments.clear();
         initFragmentList();
         buildTabLayout();
         tabLayout.getTabAt(getDefaultTab()).select();
