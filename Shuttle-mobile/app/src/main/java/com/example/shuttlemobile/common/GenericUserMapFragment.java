@@ -29,12 +29,18 @@ import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManagerKt;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
+import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager;
+import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManagerKt;
+import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions;
+
+import java.util.List;
 
 public abstract class GenericUserMapFragment extends GenericUserFragment {
     private MapView mapView;
     private AnnotationPlugin annotationApi;
     private CircleAnnotationManager circleAnnotationManager;
     private PointAnnotationManager pointAnnotationManager;
+    private PolylineAnnotationManager polylineAnnotationManager;
     private Bitmap carAvailable;
     private Bitmap carUnavailable;
 
@@ -94,6 +100,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         annotationApi = AnnotationPluginImplKt.getAnnotations(mapView);
         circleAnnotationManager = CircleAnnotationManagerKt.createCircleAnnotationManager(annotationApi, new AnnotationConfig());
         pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationApi, new AnnotationConfig());
+        polylineAnnotationManager = PolylineAnnotationManagerKt.createPolylineAnnotationManager(annotationApi, new AnnotationConfig());
     }
 
     private void initIcons() {
@@ -121,12 +128,21 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         circleAnnotationManager.create(circleAnnotationOptions);
     }
 
-    private void drawAnnotationToMap(Point point, Bitmap image) {
+    public void drawAnnotationToMap(Point point, Bitmap image) {
         PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
                 .withPoint(point)
                 .withIconImage(image)
         ;
         pointAnnotationManager.create(pointAnnotationOptions);
+    }
+
+    public void drawPolylineToMap(List<Point> points, String hexColor) {
+        PolylineAnnotationOptions polylineAnnotationOptions = new PolylineAnnotationOptions()
+                .withPoints(points)
+                .withLineWidth(8.0)
+                .withLineColor(hexColor)
+        ;
+        polylineAnnotationManager.create(polylineAnnotationOptions);
     }
 
 }
