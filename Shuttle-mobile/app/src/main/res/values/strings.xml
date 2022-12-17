@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">ShuttleMobile</string>
+
+
+    <string name="mapbox_access_token">pk.eyJ1Ijoic3YyNSIsImEiOiJjbGJyenp0aG0wdXppM29sZXppZXB3dW9jIn0.pLUD2PQXNm4YOiG8dl1jVw</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
