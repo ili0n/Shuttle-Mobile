@@ -57,8 +57,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PassengerHome extends GenericUserMapFragment {
-    private MapView mapView;
-
     public static PassengerHome newInstance(SessionContext session) {
         PassengerHome fragment = new PassengerHome();
         Bundle bundle = new Bundle();
@@ -68,68 +66,20 @@ public class PassengerHome extends GenericUserMapFragment {
     }
 
     @Override
+    public String getPublicMapApiToken() {
+        return getResources().getString(R.string.mapbox_access_token);
+    }
+
+    @Override
     public void onMapLoaded() {
         drawCar(Point.fromLngLat(0, 0), true);
         drawCar(Point.fromLngLat(3, 0), false);
 
-        List<Point> points = new ArrayList<>();
-        points.add(Point.fromLngLat(19.80613, 45.23673));
-        points.add(Point.fromLngLat(19.80057, 45.24089));
 
-        MapboxDirections client = MapboxDirections.builder()
-                .accessToken(getResources().getString(R.string.mapbox_access_token))
-                .routeOptions(RouteOptions.builder()
-                                .coordinatesList(points)
-                                .profile(DirectionsCriteria.PROFILE_DRIVING)
-                                .overview(DirectionsCriteria.OVERVIEW_FULL)
-                        .build())
-                .build();
+        Point A = Point.fromLngLat(19.80613, 45.23673);
+        Point B = Point.fromLngLat(19.80057, 45.24089);
 
-        final DirectionsRoute[] currentRoute = new DirectionsRoute[1];
-
-        client.enqueueCall(new Callback<DirectionsResponse>() {
-            @Override public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                if (response.body() == null) {
-                    Log.e("", "No routes found, make sure you set the right user and access token.");
-                    return;
-                } else if (response.body().routes().size() < 1) {
-                    Log.e("", "No routes found");
-                    return;
-                }
-
-                currentRoute[0] = response.body().routes().get(0);
-                Feature directionsRouteFeature = Feature.fromGeometry(LineString.fromPolyline(currentRoute[0].geometry(), PRECISION_6));
-
-                //Log.e(":)", currentRoute[0].distance().toString());
-
-                // je LineString
-
-                Log.e(":)", directionsRouteFeature.geometry().type());
-
-                // ((LineString)(directionsRouteFeature.geometry())).coordinates();
-                drawPolylineToMap(((LineString)(directionsRouteFeature.geometry())).coordinates(), "#4e3c0");
-
-                List<Point> routePoints = new ArrayList<>();
-                for (RouteLeg l : currentRoute[0].legs()) {
-                    for (LegStep s : l.steps()) {
-                        routePoints.add(s.maneuver().location());
-                    }
-                }
-
-                drawPolylineToMap(routePoints, "#4e3c0");
-            }
-
-            @Override public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
-                Log.e("", "Error: " + throwable.getMessage());
-            }
-        });
-
-
-        drawCircleToMap(points.get(0), 8.0, "#ff0088");
-        drawCircleToMap(points.get(1), 8.0, "#00ff88");
-        //drawPolylineToMap(points, "#4e3c0");
-
-
+        drawRoute(A, B, "#2369ED");
     }
 
     @Override

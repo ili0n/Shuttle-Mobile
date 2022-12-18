@@ -1,5 +1,7 @@
 package com.example.shuttlemobile.common;
 
+import static com.mapbox.core.constants.Constants.PRECISION_6;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,8 +19,16 @@ import android.view.ViewGroup;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.util.Utils;
+import com.mapbox.api.directions.v5.DirectionsCriteria;
+import com.mapbox.api.directions.v5.MapboxDirections;
+import com.mapbox.api.directions.v5.models.DirectionsResponse;
+import com.mapbox.api.directions.v5.models.DirectionsRoute;
+import com.mapbox.api.directions.v5.models.RouteOptions;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.maps.MapView;
+import com.mapbox.maps.MapboxMap;
 import com.mapbox.maps.Style;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin;
@@ -33,7 +43,13 @@ import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManagerKt;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public abstract class GenericUserMapFragment extends GenericUserFragment {
     private MapView mapView;
@@ -90,6 +106,8 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         mapView.onDestroy();
     }
 
+    public abstract String getPublicMapApiToken();
+
     public abstract void onMapLoaded();
 
     public abstract int getLayoutID();
@@ -109,7 +127,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
     }
 
 
-    public void drawCar(Point pos, boolean available) {
+    public final void drawCar(Point pos, boolean available) {
         if (available) {
             drawAnnotationToMap(pos, carAvailable);
         } else {
@@ -117,7 +135,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         }
     }
 
-    public void drawCircleToMap(Point point, Double radius, String hexColor) {
+    public final void drawCircleToMap(Point point, Double radius, String hexColor) {
         CircleAnnotationOptions circleAnnotationOptions = new CircleAnnotationOptions()
                 .withPoint(point)
                 .withCircleRadius(radius)
@@ -128,7 +146,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         circleAnnotationManager.create(circleAnnotationOptions);
     }
 
-    public void drawAnnotationToMap(Point point, Bitmap image) {
+    public final void drawAnnotationToMap(Point point, Bitmap image) {
         PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
                 .withPoint(point)
                 .withIconImage(image)
@@ -136,13 +154,63 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         pointAnnotationManager.create(pointAnnotationOptions);
     }
 
-    public void drawPolylineToMap(List<Point> points, String hexColor) {
+    public final void drawPolylineToMap(List<Point> points, String hexColor) {
         PolylineAnnotationOptions polylineAnnotationOptions = new PolylineAnnotationOptions()
                 .withPoints(points)
-                .withLineWidth(8.0)
-                .withLineColor(hexColor)
+                .withLineWidth(6.0)
+                .withLineColor(hexColor);
         ;
         polylineAnnotationManager.create(polylineAnnotationOptions);
     }
 
+    public final void drawRoute(Point A, Point B, String hexColor) {
+        final List<Point> points = Arrays.asList(A, B);
+
+        final MapboxDirections client = MapboxDirections.builder()
+                .accessToken(getPublicMapApiToken())
+                .routeOptions(RouteOptions.builder()
+                        .coordinatesList(points)
+                        .profile(DirectionsCriteria.PROFILE_DRIVING)
+                        .overview(DirectionsCriteria.OVERVIEW_FULL)
+                        .build())
+                .build();
+
+        client.enqueueCall(new Callback<DirectionsResponse>() {
+            @Override
+            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+                drawRouteOnResponse(call, response, hexColor);
+            }
+
+            @Override
+            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+                // Failed to call.
+            }
+        });
+    }
+
+    private void drawRouteOnResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response, String hexColor) {
+        if (response.body() == null) {
+            // No response.
+            return;
+        }
+
+        final List<DirectionsRoute> routes = response.body().routes();
+
+        if (routes.size() == 0) {
+            // No routes.
+            return;
+        }
+
+        // We only draw the first route since we don't need alternative routes.
+
+        final DirectionsRoute route = routes.get(0);
+        final Feature routeFeature = Feature.fromGeometry(LineString.fromPolyline(route.geometry(), PRECISION_6));
+        final LineString routeGeometry = (LineString)(routeFeature.geometry());
+
+        final List<Point> routePoints = routeGeometry.coordinates();
+        final Point A = routePoints.get(0);
+        final Point B = routePoints.get(routePoints.size() - 1);
+
+        drawPolylineToMap(routePoints, hexColor);
+    }
 }
