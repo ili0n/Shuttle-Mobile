@@ -1,10 +1,13 @@
 package com.example.shuttlemobile.passenger.fragments;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -35,7 +38,7 @@ public class PassengerHome extends GenericUserMapFragment {
      * Destination point.
      */
     private Point B = null;
-    
+
     public static PassengerHome newInstance(SessionContext session) {
         PassengerHome fragment = new PassengerHome();
         Bundle bundle = new Bundle();
@@ -51,9 +54,20 @@ public class PassengerHome extends GenericUserMapFragment {
         fitCamera = view.findViewById(R.id.btnFitCam);
         moveCamera = view.findViewById(R.id.btnMoveCam);
 
-        btnCreateRoute.setOnClickListener(view1 -> makeRouteFromInput());
+        btnCreateRoute.setOnClickListener(view1 -> {
+            hideKeyboard();
+            makeRouteFromInput();
+        });
         fitCamera.setOnClickListener(view12 -> fitCameraToRoute());
         moveCamera.setOnClickListener(view13 -> focusOnPointA());
+    }
+
+    private void hideKeyboard() {
+        try {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(btnCreateRoute.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        } catch (Exception e) {
+        }
     }
 
     /**

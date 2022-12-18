@@ -3,7 +3,6 @@ package com.example.shuttlemobile.common;
 import static com.mapbox.core.constants.Constants.PRECISION_6;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,12 +27,6 @@ import com.mapbox.maps.EdgeInsets;
 import com.mapbox.maps.MapView;
 import com.mapbox.maps.MapboxMap;
 import com.mapbox.maps.Style;
-import com.mapbox.maps.extension.style.StyleContract;
-import com.mapbox.maps.extension.style.StyleInterface;
-import com.mapbox.maps.extension.style.layers.LayerUtils;
-import com.mapbox.maps.extension.style.layers.generated.LineLayer;
-import com.mapbox.maps.extension.style.sources.SourceUtils;
-import com.mapbox.maps.extension.style.sources.generated.GeoJsonSource;
 import com.mapbox.maps.plugin.animation.CameraAnimationsUtils;
 import com.mapbox.maps.plugin.animation.Cancelable;
 import com.mapbox.maps.plugin.animation.MapAnimationOptions;
@@ -46,14 +39,12 @@ import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManagerKt;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
-import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotation;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManagerKt;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
