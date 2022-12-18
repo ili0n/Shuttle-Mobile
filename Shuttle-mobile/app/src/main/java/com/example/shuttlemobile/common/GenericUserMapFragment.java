@@ -241,7 +241,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         final MapAnimationOptions mapAnimationOptions = new MapAnimationOptions.Builder().duration(animDurationInMs).build();
         final Cancelable cancelable = CameraAnimationsUtils.flyTo(mapboxMap, fitOptions, mapAnimationOptions);
 
-        // Note: use `mapboxMap.setCamera(fitOptions);` to perform the transition wihtout animation.
+        // Note: use `mapboxMap.setCamera(fitOptions);` to perform the transition without animation.
     }
 
     public final void lookAtPoint(Point p, double zoom, long animDurationInMs) {

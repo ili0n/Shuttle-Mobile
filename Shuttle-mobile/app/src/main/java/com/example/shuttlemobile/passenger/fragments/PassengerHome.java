@@ -3,6 +3,7 @@ package com.example.shuttlemobile.passenger.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,9 @@ import com.mapbox.geojson.Point;
 public class PassengerHome extends GenericUserMapFragment {
     private Button fitCamera;
     private Button moveCamera;
+
+    private EditText txtDeparture, txtDestination;
+    private Button btnCreateRoute;
     
     public static PassengerHome newInstance(SessionContext session) {
         PassengerHome fragment = new PassengerHome();
@@ -26,6 +30,16 @@ public class PassengerHome extends GenericUserMapFragment {
     }
 
     private void initViewElements(@NonNull View view) {
+        txtDeparture = view.findViewById(R.id.txt_p_home_departure);
+        txtDestination = view.findViewById(R.id.txt_p_home_destination);
+        btnCreateRoute = view.findViewById(R.id.btn_p_home_makeRoute);
+
+        //
+
+        // TODO: Convert text to (long, lat)
+
+        //
+
         fitCamera = view.findViewById(R.id.btnFitCam);
         fitCamera.setOnClickListener(new View.OnClickListener() {
             @Override
