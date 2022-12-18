@@ -82,8 +82,8 @@ public class PassengerHome extends GenericUserMapFragment {
 
         final Geocoder geocoder = new Geocoder(getContext());
 
-        List<Address> addressesDep = new ArrayList<>();
-        List<Address> addressesDest = new ArrayList<>();
+        List<Address> addressesDep;
+        List<Address> addressesDest;
 
         try {
             addressesDep = geocoder.getFromLocationName(dep, 1);
@@ -119,8 +119,6 @@ public class PassengerHome extends GenericUserMapFragment {
     private void drawRouteAndPoints() {
         if (A != null && B != null) {
             drawRoute(A, B, "#2369ED");
-            drawCircle(A, 8.0, "#FF0000");
-            drawCircle(B, 8.0, "#FFff00");
         }
     }
 

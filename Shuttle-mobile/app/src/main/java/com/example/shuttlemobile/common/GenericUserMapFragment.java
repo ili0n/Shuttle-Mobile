@@ -59,6 +59,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
     private PolylineAnnotationManager polylineAnnotationManager;
 
     private PolylineAnnotationManager routeAnnotationManager;
+    private CircleAnnotationManager routeCircleAnnotationManager;
 
     private Bitmap carAvailable;
     private Bitmap carUnavailable;
@@ -120,6 +121,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationApi, new AnnotationConfig());
         polylineAnnotationManager = PolylineAnnotationManagerKt.createPolylineAnnotationManager(annotationApi, new AnnotationConfig());
         routeAnnotationManager = PolylineAnnotationManagerKt.createPolylineAnnotationManager(annotationApi, new AnnotationConfig());
+        routeCircleAnnotationManager = CircleAnnotationManagerKt.createCircleAnnotationManager(annotationApi, new AnnotationConfig());
     }
 
     private void initIcons() {
@@ -183,12 +185,36 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
      */
     public final void drawPolylineRoute(List<Point> points, String hexColor) {
         routeAnnotationManager.deleteAll();
-        PolylineAnnotationOptions polylineAnnotationOptions = new PolylineAnnotationOptions()
+        routeCircleAnnotationManager.deleteAll();
+
+        PolylineAnnotationOptions lineInner = new PolylineAnnotationOptions()
                 .withPoints(points)
-                .withLineWidth(6.0)
+                .withLineWidth(5.0)
                 .withLineColor(hexColor);
         ;
-        routeAnnotationManager.create(polylineAnnotationOptions);
+        routeAnnotationManager.create(lineInner);
+
+        PolylineAnnotationOptions lineOuter = new PolylineAnnotationOptions()
+                .withPoints(points)
+                .withLineWidth(2.0)
+                .withLineGapWidth(3.0)
+                .withLineColor("#ffffff");
+        ;
+        routeAnnotationManager.create(lineOuter);
+
+        final Point A = points.get(0);
+        final Point B = points.get(points.size() - 1);
+
+        CircleAnnotationOptions circleAnnotationOptions = new CircleAnnotationOptions()
+                .withPoint(A)
+                .withCircleColor(hexColor)
+                .withCircleRadius(5.0)
+                .withCircleStrokeWidth(3)
+                .withCircleStrokeColor("#ffffff");
+        circleAnnotationManager.create(circleAnnotationOptions);
+
+        circleAnnotationOptions.withPoint(B);
+        circleAnnotationManager.create(circleAnnotationOptions);
     }
 
     public final void drawRoute(Point A, Point B, String hexColor) {
