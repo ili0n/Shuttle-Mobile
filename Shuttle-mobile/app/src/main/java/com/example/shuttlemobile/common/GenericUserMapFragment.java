@@ -3,6 +3,7 @@ package com.example.shuttlemobile.common;
 import static com.mapbox.core.constants.Constants.PRECISION_6;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,12 @@ import com.mapbox.maps.EdgeInsets;
 import com.mapbox.maps.MapView;
 import com.mapbox.maps.MapboxMap;
 import com.mapbox.maps.Style;
+import com.mapbox.maps.extension.style.StyleContract;
+import com.mapbox.maps.extension.style.StyleInterface;
+import com.mapbox.maps.extension.style.layers.LayerUtils;
+import com.mapbox.maps.extension.style.layers.generated.LineLayer;
+import com.mapbox.maps.extension.style.sources.SourceUtils;
+import com.mapbox.maps.extension.style.sources.generated.GeoJsonSource;
 import com.mapbox.maps.plugin.animation.CameraAnimationsUtils;
 import com.mapbox.maps.plugin.animation.Cancelable;
 import com.mapbox.maps.plugin.animation.MapAnimationOptions;
@@ -39,12 +46,14 @@ import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManagerKt;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
+import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotation;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManagerKt;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,6 +66,9 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
     private CircleAnnotationManager circleAnnotationManager;
     private PointAnnotationManager pointAnnotationManager;
     private PolylineAnnotationManager polylineAnnotationManager;
+
+    private PolylineAnnotationManager routeAnnotationManager;
+
     private Bitmap carAvailable;
     private Bitmap carUnavailable;
 
@@ -74,12 +86,8 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         initMapAPI();
         initIcons();
 
-        mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
-            @Override
-            public void onStyleLoaded(@NonNull Style style) {
-                onMapLoaded();
-            }
-        });
+        mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS, style -> onMapLoaded());
+
     }
 
     @Override
@@ -120,6 +128,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         circleAnnotationManager = CircleAnnotationManagerKt.createCircleAnnotationManager(annotationApi, new AnnotationConfig());
         pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationApi, new AnnotationConfig());
         polylineAnnotationManager = PolylineAnnotationManagerKt.createPolylineAnnotationManager(annotationApi, new AnnotationConfig());
+        routeAnnotationManager = PolylineAnnotationManagerKt.createPolylineAnnotationManager(annotationApi, new AnnotationConfig());
     }
 
     private void initIcons() {
@@ -155,6 +164,14 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         pointAnnotationManager.create(pointAnnotationOptions);
     }
 
+    /**
+     * Draw a polyline from the specified points with a given color.
+     * <br/>
+     * If you want to draw a route, use <code>drawPolylineRoute()</code>, as that
+     * allows only 1 route to be drawn at any time.
+     * @param points List of points that compose the polyline.
+     * @param hexColor Color of the polyline.
+     */
     public final void drawPolyline(List<Point> points, String hexColor) {
         PolylineAnnotationOptions polylineAnnotationOptions = new PolylineAnnotationOptions()
                 .withPoints(points)
@@ -162,6 +179,25 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
                 .withLineColor(hexColor);
         ;
         polylineAnnotationManager.create(polylineAnnotationOptions);
+    }
+
+    /**
+     * Draw a route between the specified points with a given color. If another route is already
+     * drawn, it will be deleted before a new one is drawn.
+     * <br/>
+     * Note that only 1 route polyline can be present on the map at any given time,
+     * use <code>drawPolyline()</code> to draw an arbitrary polyline.
+     * @param points List of points that compose the polyline.
+     * @param hexColor Color of the polyline.
+     */
+    public final void drawPolylineRoute(List<Point> points, String hexColor) {
+        routeAnnotationManager.deleteAll();
+        PolylineAnnotationOptions polylineAnnotationOptions = new PolylineAnnotationOptions()
+                .withPoints(points)
+                .withLineWidth(6.0)
+                .withLineColor(hexColor);
+        ;
+        routeAnnotationManager.create(polylineAnnotationOptions);
     }
 
     public final void drawRoute(Point A, Point B, String hexColor) {
@@ -212,7 +248,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         final Point A = routePoints.get(0);
         final Point B = routePoints.get(routePoints.size() - 1);
 
-        drawPolyline(routePoints, hexColor);
+        drawPolylineRoute(routePoints, hexColor);
 
         return routeFeature;
     }
