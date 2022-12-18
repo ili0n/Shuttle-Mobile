@@ -2,20 +2,14 @@ package com.example.shuttlemobile.common;
 
 import static com.mapbox.core.constants.Constants.PRECISION_6;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.util.Utils;
@@ -27,9 +21,15 @@ import com.mapbox.api.directions.v5.models.RouteOptions;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
+import com.mapbox.maps.CameraOptions;
+import com.mapbox.maps.CoordinateBounds;
+import com.mapbox.maps.EdgeInsets;
 import com.mapbox.maps.MapView;
 import com.mapbox.maps.MapboxMap;
 import com.mapbox.maps.Style;
+import com.mapbox.maps.plugin.animation.CameraAnimationsUtils;
+import com.mapbox.maps.plugin.animation.Cancelable;
+import com.mapbox.maps.plugin.animation.MapAnimationOptions;
 import com.mapbox.maps.plugin.annotation.AnnotationConfig;
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin;
 import com.mapbox.maps.plugin.annotation.AnnotationPluginImplKt;
@@ -43,7 +43,6 @@ import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManagerKt;
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,6 +52,7 @@ import retrofit2.Response;
 
 public abstract class GenericUserMapFragment extends GenericUserFragment {
     private MapView mapView;
+    private MapboxMap mapboxMap;
     private AnnotationPlugin annotationApi;
     private CircleAnnotationManager circleAnnotationManager;
     private PointAnnotationManager pointAnnotationManager;
@@ -115,6 +115,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
     public abstract int getMapViewID();
 
     private void initMapAPI() {
+        mapboxMap = mapView.getMapboxMap();
         annotationApi = AnnotationPluginImplKt.getAnnotations(mapView);
         circleAnnotationManager = CircleAnnotationManagerKt.createCircleAnnotationManager(annotationApi, new AnnotationConfig());
         pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationApi, new AnnotationConfig());
@@ -129,13 +130,13 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
 
     public final void drawCar(Point pos, boolean available) {
         if (available) {
-            drawAnnotationToMap(pos, carAvailable);
+            drawImage(pos, carAvailable);
         } else {
-            drawAnnotationToMap(pos, carUnavailable);
+            drawImage(pos, carUnavailable);
         }
     }
 
-    public final void drawCircleToMap(Point point, Double radius, String hexColor) {
+    public final void drawCircle(Point point, Double radius, String hexColor) {
         CircleAnnotationOptions circleAnnotationOptions = new CircleAnnotationOptions()
                 .withPoint(point)
                 .withCircleRadius(radius)
@@ -146,7 +147,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         circleAnnotationManager.create(circleAnnotationOptions);
     }
 
-    public final void drawAnnotationToMap(Point point, Bitmap image) {
+    public final void drawImage(Point point, Bitmap image) {
         PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
                 .withPoint(point)
                 .withIconImage(image)
@@ -154,7 +155,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         pointAnnotationManager.create(pointAnnotationOptions);
     }
 
-    public final void drawPolylineToMap(List<Point> points, String hexColor) {
+    public final void drawPolyline(List<Point> points, String hexColor) {
         PolylineAnnotationOptions polylineAnnotationOptions = new PolylineAnnotationOptions()
                 .withPoints(points)
                 .withLineWidth(6.0)
@@ -178,7 +179,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         client.enqueueCall(new Callback<DirectionsResponse>() {
             @Override
             public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                drawRouteOnResponse(call, response, hexColor);
+                drawRoute_OnResponse(call, response, hexColor);
             }
 
             @Override
@@ -188,17 +189,17 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         });
     }
 
-    private void drawRouteOnResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response, String hexColor) {
+    private Feature drawRoute_OnResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response, String hexColor) {
         if (response.body() == null) {
             // No response.
-            return;
+            return null;
         }
 
         final List<DirectionsRoute> routes = response.body().routes();
 
         if (routes.size() == 0) {
             // No routes.
-            return;
+            return null;
         }
 
         // We only draw the first route since we don't need alternative routes.
@@ -211,6 +212,41 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         final Point A = routePoints.get(0);
         final Point B = routePoints.get(routePoints.size() - 1);
 
-        drawPolylineToMap(routePoints, hexColor);
+        drawPolyline(routePoints, hexColor);
+
+        return routeFeature;
+    }
+
+    public final void fitViewport(Point A, Point B, long animDurationInMs) {
+        // https://stackoverflow.com/questions/69877907/animate-the-mapbox-camera-in-v10
+        // https://github.com/mapbox/mapbox-maps-android/issues/776
+
+        // Due to rotation it may not fit always, so we add some padding. 64dp should be enough.
+
+        final double padding_dp = 64.0;
+        final double padding_px = Utils.dp2px(getContext(), padding_dp);
+        final EdgeInsets padding = new EdgeInsets(padding_px, padding_px, padding_px, padding_px);
+
+        // The points could be anywhere, create a BBox which the viewport will try to fit.
+
+        final double top = Math.min(A.latitude(), B.latitude());
+        final double bottom = Math.max(A.latitude(), B.latitude());
+        final double left = Math.min(A.longitude(), B.longitude());
+        final double right = Math.max(A.longitude(), B.longitude());
+        final CoordinateBounds bounds = new CoordinateBounds(Point.fromLngLat(left, bottom), Point.fromLngLat(right, top));
+
+        // Apply transformation.
+
+        final CameraOptions fitOptions = mapboxMap.cameraForCoordinateBounds(bounds, padding, 0.0, 0.0);
+        final MapAnimationOptions mapAnimationOptions = new MapAnimationOptions.Builder().duration(animDurationInMs).build();
+        final Cancelable cancelable = CameraAnimationsUtils.flyTo(mapboxMap, fitOptions, mapAnimationOptions);
+
+        // Note: use `mapboxMap.setCamera(fitOptions);` to perform the transition wihtout animation.
+    }
+
+    public final void lookAtPoint(Point p, double zoom, long animDurationInMs) {
+        final CameraOptions lookOptions = new CameraOptions.Builder().center(p).zoom(zoom).build();
+        final MapAnimationOptions mapAnimationOptions = new MapAnimationOptions.Builder().duration(animDurationInMs).build();
+        final Cancelable cancelable = CameraAnimationsUtils.flyTo(mapboxMap, lookOptions, mapAnimationOptions);
     }
 }

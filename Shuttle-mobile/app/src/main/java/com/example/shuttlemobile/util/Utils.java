@@ -1,9 +1,11 @@
 package com.example.shuttlemobile.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
 
 import androidx.core.content.ContextCompat;
 
@@ -19,5 +21,15 @@ public class Utils {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    /**
+     * Converts 'dp' into 'px'
+     * @param context The application context. Use <code>getContext()</code>.
+     * @param dp The relative dp value.
+     * @return Equivalent pixel value, varying for different devices.
+     */
+    public static double dp2px(Context context, double dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float)dp, context.getResources().getDisplayMetrics());
     }
 }

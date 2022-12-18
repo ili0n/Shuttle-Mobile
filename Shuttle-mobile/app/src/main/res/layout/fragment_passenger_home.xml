@@ -7,16 +7,38 @@
     android:layout_height="match_parent"
     tools:context=".passenger.fragments.PassengerHome">
 
+    <Button
+        android:id="@+id/btnFitCam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fit Camera"
+        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintEnd_toStartOf="@+id/btnMoveCam"
+        mapbox:layout_constraintHorizontal_bias="0.498"
+        mapbox:layout_constraintStart_toStartOf="parent" />
+
     <com.mapbox.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintBottom_toTopOf="@+id/btnFitCam"
         mapbox:layout_constraintEnd_toEndOf="parent"
         mapbox:layout_constraintStart_toStartOf="parent"
         mapbox:layout_constraintTop_toTopOf="parent"
         mapbox:mapbox_cameraTargetLat="40.7128"
         mapbox:mapbox_cameraTargetLng="-74.0060"
-        mapbox:mapbox_cameraZoom="9.0" />
+        mapbox:mapbox_cameraZoom="9.0">
+
+    </com.mapbox.maps.MapView>
+
+    <Button
+        android:id="@+id/btnMoveCam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Move Camera"
+        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintHorizontal_bias="0.8"
+        mapbox:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
