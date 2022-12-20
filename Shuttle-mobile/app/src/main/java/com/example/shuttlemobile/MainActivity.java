@@ -2,12 +2,21 @@ package com.example.shuttlemobile;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -22,100 +31,107 @@ import com.google.android.gms.location.Priority;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
-    private final int PERMISSION_LOCATION = 1;
-    private FusedLocationProviderClient fusedLocationClient;
-    private LocationRequest locationRequest;
-    private LocationCallback locationCallback;
-
-    private boolean hasPermission(String permission) {
-        return ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED;
-    }
+public class MainActivity extends AppCompatActivity implements LocationListener {
+    LocationManager locationManager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new Timer().schedule(new TimerTask() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void run() {
-                checkForPermissions();
-            }
-        }, 3000);
-    }
-
-    private void setFusedLocationClient() {
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(Priority.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(500);
-
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-
-                Log.e("A", locationResult.getLastLocation().toString());
-            }
-        };
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+        initLocationManager();
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    onHasPermission();
-                } else {
-                    // Permission Denied
-                    finishAndRemoveTask();
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * Check and ask for all permissions that are required ahead-of-time.
-     * If the user declines any permission, the app will close.
-     * If all permissions are accepted, continue.
-     */
-    private void checkForPermissions() {
-        checkForLocationPermission();
-    }
-
-    private void checkForLocationPermission() {
-        if (!hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                && !hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            String[] permissions = new String[] {
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-            };
-
-            ActivityCompat.requestPermissions(this, permissions, PERMISSION_LOCATION);
+    public void onLocationChanged(@NonNull Location location) {
+        if (location != null) {
+            Log.e("Location", location.toString());
         } else {
-            onHasPermission();
+            Log.e("Location", "null");
         }
     }
 
-    private void onHasPermission() {
-        setFusedLocationClient();
-        exitSplashScreen();
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
     }
 
-    private void exitSplashScreen() {
-        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-        finish();
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        enableLocationListening();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disableLocationListening();
+    }
+
+    private void initLocationManager() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.e("", "No permission, asking");
+            ActivityCompat.requestPermissions(this, new String[] {
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+            }, 13579);
+            return;
+        }
+        createLocationRequest();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void createLocationRequest() {
+        Log.e("", "createLocationRequest()");
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000L, (float) 0.1, this);
+        enableLocationListening();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        Log.e("", "onRequestPermissionsResult()");
+        if (requestCode == 13579) {
+
+            for (int res : grantResults) {
+                Log.e("grantResult", String.valueOf(res));
+            }
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                for (String perm : permissions) {
+                    Log.e("permission", perm);
+                    if (perm == Manifest.permission.ACCESS_FINE_LOCATION) {
+                        Log.e("PERMISSION_GRANTED", "Manifest.permission.ACCESS_FINE_LOCATION");
+                        createLocationRequest();
+                    } else if (perm == Manifest.permission.ACCESS_COARSE_LOCATION) {
+                        Log.e("PERMISSION_GRANTED", "Manifest.permission.ACCESS_COARSE_LOCATION");
+                        createLocationRequest();
+                    }
+                }
+            }
+        }
+    }
+
+    private void enableLocationListening() {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle("Enable Location");
+            alertDialog.setMessage("Your locations setting is not enabled. Please enabled it.");
+            alertDialog.setPositiveButton("Location Settings", (dialog, which) -> {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            });
+            alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            alertDialog.create().show();
+        }
+    }
+
+    private void disableLocationListening() {
+        locationManager.removeUpdates(this);
     }
 }
