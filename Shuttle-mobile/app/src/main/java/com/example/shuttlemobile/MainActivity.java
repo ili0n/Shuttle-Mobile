@@ -31,32 +31,38 @@ import com.google.android.gms.location.Priority;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements LocationListener {
+public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
+    LocationListener locationListener;
+
+    private void initLocationListener() {
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                if (location != null) {
+                    Log.e("Location", location.toString());
+                } else {
+                    Log.e("Location", "null");
+                }
+            }
+
+            @Override
+            public void onProviderDisabled(@NonNull String provider) {
+            }
+
+            @Override
+            public void onProviderEnabled(@NonNull String provider) {
+            }
+        };
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initLocationListener();
         initLocationManager();
-    }
-
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        if (location != null) {
-            Log.e("Location", location.toString());
-        } else {
-            Log.e("Location", "null");
-        }
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
     }
 
     @Override
@@ -74,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private void initLocationManager() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.e("", "No permission, asking");
+            Log.e("", "No location permission, asking");
             ActivityCompat.requestPermissions(this, new String[] {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -87,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @SuppressLint("MissingPermission")
     private void createLocationRequest() {
         Log.e("", "createLocationRequest()");
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000L, (float) 0.1, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000L, (float) 0.1, locationListener);
         enableLocationListening();
     }
 
@@ -97,18 +103,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         Log.e("", "onRequestPermissionsResult()");
         if (requestCode == 13579) {
-
-            for (int res : grantResults) {
-                Log.e("grantResult", String.valueOf(res));
-            }
-
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 for (String perm : permissions) {
-                    Log.e("permission", perm);
-                    if (perm == Manifest.permission.ACCESS_FINE_LOCATION) {
+                    if (perm.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
                         Log.e("PERMISSION_GRANTED", "Manifest.permission.ACCESS_FINE_LOCATION");
                         createLocationRequest();
-                    } else if (perm == Manifest.permission.ACCESS_COARSE_LOCATION) {
+                    } else if (perm.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                         Log.e("PERMISSION_GRANTED", "Manifest.permission.ACCESS_COARSE_LOCATION");
                         createLocationRequest();
                     }
@@ -132,6 +132,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     private void disableLocationListening() {
-        locationManager.removeUpdates(this);
+        locationManager.removeUpdates(locationListener);
     }
 }
