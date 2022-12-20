@@ -35,27 +35,6 @@ public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
 
-    private void initLocationListener() {
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                if (location != null) {
-                    Log.e("Location", location.toString());
-                } else {
-                    Log.e("Location", "null");
-                }
-            }
-
-            @Override
-            public void onProviderDisabled(@NonNull String provider) {
-            }
-
-            @Override
-            public void onProviderEnabled(@NonNull String provider) {
-            }
-        };
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +56,27 @@ public class MainActivity extends AppCompatActivity {
         disableLocationListening();
     }
 
+    private void initLocationListener() {
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                if (location != null) {
+                    Log.e("Location", location.toString());
+                } else {
+                    Log.e("Location", "null");
+                }
+            }
+
+            @Override
+            public void onProviderDisabled(@NonNull String provider) {
+            }
+
+            @Override
+            public void onProviderEnabled(@NonNull String provider) {
+            }
+        };
+    }
+
     private void initLocationManager() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -95,6 +95,14 @@ public class MainActivity extends AppCompatActivity {
         Log.e("", "createLocationRequest()");
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000L, (float) 0.1, locationListener);
         enableLocationListening();
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
+            }
+        }, 3000);
     }
 
     @Override

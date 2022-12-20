@@ -4,6 +4,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +31,7 @@ public class PassengerHome extends GenericUserMapFragment {
     private Button fitCamera, moveCamera; // Helper buttons for navigation.d
     private EditText txtDeparture, txtDestination;
     private Button btnCreateRoute;
+    private boolean initiallyMovedToLocation = false;
 
     /**
      * Departure point.
@@ -139,6 +141,15 @@ public class PassengerHome extends GenericUserMapFragment {
     private void focusOnPointA() {
         if (A != null) {
             lookAtPoint(A, 15, 3000);
+        }
+    }
+
+    @Override
+    public void onNewLocation(Location location) {
+        if (!initiallyMovedToLocation) {
+            // When the screen opens, move the map to our location (just the first time).
+            lookAtPoint(Point.fromLngLat(location.getLongitude(), location.getLatitude()), 15, 4000);
+            initiallyMovedToLocation = true;
         }
     }
 

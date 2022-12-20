@@ -2,14 +2,23 @@ package com.example.shuttlemobile.common;
 
 import static com.mapbox.core.constants.Constants.PRECISION_6;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.util.Utils;
@@ -64,6 +73,9 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
     private Bitmap carAvailable;
     private Bitmap carUnavailable;
 
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(getLayoutID(), container, false);
@@ -75,11 +87,25 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
 
         mapView = getActivity().findViewById(getMapViewID());
 
+        initLocationListener();
+        initLocationManager();
+
         initMapAPI();
         initIcons();
 
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS, style -> onMapLoaded());
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        createLocationRequest();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(locationListener);
     }
 
     @Override
@@ -113,6 +139,36 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
     public abstract int getLayoutID();
 
     public abstract int getMapViewID();
+
+    private void initLocationListener() {
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                onNewLocation(location);
+            }
+
+            @Override
+            public void onProviderDisabled(@NonNull String provider) {
+            }
+
+            @Override
+            public void onProviderEnabled(@NonNull String provider) {
+            }
+        };
+    }
+
+    public abstract void onNewLocation(Location location);
+
+    private void initLocationManager() {
+        locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        createLocationRequest();
+    }
+
+    @SuppressLint("MissingPermission") // Checked inside the splash screen.
+    private void createLocationRequest() {
+        Log.e("", "createLocationRequest()");
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000L, (float) 0.1, locationListener);
+    }
 
     private void initMapAPI() {
         mapboxMap = mapView.getMapboxMap();
