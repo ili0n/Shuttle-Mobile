@@ -9,6 +9,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.shuttlemobile.util.NotificationUtil;
+
 import java.sql.Time;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
@@ -47,5 +49,8 @@ public class PassengerMessageService extends Service {
 
     private void fetchNewMessages() {
         Log.e("PassengerMessageService", "fetchNewMessages()");
+
+        Intent intent = new Intent(NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID);
+        sendBroadcast(intent);
     }
 }

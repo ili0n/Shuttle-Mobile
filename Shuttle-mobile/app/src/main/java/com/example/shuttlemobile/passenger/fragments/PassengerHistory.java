@@ -1,6 +1,7 @@
 package com.example.shuttlemobile.passenger.fragments;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
+import com.example.shuttlemobile.common.receiver.MessageReceiver;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.passenger.services.PassengerMessageService;
 import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PassengerHistory extends GenericUserFragment {
+    MessageReceiver messageReceiver;
 
     public static PassengerHistory newInstance(SessionContext session) {
         PassengerHistory fragment = new PassengerHistory();
@@ -46,9 +49,9 @@ public class PassengerHistory extends GenericUserFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        messageReceiver = new MessageReceiver();
         initializeList();
     }
-
 
     private void sendNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID)
@@ -66,6 +69,14 @@ public class PassengerHistory extends GenericUserFragment {
 
         sendNotification();
         getActivity().startService(new Intent(getActivity(), PassengerMessageService.class));
+
+
+        IntentFilter intentFilter = new IntentFilter();
+        // Note: We can use an arbitrary string, but we already have these and they map 1-1.
+        intentFilter.addAction(NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID);
+        intentFilter.addAction(NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID);
+        getActivity().registerReceiver(messageReceiver, intentFilter);
+
 
         ///////////////////////////////
 
