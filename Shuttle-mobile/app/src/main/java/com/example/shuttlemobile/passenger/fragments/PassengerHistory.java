@@ -21,6 +21,7 @@ import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.passenger.Passenger;
+import com.example.shuttlemobile.passenger.services.PassengerMessageService;
 import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.util.NotificationUtil;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PassengerHistory extends GenericUserFragment {
+
     public static PassengerHistory newInstance(SessionContext session) {
         PassengerHistory fragment = new PassengerHistory();
         Bundle bundle = new Bundle();
@@ -60,8 +62,12 @@ public class PassengerHistory extends GenericUserFragment {
     }
 
     private void initializeList() {
+        ///////////////////////////////
 
         sendNotification();
+        getActivity().startService(new Intent(getActivity(), PassengerMessageService.class));
+
+        ///////////////////////////////
 
         ListView listView = getActivity().findViewById(R.id.list_p_history);
 
