@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
  * Inbox fragment is shared between all users.
  */
 public class InboxFragment extends GenericUserFragment {
+    private ListView listView;
+
     public static InboxFragment newInstance(SessionContext session) {
         InboxFragment fragment = new InboxFragment();
         Bundle bundle = new Bundle();
@@ -47,12 +50,11 @@ public class InboxFragment extends GenericUserFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        initializeList();
+        List<Chat> chats = initializeList();
+        initListView(chats);
     }
 
-    private void initializeList() {
-        ListView listView = getActivity().findViewById(R.id.list_u_inbox);
-
+    private List<Chat> initializeList() {
         Chat c = new Chat();
         List<Message> messages = new ArrayList<>();
         User other = new Driver();
@@ -94,13 +96,15 @@ public class InboxFragment extends GenericUserFragment {
             return 0;
         }).collect(Collectors.toList());
 
-        // Prevents the "Variable is accessed within inner class. Needs to be declared final" error.
-        final List<Chat> chatsFinal = chats;
+        return chats;
+    }
 
+    private void initListView(List<Chat> chats) {
+        listView = getActivity().findViewById(R.id.list_u_inbox);
         listView.setAdapter(new EasyListAdapter<Chat>() {
             @Override
             public List<Chat> getList() {
-                return chatsFinal;
+                return chats;
             }
 
             @Override
