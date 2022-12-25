@@ -1,12 +1,18 @@
 package com.example.shuttlemobile.common;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import com.example.shuttlemobile.admin.Admin;
+import com.example.shuttlemobile.common.receiver.InboxFragmentMessageReceiver;
 import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.message.Message;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +22,16 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.user.User;
+import com.example.shuttlemobile.util.NotificationUtil;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +44,9 @@ import java.util.stream.Collectors;
  */
 public class InboxFragment extends GenericUserFragment {
     private ListView listView;
+    private List<Chat> chats;
+
+    private BroadcastReceiver gotNewMessageReceiver;
 
     public static InboxFragment newInstance(SessionContext session) {
         InboxFragment fragment = new InboxFragment();
@@ -50,11 +63,20 @@ public class InboxFragment extends GenericUserFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        List<Chat> chats = initializeList();
-        initListView(chats);
+        initializeList();
+        initListView();
+        initReceiver();
     }
 
-    private List<Chat> initializeList() {
+    private void initReceiver() {
+        gotNewMessageReceiver = new InboxFragmentMessageReceiver(session, this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID);
+        intentFilter.addAction(NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID);
+        getActivity().registerReceiver(gotNewMessageReceiver, intentFilter);
+    }
+
+    private void initializeList() {
         Chat c = new Chat();
         List<Message> messages = new ArrayList<>();
         User other = new Driver();
@@ -75,7 +97,7 @@ public class InboxFragment extends GenericUserFragment {
         messages3.add(new Message(new Admin(), session.getUser(), "I am the support.", LocalDateTime.now(), null, Message.Type.SUPPORT));
         c3.setMessages(messages3);
 
-        List<Chat> chats = new ArrayList<>();
+        chats = new ArrayList<>();
         chats.add(c2);
         chats.add(c2);
         chats.add(c);
@@ -95,11 +117,9 @@ public class InboxFragment extends GenericUserFragment {
             }
             return 0;
         }).collect(Collectors.toList());
-
-        return chats;
     }
 
-    private void initListView(List<Chat> chats) {
+    private void initListView() {
         listView = getActivity().findViewById(R.id.list_u_inbox);
         listView.setAdapter(new EasyListAdapter<Chat>() {
             @Override
@@ -159,6 +179,36 @@ public class InboxFragment extends GenericUserFragment {
                 openChatActivity(obj);
             }
         });
+    }
+
+    public void dummyFetchNewData() {
+        Message lastm = chats.get(1).getLastMessage();
+        Message newMessage = new Message(
+                lastm.getRecipient(),
+                lastm.getSender(),
+                "Hi " + LocalDateTime.now().getSecond(),
+                LocalDateTime.now(),
+                lastm.getRide(),
+                lastm.getType());
+        chats.get(1).getMessages().add(newMessage);
+        ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
+
+        // If I'm the recipient of this message, send a notification.
+
+        if (newMessage.getRecipient() == session.getUser()) {
+            sendNotification(newMessage);
+        }
+    }
+
+    private void sendNotification(Message newMessage) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID)
+                .setContentTitle(newMessage.getSender().getName())
+                .setContentText(newMessage.getMessage())
+                .setSmallIcon(R.drawable.ic_baseline_inbox_24)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+        notificationManager.notify(112213, builder.build());
     }
 
     private void openChatActivity(Chat chat) {
