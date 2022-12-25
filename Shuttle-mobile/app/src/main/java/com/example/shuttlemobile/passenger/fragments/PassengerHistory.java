@@ -23,6 +23,7 @@ import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.util.NotificationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class PassengerHistory extends GenericUserFragment {
 
 
     private void sendNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), MainActivity.PASSENGER_NOTIF_CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID)
                 .setContentTitle("Notification Title!")
                 .setContentText("Notification Text!")
                 .setSmallIcon(R.drawable.car_green)
