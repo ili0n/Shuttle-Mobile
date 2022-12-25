@@ -2,6 +2,8 @@ package com.example.shuttlemobile;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -32,6 +35,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String PASSENGER_NOTIF_CHANNEL_ID = "passenger_notification_channel_id";
     LocationManager locationManager;
     LocationListener locationListener;
 
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        createNotificationChannels();
         initLocationListener();
         initLocationManager();
     }
@@ -54,6 +59,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         disableLocationListening();
+    }
+
+    private void createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.e("MainActivity", "Creating notification channels");
+
+            final CharSequence name = getString(R.string.channel_passenger);
+            final int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(PASSENGER_NOTIF_CHANNEL_ID, name, importance);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private void initLocationListener() {

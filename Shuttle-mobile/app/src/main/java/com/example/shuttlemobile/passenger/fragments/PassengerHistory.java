@@ -12,6 +12,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.example.shuttlemobile.MainActivity;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
@@ -42,7 +46,22 @@ public class PassengerHistory extends GenericUserFragment {
         initializeList();
     }
 
+
+    private void sendNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), MainActivity.PASSENGER_NOTIF_CHANNEL_ID)
+                .setContentTitle("Notification Title!")
+                .setContentText("Notification Text!")
+                .setSmallIcon(R.drawable.car_green)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+        notificationManager.notify(900009, builder.build());
+    }
+
     private void initializeList() {
+
+        sendNotification();
+
         ListView listView = getActivity().findViewById(R.id.list_p_history);
 
         List<Ride> rides = new ArrayList<>();
