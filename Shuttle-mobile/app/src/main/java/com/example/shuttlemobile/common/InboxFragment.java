@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.common;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +48,7 @@ import java.util.stream.Collectors;
 public class InboxFragment extends GenericUserFragment {
     private ListView listView;
     private List<Chat> chats;
+    private Activity activity;
 
     private BroadcastReceiver gotNewMessageReceiver;
 
@@ -63,6 +67,7 @@ public class InboxFragment extends GenericUserFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        activity = getActivity();
         initializeList();
         initListView();
         initReceiver();
@@ -191,7 +196,19 @@ public class InboxFragment extends GenericUserFragment {
                 lastm.getRide(),
                 lastm.getType());
         chats.get(1).getMessages().add(newMessage);
-        ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
+
+        // Run UI update async.
+        // TODO: Is this worthless? UI can only be updated in the main thread.
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                activity.runOnUiThread(() -> {
+                    ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
+                });
+            }
+        });
 
         // If I'm the recipient of this message, send a notification.
 
