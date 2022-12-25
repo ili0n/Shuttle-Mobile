@@ -17,9 +17,13 @@
         android:theme="@style/Theme.ShuttleMobile"
         tools:targetApi="31">
         <service
-            android:name=".passenger.services.PassengerMessageService"
+            android:name=".driver.services.DriverMessageService"
             android:enabled="true"
             android:exported="true"></service>
+        <service
+            android:name=".passenger.services.PassengerMessageService"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name=".driver.subactivities.DriverHistoryDetailsActivity"

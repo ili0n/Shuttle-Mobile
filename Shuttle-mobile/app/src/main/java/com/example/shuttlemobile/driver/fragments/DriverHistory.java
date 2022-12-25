@@ -10,12 +10,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
+import com.example.shuttlemobile.driver.services.DriverMessageService;
 import com.example.shuttlemobile.driver.subactivities.DriverHistoryDetailsActivity;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.util.NotificationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +44,26 @@ public class DriverHistory extends GenericUserFragment {
         initializeList();
     }
 
+    private void sendNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID)
+                .setContentTitle("Notification Title!")
+                .setContentText("Notification Text!")
+                .setSmallIcon(R.drawable.car_green)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+        notificationManager.notify(889988, builder.build());
+    }
+
     private void initializeList() {
+        ///////////////////////////////
+
+        sendNotification();
+        getActivity().startService(new Intent(getActivity(), DriverMessageService.class));
+
+        ///////////////////////////////
+
+
         ListView listView = getActivity().findViewById(R.id.list_d_history);
 
         List<Ride> rides = new ArrayList<>();

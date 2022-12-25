@@ -51,7 +51,7 @@ public class PassengerHistory extends GenericUserFragment {
 
 
     private void sendNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID)
                 .setContentTitle("Notification Title!")
                 .setContentText("Notification Text!")
                 .setSmallIcon(R.drawable.car_green)
