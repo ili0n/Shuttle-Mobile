@@ -2,6 +2,7 @@ package com.example.shuttlemobile.passenger;
 
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import com.example.shuttlemobile.passenger.fragments.PassengerAccount;
 import com.example.shuttlemobile.passenger.fragments.PassengerHistory;
 import com.example.shuttlemobile.passenger.fragments.PassengerHome;
 import com.example.shuttlemobile.common.InboxFragment;
+import com.example.shuttlemobile.passenger.services.PassengerMessageService;
 
 public class PassengerActivity extends GenericUserActivity {
 
@@ -19,6 +21,7 @@ public class PassengerActivity extends GenericUserActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger);
+        startService(new Intent(this, PassengerMessageService.class));
     }
 
     @Override

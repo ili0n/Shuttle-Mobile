@@ -59,7 +59,6 @@ public class PassengerHistory extends GenericUserFragment {
         ///////////////////////////////
 
         sendNotification();
-        getActivity().startService(new Intent(getActivity(), PassengerMessageService.class));
 
         ///////////////////////////////
 

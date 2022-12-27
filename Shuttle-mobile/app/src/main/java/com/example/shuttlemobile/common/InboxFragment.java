@@ -75,10 +75,21 @@ public class InboxFragment extends GenericUserFragment {
 
     private void initReceiver() {
         gotNewMessageReceiver = new InboxFragmentMessageReceiver(session, this);
+    }
+
+    @Override
+    public void onResume() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID);
         intentFilter.addAction(NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID);
         getActivity().registerReceiver(gotNewMessageReceiver, intentFilter);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        getActivity().unregisterReceiver(gotNewMessageReceiver);
+        super.onPause();
     }
 
     private void initializeList() {
@@ -209,23 +220,6 @@ public class InboxFragment extends GenericUserFragment {
                 });
             }
         });
-
-        // If I'm the recipient of this message, send a notification.
-
-        if (newMessage.getRecipient() == session.getUser()) {
-            sendNotification(newMessage);
-        }
-    }
-
-    private void sendNotification(Message newMessage) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID)
-                .setContentTitle(newMessage.getSender().getName())
-                .setContentText(newMessage.getMessage())
-                .setSmallIcon(R.drawable.ic_baseline_inbox_24)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-        notificationManager.notify(112213, builder.build());
     }
 
     private void openChatActivity(Chat chat) {
