@@ -2,6 +2,7 @@ package com.example.shuttlemobile.driver;
 
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,12 +13,14 @@ import com.example.shuttlemobile.driver.fragments.DriverAccount;
 import com.example.shuttlemobile.driver.fragments.DriverHistory;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.common.InboxFragment;
+import com.example.shuttlemobile.driver.services.DriverMessageService;
 
 public class DriverActivity extends GenericUserActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver);
+        startService(new Intent(this, DriverMessageService.class));
     }
 
     @Override

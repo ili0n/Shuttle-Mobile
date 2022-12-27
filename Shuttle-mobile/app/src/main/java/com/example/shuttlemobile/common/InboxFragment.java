@@ -1,19 +1,30 @@
 package com.example.shuttlemobile.common;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import com.example.shuttlemobile.admin.Admin;
+import com.example.shuttlemobile.common.receiver.InboxFragmentMessageReceiver;
 import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.message.Message;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
@@ -21,17 +32,26 @@ import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.user.User;
+import com.example.shuttlemobile.util.NotificationUtil;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
  * Inbox fragment is shared between all users.
  */
 public class InboxFragment extends GenericUserFragment {
+    private ListView listView;
+    private List<Chat> chats;
+    private Activity activity;
+
+    private BroadcastReceiver gotNewMessageReceiver;
+
     public static InboxFragment newInstance(SessionContext session) {
         InboxFragment fragment = new InboxFragment();
         Bundle bundle = new Bundle();
@@ -47,12 +67,32 @@ public class InboxFragment extends GenericUserFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        activity = getActivity();
         initializeList();
+        initListView();
+        initReceiver();
+    }
+
+    private void initReceiver() {
+        gotNewMessageReceiver = new InboxFragmentMessageReceiver(session, this);
+    }
+
+    @Override
+    public void onResume() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID);
+        intentFilter.addAction(NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID);
+        getActivity().registerReceiver(gotNewMessageReceiver, intentFilter);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        getActivity().unregisterReceiver(gotNewMessageReceiver);
+        super.onPause();
     }
 
     private void initializeList() {
-        ListView listView = getActivity().findViewById(R.id.list_u_inbox);
-
         Chat c = new Chat();
         List<Message> messages = new ArrayList<>();
         User other = new Driver();
@@ -73,7 +113,7 @@ public class InboxFragment extends GenericUserFragment {
         messages3.add(new Message(new Admin(), session.getUser(), "I am the support.", LocalDateTime.now(), null, Message.Type.SUPPORT));
         c3.setMessages(messages3);
 
-        List<Chat> chats = new ArrayList<>();
+        chats = new ArrayList<>();
         chats.add(c2);
         chats.add(c2);
         chats.add(c);
@@ -93,14 +133,14 @@ public class InboxFragment extends GenericUserFragment {
             }
             return 0;
         }).collect(Collectors.toList());
+    }
 
-        // Prevents the "Variable is accessed within inner class. Needs to be declared final" error.
-        final List<Chat> chatsFinal = chats;
-
+    private void initListView() {
+        listView = getActivity().findViewById(R.id.list_u_inbox);
         listView.setAdapter(new EasyListAdapter<Chat>() {
             @Override
             public List<Chat> getList() {
-                return chatsFinal;
+                return chats;
             }
 
             @Override
@@ -153,6 +193,31 @@ public class InboxFragment extends GenericUserFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Chat obj = (Chat)listView.getItemAtPosition(i);
                 openChatActivity(obj);
+            }
+        });
+    }
+
+    public void dummyFetchNewData() {
+        Message lastm = chats.get(1).getLastMessage();
+        Message newMessage = new Message(
+                lastm.getRecipient(),
+                lastm.getSender(),
+                "Hi " + LocalDateTime.now().getSecond(),
+                LocalDateTime.now(),
+                lastm.getRide(),
+                lastm.getType());
+        chats.get(1).getMessages().add(newMessage);
+
+        // Run UI update async.
+        // TODO: Is this worthless? UI can only be updated in the main thread.
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                activity.runOnUiThread(() -> {
+                    ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
+                });
             }
         });
     }

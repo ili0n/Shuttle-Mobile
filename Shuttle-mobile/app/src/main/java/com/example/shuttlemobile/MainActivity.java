@@ -2,6 +2,8 @@ package com.example.shuttlemobile;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -21,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.shuttlemobile.unregistered.LoginActivity;
+import com.example.shuttlemobile.util.NotificationUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        createNotificationChannels();
         initLocationListener();
         initLocationManager();
     }
@@ -54,6 +59,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         disableLocationListening();
+    }
+
+    private void createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            final CharSequence n_passenger = getString(R.string.channel_passenger);
+            final int imp_passenger = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel ch_passenger = new NotificationChannel(NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID, n_passenger, imp_passenger);
+
+            final CharSequence n_driver = getString(R.string.channel_driver);
+            final int imp_driver = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel ch_driver = new NotificationChannel(NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID, n_driver, imp_driver);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+
+            notificationManager.createNotificationChannel(ch_passenger);
+            notificationManager.createNotificationChannel(ch_driver);
+        }
     }
 
     private void initLocationListener() {
