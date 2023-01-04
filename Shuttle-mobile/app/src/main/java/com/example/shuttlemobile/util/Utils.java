@@ -10,6 +10,8 @@ import android.util.TypedValue;
 import androidx.core.content.ContextCompat;
 
 public class Utils {
+    public static final String ServerOrigin = "http://192.168.0.8:8080/";
+
     private Utils() {}
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {

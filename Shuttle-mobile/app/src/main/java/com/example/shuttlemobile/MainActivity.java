@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,7 +12,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -25,12 +23,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.shuttlemobile.unregistered.LoginActivity;
 import com.example.shuttlemobile.util.NotificationUtil;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
+import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,7 +40,14 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannels();
         initLocationListener();
         initLocationManager();
+
+        // We fetch the reference to the sharedPreferences once, here, and then
+        // SettingsUtil has it forever, which makes changing key-value prefs easier.
+        SettingsUtil.init(
+            getSharedPreferences(SettingsUtil.PREF_FILE, Context.MODE_PRIVATE)
+        );
     }
+
 
     @Override
     protected void onResume() {
