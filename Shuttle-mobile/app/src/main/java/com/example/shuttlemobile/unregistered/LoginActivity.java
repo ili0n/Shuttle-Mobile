@@ -1,22 +1,29 @@
 package com.example.shuttlemobile.unregistered;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.common.SettingsFragment;
 import com.example.shuttlemobile.driver.DriverActivity;
-import com.example.shuttlemobile.driver.services.DriverMessageService;
 import com.example.shuttlemobile.passenger.PassengerActivity;
-import com.example.shuttlemobile.passenger.services.PassengerMessageService;
+import com.example.shuttlemobile.unregistered.login.ILoginService;
+import com.example.shuttlemobile.unregistered.login.LoginDTO;
+import com.example.shuttlemobile.unregistered.login.TokenDTO;
+import com.example.shuttlemobile.user.JWT;
+import com.example.shuttlemobile.user.User;
+import com.example.shuttlemobile.util.JWTDecoder;
 import com.example.shuttlemobile.util.SettingsUtil;
+import com.google.android.material.snackbar.Snackbar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,25 +47,44 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login() {
-        // TODO: Once we have real data, perform authorization.
-
         EditText txtEmail = findViewById(R.id.txt_un_email);
         EditText txtPassword = findViewById(R.id.txt_un_password);
 
-        //SharedPreferences prefs = getSharedPreferences(SettingsFragment.PREF_FILE, Context.MODE_PRIVATE);
-        //SharedPreferences.Editor prefsEditor = prefs.edit();
+        final String email = txtEmail.getText().toString();
+        final String password = txtPassword.getText().toString();
 
-        //prefsEditor.putLong(SettingsUtil.KEY_USER_ID, 0);
-        //prefsEditor.putString(SettingsUtil.KEY_USER_EMAIL, txtEmail.getText().toString());
+        Call<TokenDTO> call = ILoginService.service.getUser(new LoginDTO(email, password));
+        call.enqueue(new Callback<TokenDTO>() {
+            @Override
+            public void onResponse(Call<TokenDTO> call, Response<TokenDTO> response) {
+                TokenDTO token = response.body();
+                if (token == null) {
+                    Toast.makeText(LoginActivity.this, "Wrong email or password", 3000);
+                } else {
+                    SettingsUtil.put(SettingsUtil.KEY_ACCESS_TOKEN, token.getAccessToken());
+                    Log.e("Logged in", JWTDecoder.getPayloadJSON(SettingsUtil.get(SettingsUtil.KEY_ACCESS_TOKEN, "no-token")));
 
-        if (txtEmail.getText().toString().equals("driver")) {
-            //prefsEditor.putString(SettingsFragment.KEY_USER_ROLE, SettingsFragment.VAL_USER_ROLE_DRIVER);
-            startActivity(new Intent(getApplicationContext(), DriverActivity.class));
-        } else {
-            //prefsEditor.putString(SettingsFragment.KEY_USER_ROLE, SettingsFragment.VAL_USER_ROLE_PASSENGER);
-            //prefsEditor.commit();
-            startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
-        }
+                    final JWT jwt = SettingsUtil.getUserJWT();
+                    Log.e("e-mail", jwt.getEmail());
+                    Log.e("id", jwt.getId().toString());
+                    Log.e("role", jwt.getRolesRaw().toString());
+                    Log.e("role", jwt.getRoles().toString());
+
+                    if (jwt.getRoles().contains(User.Role.Passenger)) {
+                        startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
+                    } else if (jwt.getRoles().contains(User.Role.Driver)) {
+                        startActivity(new Intent(getApplicationContext(), DriverActivity.class));
+                    } else {
+                        // Not authorized to use the app.
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TokenDTO> call, Throwable t) {
+                Log.e("REST ERROR", t.toString());
+            }
+        });
     }
 
     private void openRegistrationActivity() {
