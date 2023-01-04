@@ -16,6 +16,7 @@ import com.example.shuttlemobile.driver.DriverActivity;
 import com.example.shuttlemobile.driver.services.DriverMessageService;
 import com.example.shuttlemobile.passenger.PassengerActivity;
 import com.example.shuttlemobile.passenger.services.PassengerMessageService;
+import com.example.shuttlemobile.util.SettingsUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -44,19 +45,18 @@ public class LoginActivity extends AppCompatActivity {
         EditText txtEmail = findViewById(R.id.txt_un_email);
         EditText txtPassword = findViewById(R.id.txt_un_password);
 
-        SharedPreferences prefs = getSharedPreferences(SettingsFragment.PREF_FILE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
+        //SharedPreferences prefs = getSharedPreferences(SettingsFragment.PREF_FILE, Context.MODE_PRIVATE);
+        //SharedPreferences.Editor prefsEditor = prefs.edit();
 
-        prefsEditor.putLong(SettingsFragment.KEY_USER_ID, 0);
-        prefsEditor.putString(SettingsFragment.KEY_USER_EMAIL, txtEmail.getText().toString());
+        //prefsEditor.putLong(SettingsUtil.KEY_USER_ID, 0);
+        //prefsEditor.putString(SettingsUtil.KEY_USER_EMAIL, txtEmail.getText().toString());
 
         if (txtEmail.getText().toString().equals("driver")) {
-            prefsEditor.putString(SettingsFragment.KEY_USER_ROLE, SettingsFragment.VAL_USER_ROLE_DRIVER);
-            prefsEditor.commit();
+            //prefsEditor.putString(SettingsFragment.KEY_USER_ROLE, SettingsFragment.VAL_USER_ROLE_DRIVER);
             startActivity(new Intent(getApplicationContext(), DriverActivity.class));
         } else {
-            prefsEditor.putString(SettingsFragment.KEY_USER_ROLE, SettingsFragment.VAL_USER_ROLE_PASSENGER);
-            prefsEditor.commit();
+            //prefsEditor.putString(SettingsFragment.KEY_USER_ROLE, SettingsFragment.VAL_USER_ROLE_PASSENGER);
+            //prefsEditor.commit();
             startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
         }
     }

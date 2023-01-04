@@ -20,10 +20,12 @@ import android.widget.Toast;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.user.User;
+import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <code>GenericUserActivity</code> is an abstract activity with a toolbar and fragment view.
@@ -39,19 +41,18 @@ public abstract class GenericUserActivity extends SimpleToolbarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO : This is temporary.
-        SharedPreferences prefs = getSharedPreferences(SettingsFragment.PREF_FILE, Context.MODE_PRIVATE);
-        Log.e("ROLE:", prefs.getString(SettingsFragment.KEY_USER_ROLE, "unknown"));
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generic_user);
 
+        SharedPreferences prefs = getSharedPreferences(SettingsUtil.PREF_FILE, Context.MODE_PRIVATE);
         // TODO: This is a temporary initialization.
         session = new SessionContext();
         session.setUser(new Passenger(
                 "Bob", "Jones", "123 Grove Street", "0 123 456789", "bobjones@gmail.com", "bob1234", "BCMnhqw==", false, true
         ));
+
+        SettingsUtil.setUser(prefs, session.getUser());
+        Log.e("User:", SettingsUtil.getUser(prefs).getEmail());
 
         initializeFragmentMap();
         initializeFragmentView();

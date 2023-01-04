@@ -14,8 +14,14 @@ public class User extends Entity {
     private String pfp;
     private boolean blocked;
     private boolean active;
+    private Role role;
 
-    public User(String name, String lastName, String location, String phone, String email, String password, String pfp, boolean blocked, boolean active) {
+    public enum Role {
+        Passenger, Driver
+    }
+
+    public User(Long id, String name, String lastName, String location, String phone, String email, String password, String pfp, boolean blocked, boolean active, Role role) {
+        this.setId(id);
         this.name = name;
         this.lastName = lastName;
         this.location = location;
@@ -25,6 +31,7 @@ public class User extends Entity {
         this.pfp = pfp;
         this.blocked = blocked;
         this.active = active;
+        this.role = role;
     }
 
     public User() {
@@ -100,5 +107,13 @@ public class User extends Entity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

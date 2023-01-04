@@ -7,6 +7,6 @@ import com.example.shuttlemobile.user.User;
  */
 public class Admin extends User {
     public Admin() {
-        super("Admin", "", "", "", "", "", "", false, true);
+        super(Long.valueOf(-1), "Admin", "", "", "", "", "", "", false, true, Role.Driver);
     }
 }
