@@ -6,6 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import com.example.shuttlemobile.admin.Admin;
@@ -22,6 +26,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -33,6 +38,7 @@ import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.user.User;
 import com.example.shuttlemobile.util.NotificationUtil;
+import com.example.shuttlemobile.util.ShakePack;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,7 +51,10 @@ import java.util.stream.Collectors;
 /**
  * Inbox fragment is shared between all users.
  */
-public class InboxFragment extends GenericUserFragment {
+public class InboxFragment extends GenericUserFragment implements SensorEventListener {
+    private SensorManager sensorManager;
+    private ShakePack shakePack = new ShakePack(12);
+
     private ListView listView;
     private List<Chat> chats;
     private Activity activity;
@@ -71,6 +80,11 @@ public class InboxFragment extends GenericUserFragment {
         initializeList();
         initListView();
         initReceiver();
+        initSensorManager();
+    }
+
+    private void initSensorManager() {
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
     }
 
     private void initReceiver() {
@@ -83,12 +97,28 @@ public class InboxFragment extends GenericUserFragment {
         intentFilter.addAction(NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID);
         intentFilter.addAction(NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID);
         getActivity().registerReceiver(gotNewMessageReceiver, intentFilter);
+
+        sensorManager.registerListener(
+                this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL
+        );
+
+        sensorManager.registerListener(
+                this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+                SensorManager.SENSOR_DELAY_NORMAL
+        );
+
+
         super.onResume();
     }
 
     @Override
     public void onPause() {
         getActivity().unregisterReceiver(gotNewMessageReceiver);
+
+        sensorManager.unregisterListener(this);
         super.onPause();
     }
 
@@ -227,5 +257,28 @@ public class InboxFragment extends GenericUserFragment {
         intent.putExtra(UserChatActivity.PARAM_SESSION, session);
         intent.putExtra(UserChatActivity.PARAM_CHAT, chat);
         startActivity(intent);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            shakePack.update(sensorEvent.values);
+            if (shakePack.isShaking()) {
+                onShake();
+            }
+        } else if (sensorEvent.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            float[] values = sensorEvent.values;
+            String v = String.format("%f %f %f", values[0], values[1], values[2]);
+            Log.e("SENSOR_LIN", v);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    private void onShake() {
+        Toast.makeText(getActivity(), "Shaking detected.", Toast.LENGTH_SHORT).show();
     }
 }
