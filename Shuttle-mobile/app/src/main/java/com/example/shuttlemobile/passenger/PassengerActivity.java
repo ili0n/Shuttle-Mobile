@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.example.shuttlemobile.common.GenericUserActivity;
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.common.SettingsFragment;
 import com.example.shuttlemobile.passenger.fragments.PassengerAccount;
 import com.example.shuttlemobile.passenger.fragments.PassengerHistory;
 import com.example.shuttlemobile.passenger.fragments.PassengerHome;
@@ -54,6 +55,7 @@ public class PassengerActivity extends GenericUserActivity {
         fragments.put(R.id.toolbar_history, PassengerHistory.newInstance(session));
         fragments.put(R.id.toolbar_inbox, InboxFragment.newInstance(session));
         fragments.put(R.id.toolbar_account, PassengerAccount.newInstance(session));
+        fragments.put(R.id.toolbar_settings, SettingsFragment.newInstance());
     }
 
     @Override
