@@ -1,7 +1,9 @@
 package com.example.shuttlemobile.passenger.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -10,13 +12,16 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.preference.PreferenceManager;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.common.SettingsFragment;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.util.NotificationUtil;
 
 import java.sql.Time;
+import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,8 +35,33 @@ public class PassengerMessageService extends Service {
     public void onCreate() {
         executorService = Executors.newSingleThreadExecutor();
         final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 3000;
 
+        // Get from prefs.
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+       // SharedPreferences prefs = getSharedPreferences(SettingsFragment.PREF_FILE, Context.MODE_PRIVATE);
+        String message_sync_interval = prefs.getString("sync_msg", "");
+
+        Log.e("--------------has ", "" + prefs.contains("sync_msg"));
+        Log.e("--------------val ", prefs.getString("sync_msg", "not found"));
+        String[] possibleValues = getResources().getStringArray(R.array.sync_message_values);
+
+        // TODO: Make delay longer, this is just for testing.
+        int delay_ = 0;
+        if (message_sync_interval.equals(possibleValues[0])) {
+            return;
+        }
+        if (message_sync_interval.equals(possibleValues[1])) {
+            delay_ = 3000;
+        }
+        if (message_sync_interval.equals(possibleValues[2])) {
+            delay_ = 6000;
+        }
+        if (message_sync_interval.equals(possibleValues[3])) {
+            delay_ = 9000;
+        }
+
+        final int delay = delay_;
         executorService.execute(new Runnable() {
                 @Override
                 public void run() {

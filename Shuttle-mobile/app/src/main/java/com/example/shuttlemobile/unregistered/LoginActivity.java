@@ -2,13 +2,16 @@ package com.example.shuttlemobile.unregistered;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.common.SettingsFragment;
 import com.example.shuttlemobile.driver.DriverActivity;
 import com.example.shuttlemobile.driver.services.DriverMessageService;
 import com.example.shuttlemobile.passenger.PassengerActivity;
@@ -41,9 +44,19 @@ public class LoginActivity extends AppCompatActivity {
         EditText txtEmail = findViewById(R.id.txt_un_email);
         EditText txtPassword = findViewById(R.id.txt_un_password);
 
+        SharedPreferences prefs = getSharedPreferences(SettingsFragment.PREF_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+
+        prefsEditor.putLong(SettingsFragment.KEY_USER_ID, 0);
+        prefsEditor.putString(SettingsFragment.KEY_USER_EMAIL, txtEmail.getText().toString());
+
         if (txtEmail.getText().toString().equals("driver")) {
+            prefsEditor.putString(SettingsFragment.KEY_USER_ROLE, SettingsFragment.VAL_USER_ROLE_DRIVER);
+            prefsEditor.commit();
             startActivity(new Intent(getApplicationContext(), DriverActivity.class));
         } else {
+            prefsEditor.putString(SettingsFragment.KEY_USER_ROLE, SettingsFragment.VAL_USER_ROLE_PASSENGER);
+            prefsEditor.commit();
             startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
         }
     }

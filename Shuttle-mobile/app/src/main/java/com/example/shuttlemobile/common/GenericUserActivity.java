@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
@@ -37,6 +39,11 @@ public abstract class GenericUserActivity extends SimpleToolbarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // TODO : This is temporary.
+        SharedPreferences prefs = getSharedPreferences(SettingsFragment.PREF_FILE, Context.MODE_PRIVATE);
+        Log.e("ROLE:", prefs.getString(SettingsFragment.KEY_USER_ROLE, "unknown"));
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generic_user);
 
