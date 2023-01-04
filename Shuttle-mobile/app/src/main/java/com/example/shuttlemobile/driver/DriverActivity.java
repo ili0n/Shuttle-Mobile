@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.example.shuttlemobile.common.GenericUserActivity;
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.common.SettingsFragment;
 import com.example.shuttlemobile.driver.fragments.DriverAccount;
 import com.example.shuttlemobile.driver.fragments.DriverHistory;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
@@ -53,6 +54,7 @@ public class DriverActivity extends GenericUserActivity {
         fragments.put(R.id.toolbar_history, DriverHistory.newInstance(session));
         fragments.put(R.id.toolbar_inbox, InboxFragment.newInstance(session));
         fragments.put(R.id.toolbar_account, DriverAccount.newInstance(session));
+        fragments.put(R.id.toolbar_settings, SettingsFragment.newInstance());
     }
 
     @Override
