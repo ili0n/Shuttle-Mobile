@@ -33,9 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initButtonCallbacks();
-
-        // TODO: Remove this.
-        Toast.makeText(this, "To login as driver enter 'driver' in email", Toast.LENGTH_SHORT).show();
     }
 
     private void initButtonCallbacks() {
@@ -59,23 +56,22 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<TokenDTO> call, Response<TokenDTO> response) {
                 TokenDTO token = response.body();
                 if (token == null) {
-                    Toast.makeText(LoginActivity.this, "Wrong email or password", 3000);
+                    Toast.makeText(LoginActivity.this, "Wrong email or password", Toast.LENGTH_LONG).show();
                 } else {
                     SettingsUtil.put(SettingsUtil.KEY_ACCESS_TOKEN, token.getAccessToken());
-                    Log.e("Logged in", JWTDecoder.getPayloadJSON(SettingsUtil.get(SettingsUtil.KEY_ACCESS_TOKEN, "no-token")));
 
                     final JWT jwt = SettingsUtil.getUserJWT();
                     Log.e("e-mail", jwt.getEmail());
                     Log.e("id", jwt.getId().toString());
-                    Log.e("role", jwt.getRolesRaw().toString());
-                    Log.e("role", jwt.getRoles().toString());
+                    Log.e("rolesRaw", jwt.getRolesRaw().toString());
+                    Log.e("roles", jwt.getRoles().toString());
 
                     if (jwt.getRoles().contains(User.Role.Passenger)) {
                         startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
                     } else if (jwt.getRoles().contains(User.Role.Driver)) {
                         startActivity(new Intent(getApplicationContext(), DriverActivity.class));
                     } else {
-                        // Not authorized to use the app.
+                        Toast.makeText(LoginActivity.this, "Unauthorized!", Toast.LENGTH_LONG).show();
                     }
                 }
             }
