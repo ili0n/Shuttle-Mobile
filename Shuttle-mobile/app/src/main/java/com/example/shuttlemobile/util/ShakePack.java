@@ -1,5 +1,12 @@
 package com.example.shuttlemobile.util;
 
+/**
+ * Data structure containing all info for a shake event.
+ * Usage:
+ * Create instance once, the recommended threshold is 11-12.
+ * In the onSensorChanged method of your listener, for TYPE_ACCELEROMETER, call
+ * update(sensor.values). After that, call isShaking() to check whether there's shaking.
+ */
 public class ShakePack {
     private float lastAcc = 9f;
     private float currAcc = 9f;
