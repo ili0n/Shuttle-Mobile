@@ -1,6 +1,11 @@
 package com.example.shuttlemobile.passenger.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -21,11 +27,15 @@ import com.example.shuttlemobile.passenger.services.PassengerMessageService;
 import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.util.NotificationUtil;
+import com.example.shuttlemobile.util.ShakePack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PassengerHistory extends GenericUserFragment {
+public class PassengerHistory extends GenericUserFragment implements SensorEventListener {
+    private SensorManager sensorManager;
+    private ShakePack shakePack = new ShakePack(12);
+
     public static PassengerHistory newInstance(SessionContext session) {
         PassengerHistory fragment = new PassengerHistory();
         Bundle bundle = new Bundle();
@@ -42,6 +52,11 @@ public class PassengerHistory extends GenericUserFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         initializeList();
+        initSensorManager();
+    }
+
+    private void initSensorManager() {
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
     }
 
     private void sendNotification() {
@@ -107,5 +122,40 @@ public class PassengerHistory extends GenericUserFragment {
         intent.putExtra(PassengerHistoryDetailsActivity.PARAM_SESSION, session);
         intent.putExtra(PassengerHistoryDetailsActivity.PARAM_RIDE, ride);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sensorManager.registerListener(
+                this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL
+        );
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            shakePack.update(sensorEvent.values);
+            if (shakePack.isShaking()) {
+                onShake();
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    private void onShake() {
+        Toast.makeText(getActivity(), "Shaking detected.", Toast.LENGTH_SHORT).show();
     }
 }
