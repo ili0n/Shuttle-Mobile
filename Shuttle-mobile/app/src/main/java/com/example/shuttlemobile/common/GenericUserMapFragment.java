@@ -267,10 +267,10 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
                 .withCircleRadius(5.0)
                 .withCircleStrokeWidth(3)
                 .withCircleStrokeColor("#ffffff");
-        circleAnnotationManager.create(circleAnnotationOptions);
+        routeCircleAnnotationManager.create(circleAnnotationOptions);
 
         circleAnnotationOptions.withPoint(B);
-        circleAnnotationManager.create(circleAnnotationOptions);
+        routeCircleAnnotationManager.create(circleAnnotationOptions);
     }
 
     public final void drawRoute(Point A, Point B, String hexColor) {

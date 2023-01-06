@@ -101,8 +101,20 @@
             android:layout_marginTop="16dp"
             android:text="Go"
             mapbox:layout_constraintEnd_toEndOf="parent"
+            mapbox:layout_constraintHorizontal_bias="0.33"
             mapbox:layout_constraintStart_toStartOf="parent"
             mapbox:layout_constraintTop_toBottomOf="@+id/txt_p_home_destination" />
+
+        <Button
+            android:id="@+id/btn_p_home_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="39dp"
+            android:text="Order"
+            mapbox:layout_constraintEnd_toEndOf="parent"
+            mapbox:layout_constraintStart_toEndOf="@+id/btn_p_home_makeRoute"
+            mapbox:layout_constraintStart_toStartOf="@+id/btn_p_home_makeRoute"
+            mapbox:layout_constraintTop_toTopOf="@+id/btn_p_home_makeRoute" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

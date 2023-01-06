@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +32,7 @@ public class PassengerHome extends GenericUserMapFragment {
     private Button fitCamera, moveCamera; // Helper buttons for navigation.d
     private EditText txtDeparture, txtDestination;
     private Button btnCreateRoute;
+    private Button btnOrderRoute;
     private boolean initiallyMovedToLocation = false;
 
     /**
@@ -55,13 +57,44 @@ public class PassengerHome extends GenericUserMapFragment {
         txtDeparture = view.findViewById(R.id.txt_p_home_departure);
         txtDestination = view.findViewById(R.id.txt_p_home_destination);
         btnCreateRoute = view.findViewById(R.id.btn_p_home_makeRoute);
+        btnOrderRoute = view.findViewById(R.id.btn_p_home_order);
         fitCamera = view.findViewById(R.id.btnFitCam);
         moveCamera = view.findViewById(R.id.btnMoveCam);
+
+        txtDeparture.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    makeRouteFromInput();
+                    btnOrderRoute.setEnabled(hasRoute());
+                }
+            }
+        });
+        txtDestination.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    makeRouteFromInput();
+                    btnOrderRoute.setEnabled(hasRoute());
+                }
+            }
+        });
 
         btnCreateRoute.setOnClickListener(view1 -> {
             hideKeyboard();
             makeRouteFromInput();
+            btnOrderRoute.setEnabled(hasRoute());
         });
+
+        btnOrderRoute.setEnabled(hasRoute());
+        btnOrderRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Order route, create activity, send departure and destination through intent.
+                Toast.makeText(PassengerHome.this.getActivity(), "Order", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         fitCamera.setOnClickListener(view12 -> fitCameraToRoute());
         moveCamera.setOnClickListener(view13 -> focusOnPointA());
     }
@@ -93,13 +126,17 @@ public class PassengerHome extends GenericUserMapFragment {
 
             if (addressesDep.size() == 0) {
                 Log.e("E", "Could not find departure");
+                A = null;
                 return;
             }
             if (addressesDest.size() == 0) {
                 Log.e("E", "Could not find destination");
+                B = null;
                 return;
             }
         } catch (IOException e) {
+            A = null;
+            B = null;
             e.printStackTrace();
             return;
         }
@@ -142,6 +179,10 @@ public class PassengerHome extends GenericUserMapFragment {
         if (A != null) {
             lookAtPoint(A, 15, 3000);
         }
+    }
+
+    private boolean hasRoute() {
+        return A != null && B != null;
     }
 
     @Override
