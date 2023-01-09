@@ -1,5 +1,7 @@
 package com.example.shuttlemobile.ride;
 
+import android.location.Location;
+
 import com.example.shuttlemobile.common.Entity;
 import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.passenger.Passenger;
@@ -7,6 +9,7 @@ import com.example.shuttlemobile.vehicle.Vehicle;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 public class Ride extends Entity {
     private boolean hasBaby;
@@ -16,11 +19,10 @@ public class Ride extends Entity {
     private LocalDateTime end;
     private double cost;
     private State state;
-    private Passenger passenger;
+    private List<Passenger> passengers;
     private Driver driver;
 
     public Ride() {
-        this.passenger = new Passenger();
     }
 
     public enum State {
@@ -91,11 +93,12 @@ public class Ride extends Entity {
         this.state = state;
     }
 
-    public Passenger getPassenger() {
-        return passenger;
+
+    public List<Passenger> getPassengers() {
+        return passengers;
     }
 
-    public void setPassenger(Passenger passenger) {
-        this.passenger = passenger;
+    public void setPassengers(List<Passenger> passengers) {
+        this.passengers = passengers;
     }
 }

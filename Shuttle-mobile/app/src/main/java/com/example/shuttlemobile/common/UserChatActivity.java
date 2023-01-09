@@ -50,7 +50,7 @@ public class UserChatActivity extends SimpleToolbarActivity {
         // "works", an exception is made by making the messages list persist in-memory.
 
         Ride r = new Ride();
-        r.setPassenger((Passenger)session.getUser());
+        //r.setPassenger((Passenger)session.getUser());
         r.setDriver((Driver)other);
 
         messages.add(new Message(session.getUser(), other, "Hi", LocalDateTime.now(), r, Message.Type.RIDE));

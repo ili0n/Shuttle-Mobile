@@ -1,14 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/driverHomeFrame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".driver.fragments.DriverHome">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <com.mapbox.maps.MapView
+        android:id="@+id/d_mapView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        mapbox:layout_constraintBottom_toTopOf="@+id/container_d_current"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toTopOf="parent"
+        mapbox:mapbox_cameraTargetLat="40.7128"
+        mapbox:mapbox_cameraTargetLng="-74.0060"
+        mapbox:mapbox_cameraZoom="9.0" />
 
-</FrameLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_d_current"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toBottomOf="@id/d_mapView"
+        >
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            mapbox:layout_constraintTop_toTopOf="parent"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            android:text="Passengers:"
+            android:id="@+id/lv_lbl_d_passengers"/>
+
+        <ListView
+            android:id="@+id/lv_d_passengers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            mapbox:layout_constraintTop_toBottomOf="@id/lv_lbl_d_passengers"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/lv_lbl_d_locations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Locations:"
+            mapbox:layout_constraintTop_toBottomOf="@id/lv_d_passengers"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            />
+
+        <ListView
+            android:id="@+id/lv_d_locations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            mapbox:layout_constraintTop_toBottomOf="@id/lv_lbl_d_locations"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            mapbox:layout_constraintTop_toBottomOf="@id/lv_d_locations"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/cb_d_container"
+            >
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cb_d_baby"
+                android:layout_weight="1"
+                android:text="Baby" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cb_d_pet"
+                android:layout_weight="1"
+                android:text="Pet" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_d_estimated_time"
+            android:text="@string/elapsed_time"
+            mapbox:layout_constraintTop_toBottomOf="@id/cb_d_container"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            mapbox:layout_constraintTop_toBottomOf="@id/tv_d_estimated_time"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finish"
+                android:layout_weight="1"
+                android:layout_margin="20dp"
+                android:id="@+id/btn_d_finish"
+                android:backgroundTint="@color/teal_700"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Panic"
+                android:layout_weight="1"
+                android:layout_margin="20dp"
+                android:id="@+id/btn_d_panic"
+                android:backgroundTint="@color/red"/>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout >
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
