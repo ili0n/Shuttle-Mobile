@@ -10,20 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1e9a298b-a87a-4bd0-9046-5f0d90278529" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/fragments/PanicPromptFragment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/ride/IRideService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/ride/dto/CancellationDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/ride/dto/LocationDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/ride/dto/RideDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/ride/dto/RideDriverDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/ride/dto/RidePassengerDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/ride/dto/RouteDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_panic_prompt.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/bools.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/services/CurrentRideTimeService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/fragments/DriverCurrentRide.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/fragments/DriverCurrentRide.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/ride/Ride.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/ride/Ride.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -282,6 +272,9 @@
       <configuration name="AndroidRunConfigurationType">
         <watch expression="getSupportFragmentManager().getFragment(savedInstanceState, &quot;currentFragment&quot;)" language="JAVA" />
         <watch expression="getSupportFragmentManager()" language="JAVA" />
+        <watch expression="getContext()" language="JAVA" />
+        <watch expression="intent.getExtras()" language="JAVA" />
+        <watch expression="intent.getExtras().getString(TIME_START)" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

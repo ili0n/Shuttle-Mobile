@@ -1,16 +1,17 @@
 package com.example.shuttlemobile.driver.fragments;
 
-import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,25 +24,16 @@ import android.widget.Toast;
 
 import com.example.shuttlemobile.BlankFragment;
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.common.UserChatActivity;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
-import com.example.shuttlemobile.passenger.Passenger;
+import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
 import com.example.shuttlemobile.ride.IRideService;
-import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.dto.RideDTO;
-import com.example.shuttlemobile.ride.dto.RideDriverDTO;
 import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
 import com.mapbox.geojson.Point;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -58,9 +50,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DriverCurrentRide extends Fragment {
     private boolean isLargeLayout;
 
-    private ScheduledExecutorService executor;
-    private LocalTime time = LocalTime.of(0, 0, 0);
-
     private ListView lvPassengers;
     private ListView lvLocations;
     private CheckBox cbBaby;
@@ -73,15 +62,13 @@ public class DriverCurrentRide extends Fragment {
     private Point departure;
     private RideDTO currentRide;
 
-    private Retrofit retrofit = new Retrofit.Builder()
+    private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Utils.ServerOrigin)
             .addConverterFactory(GsonConverterFactory.create())
             .client(RetrofitUtils.basicJsonJwtClient())
             .build();
-    private IRideService rideService = retrofit.create(IRideService.class);
-
-    public DriverCurrentRide() {
-    }
+    private final IRideService rideService = retrofit.create(IRideService.class);
+    private BroadcastReceiver timeReceiver;
 
     public static DriverCurrentRide newInstance(String param1, String param2) {
         DriverCurrentRide fragment = new DriverCurrentRide();
@@ -89,8 +76,29 @@ public class DriverCurrentRide extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver((timeReceiver),
+                new IntentFilter(CurrentRideTimeService.RESULT)
+        );
+    }
+
+    @Override
+    public void onStop() {
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(timeReceiver);
+        super.onStop();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        timeReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String s = intent.getStringExtra(CurrentRideTimeService.NEW_TIME_MESSAGE);
+                tvTime.setText(s);
+            }
+        };
     }
 
     @Override
@@ -129,20 +137,21 @@ public class DriverCurrentRide extends Fragment {
     }
 
     private void setRide(){
-
         Call<RideDTO> call =  rideService.getRide(1);
         call.enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(@NonNull Call<RideDTO> call, @NonNull Response<RideDTO> response) {
                 if(response.isSuccessful()){
-                    DriverCurrentRide.this.currentRide = response.body();
+                        DriverCurrentRide.this.currentRide = response.body();
+                    Intent intent = new Intent(getActivity(), CurrentRideTimeService.class);
+                    intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
+                    getActivity().startService(intent);
                     fillData();
                 }
                 else{
                     Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onFailure(Call<RideDTO> call, Throwable t) {
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
@@ -235,27 +244,6 @@ public class DriverCurrentRide extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        startExecutor();
-        resumeTimer();
-    }
-
-    private void startExecutor(){
-        executor = Executors.newSingleThreadScheduledExecutor();
-    }
-
-    private void stopExecutor(){
-        executor.shutdownNow();
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void resumeTimer(){
-        executor.scheduleWithFixedDelay(() -> {
-            requireActivity().runOnUiThread(() ->
-                    tvTime.setText(
-                            getResources().getString(R.string.elapsed_time)
-                                    + time.format(DateTimeFormatter.ofPattern("mm:ss"))));
-            time = time.plusSeconds(1);
-        }, 0, 1, TimeUnit.SECONDS);
     }
 
     private void finishRide(){
@@ -264,7 +252,12 @@ public class DriverCurrentRide extends Fragment {
             @Override
             public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
                 if(response.isSuccessful()){
-                    stopExecutor();
+
+//                  stop receiving messages
+                    Intent myService = new Intent(getContext(), CurrentRideTimeService.class);
+                    getContext().stopService(myService);
+
+//                  replace fragment
                     DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
                     if (parentFrag != null) {
                         parentFrag.setCurrentFragment(new BlankFragment());
