@@ -45,7 +45,7 @@ public class DriverActivity extends GenericUserActivity {
 
     @Override
     protected int getFragmentFrameId() {
-        return R.id.driver_fragment_frame;
+        return R.id.driver_home_fragment_frame;
     }
 
     @Override
