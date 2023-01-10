@@ -2,6 +2,7 @@ package com.example.shuttlemobile.driver.fragments.home;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
@@ -9,12 +10,17 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.shuttlemobile.R;
@@ -39,6 +45,8 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
     private TextView txtPrice;
     private TextView txtPassengerCount;
     private BroadcastReceiver rideReceiver;
+    private Button btnReject;
+    private Button btnBegin;
 
     Point A = null;
     Point B = null;
@@ -97,6 +105,82 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
         txtTime = view.findViewById(R.id.txt_acceptance_ride_duration);
         txtPrice = view.findViewById(R.id.txt_acceptance_ride_price);
         txtPassengerCount = view.findViewById(R.id.txt_acceptance_ride_passengers);
+        btnReject = view.findViewById(R.id.btn_acceptance_ride_reject);
+        btnBegin = view.findViewById(R.id.btn_acceptance_ride_begin);
+
+        initRejectButton();
+        initBeginButton();
+    }
+
+    private void initRejectButton() {
+        btnReject.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = requireActivity().getLayoutInflater();
+            View v = inflater.inflate(R.layout.alert_reject_reason, null);
+            EditText txtReason = v.findViewById(R.id.txt_reject_reason);
+
+            builder.setView(v)
+                    .setPositiveButton(R.string.reject, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            rejectRide(txtReason.getText().toString());
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                           dialogInterface.dismiss();
+                        }
+                    });
+            AlertDialog dialog = builder.show();
+
+            // If the specified reason is empty, disable the button.
+
+            txtReason.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (charSequence.toString().trim().length() == 0) {
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+                    } else {
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+                    }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+                @Override
+                public void afterTextChanged(Editable editable) {}
+            });
+
+            // Disable it right from the start (onTextChanged() isn't called on its own).
+
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        });
+    }
+
+    private void initBeginButton() {
+        this.btnBegin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                beginRide();
+            }
+        });
+    }
+
+    private void beginRide() {
+        if (ride == null) {
+            return;
+        }
+
+        Log.e("AAAA", "Begin");
+    }
+
+    private void rejectRide(String reason) {
+        if (ride == null) {
+            return;
+        }
+
+        Log.e("AAAA", "Cancel " + reason);
     }
 
     private void onGetRide(RideDTO dto) {
