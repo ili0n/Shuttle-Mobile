@@ -29,6 +29,7 @@ import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.IRideService;
+import com.example.shuttlemobile.ride.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
@@ -196,7 +197,7 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
             return;
         }
 
-        IRideService.service.rejectRide(ride.getId()).enqueue(new Callback<RideDTO>() {
+        IRideService.service.rejectRide(ride.getId(), new RejectionDTOMinimal(reason)).enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
                 Log.e("!!!!", "Ride rejected!");

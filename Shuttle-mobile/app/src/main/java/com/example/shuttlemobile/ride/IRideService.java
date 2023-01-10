@@ -23,7 +23,7 @@ public interface IRideService {
     Call<RideDTO> getActiveRideDriver(@Path("id") Long driverId);
 
     @PUT("/api/ride/{id}/cancel")
-    Call<RideDTO> rejectRide(@Path("id") Long rideId);
+    Call<RideDTO> rejectRide(@Path("id") Long rideId, @Body RejectionDTOMinimal rejectionDTOMinimal);
 
     @PUT("/api/ride/{id}/accept")
     Call<RideDTO> acceptRide(@Path("id") Long rideId);
