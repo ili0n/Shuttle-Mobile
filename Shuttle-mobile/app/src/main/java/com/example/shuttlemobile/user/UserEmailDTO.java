@@ -1,6 +1,8 @@
 package com.example.shuttlemobile.user;
 
-public class UserEmailDTO {
+import java.io.Serializable;
+
+public class UserEmailDTO implements Serializable {
     private Long id;
     private String email;
 

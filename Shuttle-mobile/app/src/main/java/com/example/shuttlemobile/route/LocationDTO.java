@@ -1,6 +1,8 @@
 package com.example.shuttlemobile.route;
 
-public class LocationDTO {
+import java.io.Serializable;
+
+public class LocationDTO implements Serializable {
     private String address;
     private Double latitude;
     private Double longitude;

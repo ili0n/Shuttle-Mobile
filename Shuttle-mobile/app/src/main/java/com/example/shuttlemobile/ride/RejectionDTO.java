@@ -1,6 +1,8 @@
 package com.example.shuttlemobile.ride;
 
-public class RejectionDTO {
+import java.io.Serializable;
+
+public class RejectionDTO implements Serializable {
     private String reason;
     private String timeOfRejection;
 

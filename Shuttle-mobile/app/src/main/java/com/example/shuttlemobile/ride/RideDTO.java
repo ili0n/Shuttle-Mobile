@@ -3,9 +3,10 @@ package com.example.shuttlemobile.ride;
 import com.example.shuttlemobile.route.RouteDTO;
 import com.example.shuttlemobile.user.UserEmailDTO;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class RideDTO {
+public class RideDTO implements Serializable {
     private Long id;
     private String startTime;
     private String endTime;

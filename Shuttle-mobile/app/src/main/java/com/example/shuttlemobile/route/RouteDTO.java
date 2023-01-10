@@ -1,6 +1,8 @@
 package com.example.shuttlemobile.route;
 
-public class RouteDTO {
+import java.io.Serializable;
+
+public class RouteDTO implements Serializable  {
     private LocationDTO departure;
     private LocationDTO destination;
 

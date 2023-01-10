@@ -15,6 +15,7 @@ import com.example.shuttlemobile.unregistered.login.ILoginService;
 import com.example.shuttlemobile.unregistered.login.LoginDTO;
 import com.example.shuttlemobile.unregistered.login.TokenDTO;
 import com.example.shuttlemobile.user.JWT;
+import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.concurrent.ExecutorService;
@@ -25,6 +26,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DriverRideService extends Service {
+    public static String BROADCAST_CHANNEL = "driver_ride_service_broadcast_channel";
+    public static String INTENT_RIDE_KEY = "ride";
+
     public DriverRideService() {
     }
 
@@ -63,9 +67,10 @@ public class DriverRideService extends Service {
             public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
                 RideDTO ride = response.body();
                 if (ride == null) {
-                    Log.e("DRIVER RIDE", "null");
                 } else {
-                    Log.e("DRIVER RIDE", ride.toString());
+                    Intent intent = new Intent(BROADCAST_CHANNEL);
+                    intent.putExtra(INTENT_RIDE_KEY, ride);
+                    sendBroadcast(intent);
                 }
             }
 
