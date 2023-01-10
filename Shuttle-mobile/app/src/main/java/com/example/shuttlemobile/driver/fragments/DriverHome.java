@@ -51,7 +51,7 @@ public class DriverHome extends GenericUserFragment {
     }
 
     private void setSubFragment() {
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
+        FragmentTransaction fragmentTransaction = getParentFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .setReorderingAllowed(true)

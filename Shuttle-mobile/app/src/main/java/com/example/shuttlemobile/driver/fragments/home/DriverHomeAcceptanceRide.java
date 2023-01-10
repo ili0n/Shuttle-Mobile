@@ -26,6 +26,7 @@ import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.util.NotificationUtil;
+import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
 
 import org.w3c.dom.Text;
@@ -45,7 +46,7 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
 
     @Override
     public String getPublicMapApiToken() {
-        return getResources().getString(R.string.mapbox_access_token);
+        return getContext().getResources().getString(R.string.mapbox_access_token);
     }
 
     @Override
@@ -118,7 +119,20 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
 
         tryDrawAndFocusRoute();
 
-        // TODO: Send notification.
+        if (!SettingsUtil.get(SettingsUtil.KEY_CURRENT_RIDE_ID, -1L).equals(dto.getId())) {
+            NotificationUtil.sendNotification(
+                    getActivity(),
+                    NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID,
+                    "New ride",
+                    "You have a new ride!",
+                    R.drawable.car_green,
+                    1100110110
+            );
+        }
+
+        Log.e("..........", dto.getId() + "");
+        SettingsUtil.put(SettingsUtil.KEY_CURRENT_RIDE_ID, dto.getId());
+        // TODO: When you finish a ride, or if there's no ride, this should be set to null.
     }
 
     /**
