@@ -67,6 +67,9 @@ public class DriverRideService extends Service {
             public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
                 RideDTO ride = response.body();
                 if (ride == null) {
+                    Intent intent = new Intent(BROADCAST_CHANNEL);
+                    intent.putExtra(INTENT_RIDE_KEY, (java.io.Serializable) null);
+                    sendBroadcast(intent);
                 } else {
                     Intent intent = new Intent(BROADCAST_CHANNEL);
                     intent.putExtra(INTENT_RIDE_KEY, ride);

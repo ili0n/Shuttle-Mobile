@@ -49,9 +49,10 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
     private TextView txtTime;
     private TextView txtPrice;
     private TextView txtPassengerCount;
-    private BroadcastReceiver rideReceiver;
     private Button btnReject;
     private Button btnBegin;
+
+    private BroadcastReceiver rideReceiver;
 
     Point A = null;
     Point B = null;
@@ -209,6 +210,11 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
     }
 
     private void onGetRide(RideDTO dto) {
+//        if (ride != null && dto.getId().equals(ride.getId())) {
+//            // Same ride, possibly new data.
+//            ride = dto;
+//        }
+
         if (!isThisNewRide(dto)) {
             return;
         }
