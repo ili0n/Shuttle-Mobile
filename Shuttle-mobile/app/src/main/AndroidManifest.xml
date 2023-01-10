@@ -17,10 +17,6 @@
         android:theme="@style/Theme.ShuttleMobile"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <service
-            android:name=".StartRideService"
-            android:enabled="true"
-            android:exported="true"></service>
 
         <activity
             android:name=".common.SettingsActivity"
