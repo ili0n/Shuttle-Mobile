@@ -33,6 +33,10 @@ public class Ride extends Entity {
         STATE_FINISHED
     };
 
+    public enum Status {
+        Pending, Accepted, Rejected, Canceled, Finished, Started
+    }
+
     public Driver getDriver() { return driver; }
 
     public void setDriver(Driver d) { this.driver = d; }
