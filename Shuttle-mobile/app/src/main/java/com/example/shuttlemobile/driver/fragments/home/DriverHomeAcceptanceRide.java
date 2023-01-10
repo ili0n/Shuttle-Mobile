@@ -28,6 +28,7 @@ import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.driver.services.DriverRideService;
+import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
@@ -36,6 +37,10 @@ import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
 
 import org.w3c.dom.Text;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
     private TextView txtDeparture;
@@ -172,7 +177,17 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
             return;
         }
 
-        Log.e("AAAA", "Begin");
+        IRideService.service.acceptRide(ride.getId()).enqueue(new Callback<RideDTO>() {
+            @Override
+            public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
+                Log.e("!!!!", "Ride accepted!");
+            }
+
+            @Override
+            public void onFailure(Call<RideDTO> call, Throwable t) {
+                Log.e("REST Error", t.toString());
+            }
+        });
     }
 
     private void rejectRide(String reason) {
@@ -180,7 +195,17 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
             return;
         }
 
-        Log.e("AAAA", "Cancel " + reason);
+        IRideService.service.rejectRide(ride.getId()).enqueue(new Callback<RideDTO>() {
+            @Override
+            public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
+                Log.e("!!!!", "Ride rejected!");
+            }
+
+            @Override
+            public void onFailure(Call<RideDTO> call, Throwable t) {
+                Log.e("REST Error", t.toString());
+            }
+        });
     }
 
     private void onGetRide(RideDTO dto) {
