@@ -22,6 +22,7 @@ import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.driver.services.DriverRideService;
+import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.util.NotificationUtil;
@@ -40,6 +41,7 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
 
     Point A = null;
     Point B = null;
+    RideDTO ride = null;
 
     @Override
     public String getPublicMapApiToken() {
@@ -97,6 +99,9 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
     }
 
     private void onGetRide(RideDTO dto) {
+        if (!isThisNewRide(dto)) {
+            return;
+        }
         LocationDTO Aloc = dto.getLocations().get(0).getDeparture();
         LocationDTO Bloc = dto.getLocations().get(dto.getLocations().size() - 1).getDestination();
 
@@ -107,12 +112,53 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
         txtPrice.setText(dto.getTotalCost() + " RSD");
         txtPassengerCount.setText(dto.getPassengers().size() + "");
 
+        ride = dto;
+        A = null;
+        B = null;
 
+        tryDrawAndFocusRoute();
+
+        // TODO: Send notification.
+    }
+
+    /**
+     * Draw a new route and focus on it but only if there's new info (new ride basically, there's no
+     * need to redraw the existing route if it's already on-screen).
+     */
+    private void tryDrawAndFocusRoute() {
         if (A == null && B == null) {
+            LocationDTO Aloc = ride.getLocations().get(0).getDeparture();
+            LocationDTO Bloc = ride.getLocations().get(ride.getLocations().size() - 1).getDestination();
+
             A = Point.fromLngLat(Aloc.getLongitude(), Aloc.getLatitude());
             B = Point.fromLngLat(Bloc.getLongitude(), Bloc.getLatitude());
             drawRoute(A, B, "#0000FF");
             fitViewport(A, B, 3000);
         }
+    }
+
+    /**
+     * Check if the received DTO should override an existing ride in-memory (if any).
+     * The idea behind is that a driver can have an active ride and a pending ride, so if he
+     * for some reason gets a pending ride, it shouldn't be drawn on screen since the active
+     * ride is more important.
+     * @param dto New ride caught from the back. Can be null.
+     * @return True if this ride should be in-focus, false otherwise.
+     */
+    private boolean isThisNewRide(RideDTO dto) {
+        if (dto == null) {
+            return false;
+        }
+        if (ride == null) {
+            return true;
+        }
+
+        final Ride.State stateCurrent = Ride.State.valueOf(ride.getStatus().toUpperCase());
+        final Ride.State stateUpcoming = Ride.State.valueOf(dto.getStatus().toUpperCase());
+        if (stateCurrent == Ride.State.PENDING || stateCurrent == Ride.State.ACCEPTED || stateCurrent == Ride.State.STARTED) {
+            return false;
+        }
+
+        return true;
     }
 }

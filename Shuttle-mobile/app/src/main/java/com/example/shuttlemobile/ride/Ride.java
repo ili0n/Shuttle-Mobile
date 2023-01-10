@@ -25,11 +25,12 @@ public class Ride extends Entity {
             }
 
     public enum State {
-        STATE_PENDING,
-        STATE_ACCEPTED,
-        STATE_REJECTED,
-        STATE_ACTIVE,
-        STATE_FINISHED
+        PENDING,
+        ACCEPTED,
+        REJECTED,
+        CANCELED,
+        FINISHED,
+        STARTED,
     };
 
     public Driver getDriver() { return driver; }
