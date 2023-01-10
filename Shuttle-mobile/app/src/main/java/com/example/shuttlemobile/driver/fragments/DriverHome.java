@@ -104,7 +104,6 @@ public class DriverHome extends GenericUserFragment {
     }
 
     private void onGetRide(RideDTO dto) {
-        Log.e("DriverHome", dto == null ? "null" : dto.toString());
         determineSubFragment(dto);
     }
 

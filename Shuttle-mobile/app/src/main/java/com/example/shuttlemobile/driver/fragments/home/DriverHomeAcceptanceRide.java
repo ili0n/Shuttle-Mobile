@@ -78,7 +78,10 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
     public void onMapLoaded() {}
 
     @Override
-    public void onNewLocation(Location location) {}
+    public void onNewLocation(Location location) {
+        drawCurrentLocation(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
+        lookAtPoint(Point.fromLngLat(location.getLongitude(), location.getLatitude()), 15, 3000);
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -182,7 +185,6 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
         IRideService.service.acceptRide(ride.getId()).enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
-                Log.e("!!!!", "Ride accepted!");
             }
 
             @Override
@@ -200,7 +202,7 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
         IRideService.service.rejectRide(ride.getId(), new RejectionDTOMinimal(reason)).enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
-                Log.e("!!!!", "Ride rejected!");
+                clearRide();
             }
 
             @Override
@@ -210,32 +212,63 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
         });
     }
 
-    private void onGetRide(RideDTO dto) {
-//        if (ride != null && dto.getId().equals(ride.getId())) {
-//            // Same ride, possibly new data.
-//            ride = dto;
-//        }
+    private void clearRide() {
+        this.ride = null;
+        this.A = null;
+        this.B = null;
+    }
 
-        if (!isThisNewRide(dto)) {
+    private void onGetRide(RideDTO dto) {
+        // If the DTO is null, then there is no ride.
+
+        if (dto == null) {
+            ride = null;
+            A = null;
+            B = null;
             return;
         }
-        LocationDTO Aloc = dto.getLocations().get(0).getDeparture();
-        LocationDTO Bloc = dto.getLocations().get(dto.getLocations().size() - 1).getDestination();
 
-        txtDeparture.setText(Aloc.getAddress());
-        txtDestination.setText(Bloc.getAddress());
+        // If this is the first time you're getting this ride, send a notification.
+
+        boolean shouldSendNotification = false;
+        if (!SettingsUtil.get(SettingsUtil.KEY_CURRENT_RIDE_ID, -1L).equals(dto.getId())) {
+            shouldSendNotification = true;
+        }
+
+        // If the currently cached ride is different from this one, redraw the route and focus on it.
+
+        boolean shouldRedrawRoute = false;
+        if (ride == null || !ride.getId().equals(dto.getId())) {
+            shouldRedrawRoute = true;
+        }
+
+        // Update ride.
+
+        ride = dto;
+        final LocationDTO A_loc = ride.getLocations().get(0).getDeparture();
+        final LocationDTO B_loc = ride.getLocations().get(ride.getLocations().size() - 1).getDestination();
+
+        A = Point.fromLngLat(A_loc.getLongitude(), A_loc.getLatitude());
+        B = Point.fromLngLat(B_loc.getLongitude(), B_loc.getLatitude());
+
+        // Update text views.
+
+        txtDeparture.setText(A_loc.getAddress());
+        txtDestination.setText(B_loc.getAddress());
         txtDistance.setText("???");
         txtTime.setText(dto.getEstimatedTimeInMinutes() + "min");
         txtPrice.setText(dto.getTotalCost() + " RSD");
         txtPassengerCount.setText(dto.getPassengers().size() + "");
 
-        ride = dto;
-        A = null;
-        B = null;
 
-        tryDrawAndFocusRoute();
+        // Update the things from above if neccessary.
 
-        if (!SettingsUtil.get(SettingsUtil.KEY_CURRENT_RIDE_ID, -1L).equals(dto.getId())) {
+        if (shouldRedrawRoute) {
+            drawRoute(A, B, "#0000FF");
+            fitViewport(A, B, 3000);
+        }
+
+        if (shouldSendNotification) {
             NotificationUtil.sendNotification(
                     getActivity(),
                     NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID,
@@ -244,11 +277,9 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
                     R.drawable.car_green,
                     1100110110
             );
-        }
 
-        Log.e("..........", dto.getId() + "");
-        SettingsUtil.put(SettingsUtil.KEY_CURRENT_RIDE_ID, dto.getId());
-        // TODO: When you finish a ride, or if there's no ride, this should be set to null.
+            SettingsUtil.put(SettingsUtil.KEY_CURRENT_RIDE_ID, ride.getId());
+        }
     }
 
     /**
