@@ -39,7 +39,7 @@ public class DriverHome extends GenericUserFragment {
         initViewElements(view);
         initFragments();
 
-        setSubfragment();
+        setSubFragment();
     }
 
     private void initViewElements(@NonNull View view) {
@@ -50,7 +50,7 @@ public class DriverHome extends GenericUserFragment {
         fragmentAcceptance = DriverHomeAcceptanceRide.newInstance();
     }
 
-    private void setSubfragment() {
+    private void setSubFragment() {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
