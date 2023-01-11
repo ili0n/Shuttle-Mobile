@@ -18,9 +18,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <service
-            android:name=".driver.services.CurrentRideStatusService"
+            android:name=".driver.services.PullingService"
             android:enabled="true"
             android:exported="true"/>
+        <service
+            android:name=".driver.services.CurrentRideStatusService"
+            android:enabled="true"
+            android:exported="true" />
         <service
             android:name=".driver.services.DriversLocationService"
             android:enabled="true"
