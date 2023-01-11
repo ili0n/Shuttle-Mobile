@@ -25,10 +25,13 @@ import android.widget.Toast;
 import com.example.shuttlemobile.BlankFragment;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
+import com.example.shuttlemobile.driver.services.CurrentRideDriverLocationService;
 import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
 import com.example.shuttlemobile.ride.IRideService;
+import com.example.shuttlemobile.ride.dto.LocationDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
+import com.example.shuttlemobile.ride.dto.RouteDTO;
 import com.example.shuttlemobile.ride.dto.VehicleDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
@@ -36,6 +39,7 @@ import com.example.shuttlemobile.vehicle.IVehicleService;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -79,6 +83,9 @@ public class DriverCurrentRide extends Fragment {
     private final IVehicleService vehicleService = retrofit.create(IVehicleService.class);
 
     private BroadcastReceiver timeReceiver;
+    private BroadcastReceiver driverLocationReceiver;
+
+
 
     public static DriverCurrentRide newInstance(String param1, String param2) {
         DriverCurrentRide fragment = new DriverCurrentRide();
@@ -86,22 +93,25 @@ public class DriverCurrentRide extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setReceiveOperations();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver((timeReceiver),
-                new IntentFilter(CurrentRideTimeService.RESULT)
-        );
+        registerReceivers();
     }
+
 
     @Override
     public void onStop() {
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(timeReceiver);
+        unregisterReceivers();
         super.onStop();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void setReceiveOperations() {
         timeReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -109,41 +119,40 @@ public class DriverCurrentRide extends Fragment {
                 tvTime.setText(s);
             }
         };
+        driverLocationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                    double lat = intent.getDoubleExtra(CurrentRideDriverLocationService.NEW_LAT, 0);
+                    double lng = intent.getDoubleExtra(CurrentRideDriverLocationService.NEW_LNG, 0);
+                    DriverHome parentFrag = ((DriverHome) DriverCurrentRide.this.getParentFragment());
+                    Point driverLocation = Point.fromLngLat(lng, lat);
+                    getActivity().runOnUiThread(() -> {
+                        parentFrag.deleteAllPoints();
+                        parentFrag.drawCar(driverLocation, true);
+
+                    });
+            }
+        };
+    }
+
+    private void registerReceivers() {
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver((timeReceiver),
+                new IntentFilter(CurrentRideTimeService.RESULT)
+        );
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver((driverLocationReceiver),
+                new IntentFilter(CurrentRideDriverLocationService.RESULT)
+        );
+    }
+
+    private void unregisterReceivers() {
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(timeReceiver);
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(driverLocationReceiver);
     }
 
     private void setPullingLocation() {
-
-        scheduler.scheduleAtFixedRate
-                (new Runnable() {
-                    @Override
-                    public void run() {
-                        Call<VehicleDTO> call = vehicleService.getDriverLocation(currentRide.getDriver().getId());
-                        call.enqueue(new Callback<VehicleDTO>() {
-                            @Override
-                            public void onResponse(Call<VehicleDTO> call, Response<VehicleDTO> response) {
-                                if(response.isSuccessful()){
-                                    DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
-                                    VehicleDTO vehicle = response.body();
-                                    double lng = vehicle.getCurrentLocation().getLongitude();
-                                    double lat = vehicle.getCurrentLocation().getLatitude();
-                                    Point driverLocation = Point.fromLngLat(lng, lat);
-                                    getActivity().runOnUiThread(() -> {
-                                        parentFrag.deleteAllPoints();
-                                        parentFrag.drawCar(driverLocation, true);
-                                    });
-                                }
-                                else{
-                                    Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<VehicleDTO> call, Throwable t) {
-                                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }, 0, 4, TimeUnit.SECONDS);
+        Intent intent = new Intent(getActivity(), CurrentRideDriverLocationService.class);
+        intent.putExtra(CurrentRideDriverLocationService.DRIVER_ID, currentRide.getId());
+        getActivity().startService(intent);
     }
 
     @Override
@@ -155,8 +164,16 @@ public class DriverCurrentRide extends Fragment {
 
 
     private void setPoints(){
-        this.departure = Point.fromLngLat(19.842550,45.254410);
-        this.destination = Point.fromLngLat(20.683809, 43.725128);
+        LocationDTO departure = currentRide.getLocations().get(0).getDeparture();
+        LocationDTO destination = currentRide.getLocations().get(0).getDestination();
+        this.departure = Point.fromLngLat(departure.getLongitude(), departure.getLatitude());
+        this.destination = Point.fromLngLat(destination.getLongitude(), destination.getLatitude());
+        DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
+        if (parentFrag != null) {
+            requireActivity().runOnUiThread(() -> parentFrag.drawRoute(DriverCurrentRide.this.departure,
+                    DriverCurrentRide.this.destination, "#c92418"));
+
+        }
     }
 
     @Override
@@ -164,11 +181,6 @@ public class DriverCurrentRide extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initViewElements(view);
         setRide();
-        setPoints();
-        DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
-        if (parentFrag != null) {
-            parentFrag.drawRoute(departure, destination, "#c92418");
-        }
     }
 
     private void initViewElements(View view) {
@@ -193,6 +205,7 @@ public class DriverCurrentRide extends Fragment {
                     getActivity().startService(intent);
                     setPullingLocation();
                     fillData();
+                    setPoints();
                 }
                 else{
                     Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
