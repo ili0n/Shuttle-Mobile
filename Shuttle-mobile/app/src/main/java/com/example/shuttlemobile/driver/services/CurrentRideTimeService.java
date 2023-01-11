@@ -22,9 +22,11 @@ public class CurrentRideTimeService extends Service {
     private LocalDateTime startTime;
     private LocalBroadcastManager  broadcaster;
 
-    static final public String RESULT = "TIME_PROCESSED";
-    static final public String NEW_TIME_MESSAGE = "TIME_MESSAGE";
-    static final public String TIME_START = "time start";
+    static final public String PREFIX = "CURRENT_RIDE_DRIVER_TIME_";
+
+    static final public String RESULT = PREFIX + "TIME_PROCESSED";
+    static final public String NEW_TIME_MESSAGE = PREFIX + "TIME_MESSAGE";
+    static final public String TIME_START = PREFIX + "time start";
 
     @Override
     public void onCreate() {

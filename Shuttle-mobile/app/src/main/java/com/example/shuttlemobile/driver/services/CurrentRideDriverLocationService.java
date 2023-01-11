@@ -36,10 +36,14 @@ public class CurrentRideDriverLocationService extends Service {
     private ScheduledExecutorService executor;
     private LocalBroadcastManager broadcaster;
 
-    static final public String RESULT = "CURRENT_RIDE_DRIVER_LOCATION_PROCESSED";
-    static final public String NEW_LAT = "LAT_MESSAGE";
-    static final public String NEW_LNG = "LNG_MESSAGE";
-    static final public String DRIVER_ID = "driver id";
+    static final public String PREFIX = "CURRENT_RIDE_DRIVER_LOCATION_";
+
+    static final public String RESULT = PREFIX + "PROCESSED";
+    static final public String FETCHING_ERROR = PREFIX + "FETCHING_ERROR";
+    static final public String NEW_FETCHING_ERROR = PREFIX + "FETCHING_ERROR_MESSAGE";
+    static final public String NEW_LAT = PREFIX + "LAT_MESSAGE";
+    static final public String NEW_LNG = PREFIX + "LNG_MESSAGE";
+    static final public String DRIVER_ID = PREFIX + "driver id";
 
 
     private final Retrofit retrofit = new Retrofit.Builder()
@@ -60,6 +64,12 @@ public class CurrentRideDriverLocationService extends Service {
         Intent intent = new Intent(RESULT);
         intent.putExtra(NEW_LAT, lat);
         intent.putExtra(NEW_LNG, lng);
+        broadcaster.sendBroadcast(intent);
+    }
+
+    public void sendError(String message) {
+        Intent intent = new Intent(FETCHING_ERROR);
+        intent.putExtra(NEW_FETCHING_ERROR, message);
         broadcaster.sendBroadcast(intent);
     }
 
@@ -84,13 +94,13 @@ public class CurrentRideDriverLocationService extends Service {
                         sendResult(lat, lng);
                     }
                     else{
-//                        Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
+                        sendError(response.message());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<VehicleDTO> call, Throwable t) {
-//                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    sendError(t.getMessage());
                 }
             });
 

@@ -34,6 +34,7 @@ import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
 import com.example.shuttlemobile.ride.dto.RouteDTO;
 import com.example.shuttlemobile.ride.dto.VehicleDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
+import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.Utils;
 import com.example.shuttlemobile.vehicle.IVehicleService;
 import com.mapbox.geojson.Point;
@@ -85,6 +86,8 @@ public class DriverCurrentRide extends Fragment {
     private BroadcastReceiver timeReceiver;
     private BroadcastReceiver driverLocationReceiver;
 
+    public final String DRIVER_ID = "DRIVER_ID";
+
 
 
     public static DriverCurrentRide newInstance(String param1, String param2) {
@@ -122,6 +125,11 @@ public class DriverCurrentRide extends Fragment {
         driverLocationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if(intent.hasExtra(CurrentRideDriverLocationService.FETCHING_ERROR)){
+                    String message =  intent.getStringExtra(CurrentRideDriverLocationService.NEW_FETCHING_ERROR);
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+                }
+                else{
                     double lat = intent.getDoubleExtra(CurrentRideDriverLocationService.NEW_LAT, 0);
                     double lng = intent.getDoubleExtra(CurrentRideDriverLocationService.NEW_LNG, 0);
                     DriverHome parentFrag = ((DriverHome) DriverCurrentRide.this.getParentFragment());
@@ -131,6 +139,7 @@ public class DriverCurrentRide extends Fragment {
                         parentFrag.drawCar(driverLocation, true);
 
                     });
+                }
             }
         };
     }
@@ -180,7 +189,8 @@ public class DriverCurrentRide extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViewElements(view);
-        setRide();
+        long driverId = SettingsUtil.getUserJWT().getId();
+        setRide(driverId);
     }
 
     private void initViewElements(View view) {
@@ -193,8 +203,8 @@ public class DriverCurrentRide extends Fragment {
         btnPanic = view.findViewById(R.id.btn_d_panic);
     }
 
-    private void setRide(){
-        Call<RideDTO> call =  rideService.getRide(1);
+    private void setRide(long driverId){
+        Call<RideDTO> call =  rideService.getRide(driverId);
         call.enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(@NonNull Call<RideDTO> call, @NonNull Response<RideDTO> response) {
