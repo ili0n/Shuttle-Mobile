@@ -32,8 +32,6 @@ public class CurrentRideStatusService extends PullingService {
     static final public String NEW_STATUS_UPDATE = PREFIX + "STATUS_MESSAGE";
     static final public String DRIVER_ID = PREFIX + "driver id";
 
-    private final IRideService rideService = retrofit.create(IRideService.class);
-
     public void sendResult(Ride.Status status) {
         Intent intent = new Intent(RESULT);
         intent.putExtra(NEW_STATUS_UPDATE, status);
@@ -45,7 +43,7 @@ public class CurrentRideStatusService extends PullingService {
         long driverId =  intent.getExtras().getLong(DRIVER_ID);
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleWithFixedDelay(() -> {
-            Call<RideDTO> call = rideService.getActiveRide(driverId);
+            Call<RideDTO> call = IRideService.service.getActiveRide(driverId);
             call.enqueue(new Callback<RideDTO>() {
                 @Override
                 public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {

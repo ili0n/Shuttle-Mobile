@@ -1,6 +1,7 @@
 package com.example.shuttlemobile.ride;
 
 import com.example.shuttlemobile.ride.dto.RideDTO;
+import com.example.shuttlemobile.util.RetrofitUtils;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -14,5 +15,6 @@ public interface IRideService {
     @PUT("/api/ride/{rideId}/end")
     Call<RideDTO> endRide(@Path("rideId") long rideId);
 
+    public final IRideService service = RetrofitUtils.retrofit.create(IRideService.class);
 
 }

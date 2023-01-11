@@ -32,8 +32,6 @@ public class DriversLocationService extends PullingService {
     static final public String NEW_LAT = PREFIX + "LAT_MESSAGE";
     static final public String NEW_LNG = PREFIX + "LNG_MESSAGE";
 
-    private final IVehicleService vehicleService = retrofit.create(IVehicleService.class);
-
     public void sendResult(double[] latitudes, double[] longitudes) {
 
         if(latitudes.length != longitudes.length){
@@ -51,7 +49,7 @@ public class DriversLocationService extends PullingService {
     protected void startExecutor(Intent intent){
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleWithFixedDelay(() -> {
-            Call<List<VehicleLocationDTO>> call = vehicleService.getDriversLocation();
+            Call<List<VehicleLocationDTO>> call = IVehicleService.service.getDriversLocation();
             call.enqueue(new Callback<List<VehicleLocationDTO>>() {
                 @Override
                 public void onResponse(Call<List<VehicleLocationDTO>> call, Response<List<VehicleLocationDTO>> response) {

@@ -6,8 +6,15 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUtils {
+    public static final Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(Utils.ServerOrigin)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(RetrofitUtils.basicJsonJwtClient())
+            .build();
 
     /**
      * Create a HTTP Interceptor which injects the following headers:

@@ -19,11 +19,7 @@ public abstract class PullingService extends Service {
     protected ScheduledExecutorService executor;
     protected LocalBroadcastManager broadcaster;
 
-    protected final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Utils.ServerOrigin)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(RetrofitUtils.basicJsonJwtClient())
-            .build();
+    protected abstract void startExecutor(Intent intent);
 
     @Override
     public void onCreate() {
@@ -35,8 +31,6 @@ public abstract class PullingService extends Service {
         startExecutor(intent);
         return super.onStartCommand(intent, flags, startId);
     }
-
-    protected abstract void startExecutor(Intent intent);
 
     public void sendError(String intentFilter, String errorTitle, String errorMessage) {
         Intent intent = new Intent(intentFilter);

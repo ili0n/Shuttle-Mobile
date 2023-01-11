@@ -32,7 +32,7 @@ import com.mapbox.geojson.Point;
 
 public class DriverHome extends GenericUserMapFragment {
     private boolean initiallyMovedToLocation = false;
-    private BroadcastReceiver finishedRideReceiver;
+    private BroadcastReceiver rideStatusReceiver;
     private BroadcastReceiver driversLocationReceiver;
 
     Fragment currentFragment;
@@ -127,7 +127,7 @@ public class DriverHome extends GenericUserMapFragment {
     }
 
     private void registerReceivers(){
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((finishedRideReceiver),
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((rideStatusReceiver),
                 new IntentFilter(CurrentRideStatusService.RESULT)
         );
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver((driversLocationReceiver),
@@ -136,7 +136,7 @@ public class DriverHome extends GenericUserMapFragment {
     }
 
     private void unregisterReceivers(){
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(finishedRideReceiver);
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(rideStatusReceiver);
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(driversLocationReceiver);
     }
 
@@ -154,7 +154,7 @@ public class DriverHome extends GenericUserMapFragment {
 
     private void setReceiveOperations() {
         Handler handler = new Handler();
-        finishedRideReceiver = new BroadcastReceiver() {
+        rideStatusReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.hasExtra(CurrentRideStatusService.ERROR)){
