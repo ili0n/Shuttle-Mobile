@@ -1,44 +1,40 @@
 package com.example.shuttlemobile.driver.fragments;
 
-import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.example.shuttlemobile.BlankFragment;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.SessionContext;
-import com.example.shuttlemobile.common.adapter.EasyListAdapter;
-import com.example.shuttlemobile.passenger.Passenger;
+import com.example.shuttlemobile.driver.services.CurrentRideStatusService;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
-
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class DriverHome extends GenericUserMapFragment {
     private boolean initiallyMovedToLocation = false;
+    private BroadcastReceiver finishedRideReceiver;
+
+    Fragment currentFragment;
+    DriverCurrentRide currentRideFragment = new DriverCurrentRide();
+    BlankFragment blankFragment = new BlankFragment();
+
+    private Ride.Status rideStatus;
 
     public static DriverHome newInstance(SessionContext session) {
         DriverHome fragment = new DriverHome();
@@ -51,8 +47,7 @@ public class DriverHome extends GenericUserMapFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        DriverCurrentRide currentRideFragment = new DriverCurrentRide();
-        setCurrentFragment(currentRideFragment);
+        setCurrentFragment(blankFragment);
     }
 
     public void setCurrentFragment(Fragment fragment){
@@ -63,11 +58,26 @@ public class DriverHome extends GenericUserMapFragment {
                 .replace(R.id.container_d_home, fragment);
         fragmentTransaction.addToBackStack("DriverHome");
         fragmentTransaction.commit();
+        currentFragment = fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_driver_home, container, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setStatusReceiveOperations();
+        setPullingRideStatus();
+        registerStatusReceiver();
+    }
+
+    @Override
+    public void onStop() {
+        unregisterStatusReceiver();
+        super.onStop();
     }
 
     @Override
@@ -97,5 +107,58 @@ public class DriverHome extends GenericUserMapFragment {
         }
     }
 
+    private void placeFragment(){
+        this.setCurrentFragment(currentRideFragment);
+    }
+
+    private void removeFragment() {
+        this.setCurrentFragment(blankFragment);
+    }
+
+    private void registerStatusReceiver(){
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((finishedRideReceiver),
+                new IntentFilter(CurrentRideStatusService.RESULT)
+        );
+    }
+
+    private void unregisterStatusReceiver(){
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(finishedRideReceiver);
+    }
+    private void setPullingRideStatus() {
+        Intent intent = new Intent(getActivity(), CurrentRideStatusService.class);
+        long driverId = SettingsUtil.getUserJWT().getId();
+        intent.putExtra(CurrentRideStatusService.DRIVER_ID, driverId);
+        requireActivity().startService(intent);
+    }
+    private void setStatusReceiveOperations() {
+        finishedRideReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.hasExtra(CurrentRideStatusService.ERROR)){
+                    String message =  intent.getStringExtra(CurrentRideStatusService.NEW_ERROR_MESSAGE);
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Ride.Status status = (Ride.Status) intent.getSerializableExtra(CurrentRideStatusService.NEW_STATUS_UPDATE);
+                    if(rideStatus != status){
+                        if(status == Ride.Status.Accepted){
+                            rideStatus = Ride.Status.Accepted;
+                            placeFragment();
+                            long driverId = SettingsUtil.getUserJWT().getId();
+                            currentRideFragment.setRide(driverId);
+                        }
+                        else{
+                            if(rideStatus == Ride.Status.Accepted){
+                                currentRideFragment.stopTimer();
+                            }
+                            rideStatus = null;
+                            currentRideFragment.clearRoute();
+                            removeFragment();
+                        }
+                    }
+                }
+            }
+        };
+    }
 
 }

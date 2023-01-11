@@ -23,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.shuttlemobile.BlankFragment;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.driver.services.DriversLocationService;
@@ -33,14 +32,10 @@ import com.example.shuttlemobile.ride.dto.LocationDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
-import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.Utils;
-import com.example.shuttlemobile.vehicle.IVehicleService;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -69,8 +64,6 @@ public class DriverCurrentRide extends Fragment {
     private Point departure;
     private RideDTO currentRide;
 
-    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Utils.ServerOrigin)
             .addConverterFactory(GsonConverterFactory.create())
@@ -78,16 +71,11 @@ public class DriverCurrentRide extends Fragment {
             .build();
 
     private final IRideService rideService = retrofit.create(IRideService.class);
-    private final IVehicleService vehicleService = retrofit.create(IVehicleService.class);
 
     private BroadcastReceiver timeReceiver;
     private BroadcastReceiver driversLocationReceiver;
 
-    public final String DRIVER_ID = "DRIVER_ID";
-
-
-
-    public static DriverCurrentRide newInstance(String param1, String param2) {
+    public static DriverCurrentRide newInstance() {
         DriverCurrentRide fragment = new DriverCurrentRide();
         return fragment;
     }
@@ -95,15 +83,14 @@ public class DriverCurrentRide extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setReceiveOperations();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        setReceiveOperations();
         registerReceivers();
     }
-
 
     @Override
     public void onStop() {
@@ -142,23 +129,22 @@ public class DriverCurrentRide extends Fragment {
     }
 
     private void registerReceivers() {
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver((timeReceiver),
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((timeReceiver),
                 new IntentFilter(CurrentRideTimeService.RESULT)
         );
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver((driversLocationReceiver),
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((driversLocationReceiver),
                 new IntentFilter(DriversLocationService.RESULT)
         );
     }
 
     private void unregisterReceivers() {
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(timeReceiver);
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(driversLocationReceiver);
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(timeReceiver);
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(driversLocationReceiver);
     }
 
     private void setPullingLocation() {
         Intent intent = new Intent(getActivity(), DriversLocationService.class);
-        intent.putExtra(DriversLocationService.DRIVER_ID, currentRide.getId());
-        getActivity().startService(intent);
+        requireActivity().startService(intent);
     }
 
     @Override
@@ -167,7 +153,6 @@ public class DriverCurrentRide extends Fragment {
         isLargeLayout = getResources().getBoolean(R.bool.large_layout);
         return inflater.inflate(R.layout.fragment_driver_current_ride, container, false);
     }
-
 
     private void setPoints(){
         LocationDTO departure = currentRide.getLocations().get(0).getDeparture();
@@ -178,7 +163,6 @@ public class DriverCurrentRide extends Fragment {
         if (parentFrag != null) {
             requireActivity().runOnUiThread(() -> parentFrag.drawRoute(DriverCurrentRide.this.departure,
                     DriverCurrentRide.this.destination, "#c92418"));
-
         }
     }
 
@@ -186,8 +170,7 @@ public class DriverCurrentRide extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViewElements(view);
-        long driverId = SettingsUtil.getUserJWT().getId();
-        setRide(driverId);
+        setPullingLocation();
     }
 
     private void initViewElements(View view) {
@@ -200,19 +183,20 @@ public class DriverCurrentRide extends Fragment {
         btnPanic = view.findViewById(R.id.btn_d_panic);
     }
 
-    private void setRide(long driverId){
-        Call<RideDTO> call =  rideService.getRide(driverId);
+    public void setRide(long driverId){
+        Call<RideDTO> call =  rideService.getActiveRide(driverId);
         call.enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(@NonNull Call<RideDTO> call, @NonNull Response<RideDTO> response) {
                 if(response.isSuccessful()){
                     DriverCurrentRide.this.currentRide = response.body();
                     Intent intent = new Intent(getActivity(), CurrentRideTimeService.class);
-                    intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
-                    getActivity().startService(intent);
-                    setPullingLocation();
-                    fillData();
-                    setPoints();
+                    if(currentRide.getStartTime() != null){
+                        intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
+                        requireActivity().startService(intent);
+                        fillData();
+                        setPoints();
+                    }
                 }
                 else{
                     Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
@@ -248,7 +232,6 @@ public class DriverCurrentRide extends Fragment {
             transaction.add(android.R.id.content, panicFragment)
                     .addToBackStack(null).commit();
         }
-
     }
 
     private void fillPassengers() {
@@ -320,16 +303,7 @@ public class DriverCurrentRide extends Fragment {
                 if(response.isSuccessful()){
 
 //                  stop receiving messages
-                    Intent myService = new Intent(getContext(), CurrentRideTimeService.class);
-                    getContext().stopService(myService);
-
-//                  replace fragment
-                    DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
-                    if (parentFrag != null) {
-                        parentFrag.setCurrentFragment(new BlankFragment());
-                        parentFrag.deleteAllRoutes();
-                        parentFrag.deleteAllRouteCircles();
-                    }
+                    stopTimer();
                     Toast.makeText(getActivity(), "Finished ride", Toast.LENGTH_LONG).show();
                 }
                 else{
@@ -342,6 +316,18 @@ public class DriverCurrentRide extends Fragment {
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
 
+    public void stopTimer(){
+        Intent myService = new Intent(requireContext(), CurrentRideTimeService.class);
+        requireContext().stopService(myService);
+    }
+
+    public void clearRoute() {
+        DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
+        if (parentFrag != null) {
+            parentFrag.deleteAllRoutes();
+            parentFrag.deleteAllRouteCircles();
+        }
     }
 }
