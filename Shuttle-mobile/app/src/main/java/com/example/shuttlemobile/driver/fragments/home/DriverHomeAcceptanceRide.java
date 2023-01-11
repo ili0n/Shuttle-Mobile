@@ -5,14 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,27 +16,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.common.GenericUserMapFragment;
-import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.RejectionDTOMinimal;
-import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
 
-import org.w3c.dom.Text;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
+public class DriverHomeAcceptanceRide extends Fragment {
     private TextView txtDeparture;
     private TextView txtDestination;
     private TextView txtDistance;
@@ -53,41 +46,33 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
     private Button btnReject;
     private Button btnBegin;
 
+    private DriverHome parent = null;
+
     private BroadcastReceiver rideReceiver;
 
-    Point A = null;
-    Point B = null;
-    RideDTO ride = null;
+    private Point A = null;
+    private Point B = null;
+    private RideDTO ride = null;
 
     @Override
-    public String getPublicMapApiToken() {
-        return getContext().getResources().getString(R.string.mapbox_access_token);
-    }
-
-    @Override
-    public int getLayoutID() {
-        return R.layout.fragment_driver_home_acceptance_ride;
-    }
-
-    @Override
-    public int getMapViewID() {
-        return R.id.map_acceptance_ride;
-    }
-
-    @Override
-    public void onMapLoaded() {}
-
-    @Override
-    public void onNewLocation(Location location) {
-        drawCurrentLocation(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
-        lookAtPoint(Point.fromLngLat(location.getLongitude(), location.getLatitude()), 15, 3000);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_driver_home_acceptance_ride, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        initParent();
         initViewElements(view);
         initRideReceiver();
+    }
+
+    private void initParent() {
+        parent = (DriverHome)DriverHomeAcceptanceRide.this.getParentFragment();
+        if (parent == null) {
+            throw new IllegalStateException("Parent is null (should be DriverHome)");
+        }
     }
 
     private void initRideReceiver() {
@@ -264,8 +249,8 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
         // Update the things from above if neccessary.
 
         if (shouldRedrawRoute) {
-            drawRoute(A, B, "#0000FF");
-            fitViewport(A, B, 3000);
+            parent.drawRoute(A, B, "#0000FF");
+            parent.fitViewport(A, B, 3000);
         }
 
         if (shouldSendNotification) {
@@ -280,46 +265,5 @@ public class DriverHomeAcceptanceRide extends GenericUserMapFragment {
 
             SettingsUtil.put(SettingsUtil.KEY_CURRENT_RIDE_ID, ride.getId());
         }
-    }
-
-    /**
-     * Draw a new route and focus on it but only if there's new info (new ride basically, there's no
-     * need to redraw the existing route if it's already on-screen).
-     */
-    private void tryDrawAndFocusRoute() {
-        if (A == null && B == null) {
-            LocationDTO Aloc = ride.getLocations().get(0).getDeparture();
-            LocationDTO Bloc = ride.getLocations().get(ride.getLocations().size() - 1).getDestination();
-
-            A = Point.fromLngLat(Aloc.getLongitude(), Aloc.getLatitude());
-            B = Point.fromLngLat(Bloc.getLongitude(), Bloc.getLatitude());
-            drawRoute(A, B, "#0000FF");
-            fitViewport(A, B, 3000);
-        }
-    }
-
-    /**
-     * Check if the received DTO should override an existing ride in-memory (if any).
-     * The idea behind is that a driver can have an active ride and a pending ride, so if he
-     * for some reason gets a pending ride, it shouldn't be drawn on screen since the active
-     * ride is more important.
-     * @param dto New ride caught from the back. Can be null.
-     * @return True if this ride should be in-focus, false otherwise.
-     */
-    private boolean isThisNewRide(RideDTO dto) {
-        if (dto == null) {
-            return false;
-        }
-        if (ride == null) {
-            return true;
-        }
-
-        final Ride.State stateCurrent = Ride.State.valueOf(ride.getStatus().toUpperCase());
-        final Ride.State stateUpcoming = Ride.State.valueOf(dto.getStatus().toUpperCase());
-        if (stateCurrent == Ride.State.PENDING || stateCurrent == Ride.State.ACCEPTED || stateCurrent == Ride.State.STARTED) {
-            return false;
-        }
-
-        return true;
     }
 }

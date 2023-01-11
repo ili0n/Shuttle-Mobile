@@ -4,9 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.os.Bundle;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,25 +19,22 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.shuttlemobile.BlankFragment;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
+import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.driver.fragments.home.DriverHomeAcceptanceRide;
-import com.example.shuttlemobile.driver.fragments.home.DriverHomeJustMap;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.RideDTO;
 
-import java.util.Locale;
-
-public class DriverHome extends GenericUserFragment {
+public class DriverHome extends GenericUserMapFragment {
     private FragmentContainerView fragmentContainerView;
     private BroadcastReceiver rideReceiver;
 
-    private DriverHomeJustMap fragmentJustMap;
+    private BlankFragment blankFragment;
     private DriverHomeAcceptanceRide fragmentAcceptance;
 
     private Fragment currentFragment = null;
     private RideDTO lastDto = null;
-
 
     public static DriverHome newInstance(SessionContext session) {
         DriverHome fragment = new DriverHome();
@@ -50,8 +46,29 @@ public class DriverHome extends GenericUserFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_driver_home, container, false);
+        return inflater.inflate(getLayoutID(), container, false);
     }
+
+    @Override
+    public String getPublicMapApiToken() {
+        return getContext().getResources().getString(R.string.mapbox_access_token);
+    }
+
+    @Override
+    public void onMapLoaded() {}
+
+    @Override
+    public int getLayoutID() {
+        return R.layout.fragment_driver_home;
+    }
+
+    @Override
+    public int getMapViewID() {
+        return R.id.map_driver_home;
+    }
+
+    @Override
+    public void onNewLocation(Location location) {}
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -64,11 +81,11 @@ public class DriverHome extends GenericUserFragment {
     }
 
     private void initViewElements(@NonNull View view) {
-        fragmentContainerView = view.findViewById(R.id.driver_home_fragment_frame);
+        fragmentContainerView = view.findViewById(R.id.driver_home_fragment_frame_home);
     }
 
     private void initFragments() {
-        fragmentJustMap = DriverHomeJustMap.newInstance();
+        blankFragment = BlankFragment.newInstance();
         fragmentAcceptance = DriverHomeAcceptanceRide.newInstance();
     }
 
@@ -79,11 +96,11 @@ public class DriverHome extends GenericUserFragment {
     }
 
     private void setSubFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getParentFragmentManager()
+        FragmentTransaction fragmentTransaction = getChildFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .setReorderingAllowed(true)
-                .replace(R.id.driver_home_fragment_frame, fragment);
+                .replace(R.id.driver_home_fragment_frame_home, fragment);
         fragmentTransaction.addToBackStack("DriverHome");
         fragmentTransaction.commit();
         currentFragment = fragment;
@@ -109,7 +126,8 @@ public class DriverHome extends GenericUserFragment {
 
     private void determineSubFragment(RideDTO dto) {
         if (dto == null) {
-            setSubFragmentIfDifferent(fragmentJustMap);
+            setSubFragmentIfDifferent(blankFragment);
+            removeRoute();
             return;
         }
 
@@ -123,7 +141,8 @@ public class DriverHome extends GenericUserFragment {
                 setSubFragmentIfDifferent(fragmentAcceptance); // TODO: Use fragmentCurrentRide.
                 break;
             case CANCELED: case FINISHED: case REJECTED:
-                setSubFragmentIfDifferent(fragmentJustMap);
+                setSubFragmentIfDifferent(blankFragment);
+                removeRoute();
                 break;
             default:
                 throw new IllegalStateException("Unsupported state: " + state);

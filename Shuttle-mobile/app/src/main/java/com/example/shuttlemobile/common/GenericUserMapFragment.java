@@ -252,8 +252,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
      * @param hexColor Color of the polyline.
      */
     public final void drawPolylineRoute(List<Point> points, String hexColor) {
-        routeAnnotationManager.deleteAll();
-        routeCircleAnnotationManager.deleteAll();
+        removeRoute();
 
         PolylineAnnotationOptions lineInner = new PolylineAnnotationOptions()
                 .withPoints(points)
@@ -308,6 +307,14 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
                 // Failed to call.
             }
         });
+    }
+
+    /**
+     * Remove the route and its endpoint from the map (if any).
+     */
+    public final void removeRoute() {
+        routeAnnotationManager.deleteAll();
+        routeCircleAnnotationManager.deleteAll();
     }
 
     private Feature drawRoute_OnResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response, String hexColor) {
