@@ -11,6 +11,7 @@ import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
 import com.example.shuttlemobile.vehicle.IVehicleService;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,20 +30,13 @@ public class DriversLocationService extends PullingService {
     static final public String RESULT = PREFIX + "PROCESSED";
     static final public String ERROR = PREFIX + "ERROR";
     static final public String NEW_ERROR_MESSAGE = PREFIX + "FETCHING_ERROR_MESSAGE";
-    static final public String NEW_LAT = PREFIX + "LAT_MESSAGE";
-    static final public String NEW_LNG = PREFIX + "LNG_MESSAGE";
+    static final public String NEW_VEHICLES_LOCATIONS = PREFIX + "VEHICLES_LOCATIONS_MESSAGE";
 
-    public void sendResult(double[] latitudes, double[] longitudes) {
+    public void sendResult(List<VehicleLocationDTO> result) {
 
-        if(latitudes.length != longitudes.length){
-            sendError(ERROR, NEW_ERROR_MESSAGE, "Array sizes don't match");
-        }
-        else{
-            Intent intent = new Intent(RESULT);
-            intent.putExtra(NEW_LAT, latitudes);
-            intent.putExtra(NEW_LNG, longitudes);
-            broadcaster.sendBroadcast(intent);
-        }
+        Intent intent = new Intent(RESULT);
+        intent.putExtra(NEW_VEHICLES_LOCATIONS, (Serializable) result);
+        broadcaster.sendBroadcast(intent);
     }
 
     @Override
@@ -54,16 +48,7 @@ public class DriversLocationService extends PullingService {
                 @Override
                 public void onResponse(Call<List<VehicleLocationDTO>> call, Response<List<VehicleLocationDTO>> response) {
                     if(response.isSuccessful()){
-                        double[] latitudes = response.body()
-                                .stream()
-                                .mapToDouble(vehicle -> vehicle.getLocation().getLatitude())
-                                .toArray();
-
-                        double[] longitudes = response.body()
-                                .stream()
-                                .mapToDouble(vehicle -> vehicle.getLocation().getLongitude())
-                                .toArray();
-                        sendResult(latitudes, longitudes);
+                        sendResult(response.body());
                     }
                     else{
                         sendError(ERROR, NEW_ERROR_MESSAGE, response.message());

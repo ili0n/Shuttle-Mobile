@@ -27,8 +27,12 @@ import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.driver.services.CurrentRideStatusService;
 import com.example.shuttlemobile.driver.services.DriversLocationService;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.ride.dto.LocationDTO;
+import com.example.shuttlemobile.ride.dto.VehicleLocationDTO;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
+
+import java.util.List;
 
 public class DriverHome extends GenericUserMapFragment {
     private boolean initiallyMovedToLocation = false;
@@ -190,12 +194,13 @@ public class DriverHome extends GenericUserMapFragment {
                     Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
                 }
                 else{
-                    double[] latitudes = intent.getDoubleArrayExtra(DriversLocationService.NEW_LAT);
-                    double[] longitudes = intent.getDoubleArrayExtra(DriversLocationService.NEW_LNG);
+                    List<VehicleLocationDTO> locations =
+                            (List<VehicleLocationDTO>) intent.getSerializableExtra(DriversLocationService.NEW_VEHICLES_LOCATIONS);
                     deleteAllPoints();
-                    for(int i = 0; i < latitudes.length; ++i){
-                        Point driverLocation = Point.fromLngLat(longitudes[i], latitudes[i]);
-                        handler.post(() -> drawCar(driverLocation, true));
+                    for(VehicleLocationDTO dto: locations){
+                        LocationDTO location = dto.getLocation();
+                        Point driverLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
+                        handler.post(() -> drawCar(driverLocation, dto.getAvailable()));
                     }
                 }
             }
