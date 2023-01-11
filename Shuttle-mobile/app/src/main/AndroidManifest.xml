@@ -18,7 +18,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <service
-            android:name=".driver.services.CurrentRideDriverLocationService"
+            android:name=".driver.services.DriversLocationService"
             android:enabled="true"
             android:exported="true"/>
         <service
