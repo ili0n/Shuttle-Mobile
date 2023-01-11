@@ -2,6 +2,7 @@ package com.example.shuttlemobile.passenger.fragments;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -22,6 +23,7 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.passenger.orderride.OrderActivity;
 import com.mapbox.geojson.Point;
 
 import java.io.IOException;
@@ -91,6 +93,8 @@ public class PassengerHome extends GenericUserMapFragment {
             @Override
             public void onClick(View view) {
                 // Order route, create activity, send departure and destination through intent.
+                Intent i = new Intent(getActivity(), OrderActivity.class);
+                startActivity(i);
                 Toast.makeText(PassengerHome.this.getActivity(), "Order", Toast.LENGTH_SHORT).show();
             }
         });
