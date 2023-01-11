@@ -14,6 +14,7 @@ import com.example.shuttlemobile.ride.RideDTO;
 import com.example.shuttlemobile.unregistered.login.ILoginService;
 import com.example.shuttlemobile.unregistered.login.LoginDTO;
 import com.example.shuttlemobile.unregistered.login.TokenDTO;
+import com.example.shuttlemobile.user.IUserService;
 import com.example.shuttlemobile.user.JWT;
 import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
@@ -28,6 +29,9 @@ import retrofit2.Response;
 public class DriverRideService extends Service {
     public static String BROADCAST_CHANNEL = "driver_ride_service_broadcast_channel";
     public static String INTENT_RIDE_KEY = "ride";
+
+    public static String ACTIVE_CHANNEL = "driver_is_active_channel";
+    public static String INTENT_IS_ACTIVE_KEY = "is_active";
 
     public DriverRideService() {
     }
@@ -45,6 +49,7 @@ public class DriverRideService extends Service {
                         @Override
                         public void run() {
                             fetchNewMessages();
+                            fetchActiveState();
                             handler.postDelayed(this, delay);
                         }
                     }, delay);
@@ -79,6 +84,22 @@ public class DriverRideService extends Service {
 
             @Override
             public void onFailure(Call<RideDTO> call, Throwable t) {
+                Log.e("REST ERROR", t.toString());
+            }
+        });
+    }
+
+    private void fetchActiveState() {
+        IUserService.service.getActive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                Intent intent = new Intent(ACTIVE_CHANNEL);
+                intent.putExtra(INTENT_IS_ACTIVE_KEY, response.body());
+                sendBroadcast(intent);
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
                 Log.e("REST ERROR", t.toString());
             }
         });

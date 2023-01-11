@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,10 +28,18 @@ import com.example.shuttlemobile.driver.fragments.home.DriverHomeAcceptanceRide;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.RideDTO;
+import com.example.shuttlemobile.user.IUserService;
+import com.example.shuttlemobile.util.SettingsUtil;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DriverHome extends GenericUserMapFragment {
     private FragmentContainerView fragmentContainerView;
     private BroadcastReceiver rideReceiver;
+    private BroadcastReceiver isActiveReceiver;
+    private Switch activeSwitch;
 
     private BlankFragment blankFragment;
     private DriverHomeAcceptanceRide fragmentAcceptance;
@@ -77,11 +88,46 @@ public class DriverHome extends GenericUserMapFragment {
         initFragments();
 
         initRideReceiver();
+        initIsActiveReceiver();
         determineSubFragment(null);
     }
 
     private void initViewElements(@NonNull View view) {
         fragmentContainerView = view.findViewById(R.id.driver_home_fragment_frame_home);
+        activeSwitch = view.findViewById(R.id.switch_is_active);
+        initSwitchToggle();
+    }
+
+    private void initSwitchToggle() {
+        activeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (compoundButton.isPressed() == false)
+                    return;
+
+                if (isChecked) {
+                    IUserService.service.setActive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {}
+
+                        @Override
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+                            Log.e("REST ERROR", t.toString());
+                        }
+                    });
+                } else {
+                    IUserService.service.setInactive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {}
+
+                        @Override
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+                            Log.e("REST ERROR", t.toString());
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void initFragments() {
@@ -118,6 +164,24 @@ public class DriverHome extends GenericUserMapFragment {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(DriverRideService.BROADCAST_CHANNEL);
         getActivity().registerReceiver(rideReceiver, intentFilter);
+    }
+
+    private void initIsActiveReceiver() {
+        isActiveReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Boolean isActive = intent.getBooleanExtra(DriverRideService.INTENT_IS_ACTIVE_KEY, false);
+                onGetIsActive(isActive);
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DriverRideService.ACTIVE_CHANNEL);
+        getActivity().registerReceiver(isActiveReceiver, intentFilter);
+    }
+
+    private void onGetIsActive(Boolean isActive) {
+        activeSwitch.setChecked(isActive);
     }
 
     private void onGetRide(RideDTO dto) {
