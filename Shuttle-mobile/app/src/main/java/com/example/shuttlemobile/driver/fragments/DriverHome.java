@@ -7,11 +7,14 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -22,6 +25,7 @@ import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.driver.services.CurrentRideStatusService;
+import com.example.shuttlemobile.driver.services.DriversLocationService;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
@@ -29,6 +33,7 @@ import com.mapbox.geojson.Point;
 public class DriverHome extends GenericUserMapFragment {
     private boolean initiallyMovedToLocation = false;
     private BroadcastReceiver finishedRideReceiver;
+    private BroadcastReceiver driversLocationReceiver;
 
     Fragment currentFragment;
     DriverCurrentRide currentRideFragment = new DriverCurrentRide();
@@ -69,15 +74,21 @@ public class DriverHome extends GenericUserMapFragment {
     @Override
     public void onStart() {
         super.onStart();
-        setStatusReceiveOperations();
+        setReceiveOperations();
         setPullingRideStatus();
-        registerStatusReceiver();
+        registerReceivers();
     }
 
     @Override
     public void onStop() {
-        unregisterStatusReceiver();
+        unregisterReceivers();
         super.onStop();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setPullingLocation();
     }
 
     @Override
@@ -115,22 +126,34 @@ public class DriverHome extends GenericUserMapFragment {
         this.setCurrentFragment(blankFragment);
     }
 
-    private void registerStatusReceiver(){
+    private void registerReceivers(){
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver((finishedRideReceiver),
                 new IntentFilter(CurrentRideStatusService.RESULT)
         );
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((driversLocationReceiver),
+                new IntentFilter(DriversLocationService.RESULT)
+        );
     }
 
-    private void unregisterStatusReceiver(){
+    private void unregisterReceivers(){
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(finishedRideReceiver);
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(driversLocationReceiver);
     }
+
     private void setPullingRideStatus() {
         Intent intent = new Intent(getActivity(), CurrentRideStatusService.class);
         long driverId = SettingsUtil.getUserJWT().getId();
         intent.putExtra(CurrentRideStatusService.DRIVER_ID, driverId);
         requireActivity().startService(intent);
     }
-    private void setStatusReceiveOperations() {
+
+    private void setPullingLocation() {
+        Intent intent = new Intent(getActivity(), DriversLocationService.class);
+        requireActivity().startService(intent);
+    }
+
+    private void setReceiveOperations() {
+        Handler handler = new Handler();
         finishedRideReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -155,6 +178,24 @@ public class DriverHome extends GenericUserMapFragment {
                             currentRideFragment.clearRoute();
                             removeFragment();
                         }
+                    }
+                }
+            }
+        };
+        driversLocationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.hasExtra(DriversLocationService.ERROR)){
+                    String message =  intent.getStringExtra(DriversLocationService.NEW_ERROR_MESSAGE);
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+                }
+                else{
+                    double[] latitudes = intent.getDoubleArrayExtra(DriversLocationService.NEW_LAT);
+                    double[] longitudes = intent.getDoubleArrayExtra(DriversLocationService.NEW_LNG);
+                    deleteAllPoints();
+                    for(int i = 0; i < latitudes.length; ++i){
+                        Point driverLocation = Point.fromLngLat(longitudes[i], latitudes[i]);
+                        handler.post(() -> drawCar(driverLocation, true));
                     }
                 }
             }
