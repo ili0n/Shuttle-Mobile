@@ -29,11 +29,16 @@ import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
+import com.example.shuttlemobile.ride.dto.VehicleDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
+import com.example.shuttlemobile.vehicle.IVehicleService;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -62,12 +67,17 @@ public class DriverCurrentRide extends Fragment {
     private Point departure;
     private RideDTO currentRide;
 
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Utils.ServerOrigin)
             .addConverterFactory(GsonConverterFactory.create())
             .client(RetrofitUtils.basicJsonJwtClient())
             .build();
+
     private final IRideService rideService = retrofit.create(IRideService.class);
+    private final IVehicleService vehicleService = retrofit.create(IVehicleService.class);
+
     private BroadcastReceiver timeReceiver;
 
     public static DriverCurrentRide newInstance(String param1, String param2) {
@@ -99,6 +109,41 @@ public class DriverCurrentRide extends Fragment {
                 tvTime.setText(s);
             }
         };
+    }
+
+    private void setPullingLocation() {
+
+        scheduler.scheduleAtFixedRate
+                (new Runnable() {
+                    @Override
+                    public void run() {
+                        Call<VehicleDTO> call = vehicleService.getDriverLocation(currentRide.getDriver().getId());
+                        call.enqueue(new Callback<VehicleDTO>() {
+                            @Override
+                            public void onResponse(Call<VehicleDTO> call, Response<VehicleDTO> response) {
+                                if(response.isSuccessful()){
+                                    DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
+                                    VehicleDTO vehicle = response.body();
+                                    double lng = vehicle.getCurrentLocation().getLongitude();
+                                    double lat = vehicle.getCurrentLocation().getLatitude();
+                                    Point driverLocation = Point.fromLngLat(lng, lat);
+                                    getActivity().runOnUiThread(() -> {
+                                        parentFrag.deleteAllPoints();
+                                        parentFrag.drawCar(driverLocation, true);
+                                    });
+                                }
+                                else{
+                                    Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<VehicleDTO> call, Throwable t) {
+                                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }, 0, 4, TimeUnit.SECONDS);
     }
 
     @Override
@@ -142,10 +187,11 @@ public class DriverCurrentRide extends Fragment {
             @Override
             public void onResponse(@NonNull Call<RideDTO> call, @NonNull Response<RideDTO> response) {
                 if(response.isSuccessful()){
-                        DriverCurrentRide.this.currentRide = response.body();
+                    DriverCurrentRide.this.currentRide = response.body();
                     Intent intent = new Intent(getActivity(), CurrentRideTimeService.class);
                     intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
                     getActivity().startService(intent);
+                    setPullingLocation();
                     fillData();
                 }
                 else{
@@ -261,6 +307,8 @@ public class DriverCurrentRide extends Fragment {
                     DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
                     if (parentFrag != null) {
                         parentFrag.setCurrentFragment(new BlankFragment());
+                        parentFrag.deleteAllRoutes();
+                        parentFrag.deleteAllRouteCircles();
                     }
                     Toast.makeText(getActivity(), "Finished ride", Toast.LENGTH_LONG).show();
                 }
