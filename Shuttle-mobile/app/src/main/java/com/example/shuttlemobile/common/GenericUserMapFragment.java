@@ -70,6 +70,8 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
     private PolylineAnnotationManager routeAnnotationManager;
     private CircleAnnotationManager routeCircleAnnotationManager;
 
+    private PointAnnotationManager currentPositionAnnotationManager;
+
     private Bitmap carAvailable;
     private Bitmap carUnavailable;
 
@@ -178,11 +180,21 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         polylineAnnotationManager = PolylineAnnotationManagerKt.createPolylineAnnotationManager(annotationApi, new AnnotationConfig());
         routeAnnotationManager = PolylineAnnotationManagerKt.createPolylineAnnotationManager(annotationApi, new AnnotationConfig());
         routeCircleAnnotationManager = CircleAnnotationManagerKt.createCircleAnnotationManager(annotationApi, new AnnotationConfig());
+        currentPositionAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationApi, new AnnotationConfig());
     }
 
     private void initIcons() {
         carAvailable = Utils.getBitmapFromVectorDrawable(getActivity(), R.drawable.car_green);
         carUnavailable = Utils.getBitmapFromVectorDrawable(getActivity(), R.drawable.car_red);
+    }
+
+    public final void drawCurrentLocation(Point pos) {
+        PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
+                .withPoint(pos)
+                .withIconImage(carAvailable)
+                ;
+        pointAnnotationManager.deleteAll();
+        pointAnnotationManager.create(pointAnnotationOptions);
     }
 
 
@@ -240,8 +252,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
      * @param hexColor Color of the polyline.
      */
     public final void drawPolylineRoute(List<Point> points, String hexColor) {
-        routeAnnotationManager.deleteAll();
-        routeCircleAnnotationManager.deleteAll();
+        removeRoute();
 
         PolylineAnnotationOptions lineInner = new PolylineAnnotationOptions()
                 .withPoints(points)
@@ -296,6 +307,14 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
                 // Failed to call.
             }
         });
+    }
+
+    /**
+     * Remove the route and its endpoint from the map (if any).
+     */
+    public final void removeRoute() {
+        routeAnnotationManager.deleteAll();
+        routeCircleAnnotationManager.deleteAll();
     }
 
     private Feature drawRoute_OnResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response, String hexColor) {

@@ -7,6 +7,8 @@ import com.example.shuttlemobile.vehicle.Vehicle;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ride extends Entity {
     private boolean hasBaby;
@@ -16,19 +18,19 @@ public class Ride extends Entity {
     private LocalDateTime end;
     private double cost;
     private State state;
-    private Passenger passenger;
+    private List<Passenger> passengers = new ArrayList<>();
     private Driver driver;
 
     public Ride() {
-        this.passenger = new Passenger();
-    }
+            }
 
     public enum State {
-        STATE_PENDING,
-        STATE_ACCEPTED,
-        STATE_REJECTED,
-        STATE_ACTIVE,
-        STATE_FINISHED
+        PENDING,
+        ACCEPTED,
+        REJECTED,
+        CANCELED,
+        FINISHED,
+        STARTED,
     };
 
     public Driver getDriver() { return driver; }
@@ -91,11 +93,11 @@ public class Ride extends Entity {
         this.state = state;
     }
 
-    public Passenger getPassenger() {
-        return passenger;
+    public List<Passenger> getPassengers() {
+        return passengers;
     }
 
-    public void setPassenger(Passenger passenger) {
-        this.passenger = passenger;
+    public void setPassengers(List<Passenger> passengers) {
+        this.passengers = passengers;
     }
 }
