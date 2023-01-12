@@ -1,5 +1,7 @@
 package com.example.shuttlemobile.ride.dto;
 
+import com.example.shuttlemobile.route.LocationDTO;
+
 import java.io.Serializable;
 
 public class VehicleLocationDTO implements Serializable {

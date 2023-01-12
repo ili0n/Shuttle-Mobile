@@ -63,7 +63,7 @@ public class DriverCurrentRide extends Fragment {
     private Point destination;
     private Point departure;
     private RideDTO currentRide;
-
+/*
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Utils.ServerOrigin)
             .addConverterFactory(GsonConverterFactory.create())
@@ -71,7 +71,7 @@ public class DriverCurrentRide extends Fragment {
             .build();
 
     private final IRideService rideService = retrofit.create(IRideService.class);
-
+*/
     private BroadcastReceiver timeReceiver;
 
     public static DriverCurrentRide newInstance() {
@@ -153,7 +153,7 @@ public class DriverCurrentRide extends Fragment {
     }
 
     public void setRide(long driverId){
-        Call<RideDTO> call =  rideService.getActiveRide(driverId);
+        Call<RideDTO> call =  IRideService.service.getActiveRide(driverId);
         call.enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(@NonNull Call<RideDTO> call, @NonNull Response<RideDTO> response) {
@@ -263,7 +263,7 @@ public class DriverCurrentRide extends Fragment {
     }
 
     private void finishRide(){
-        Call<RideDTO> call = rideService.endRide(currentRide.getId());
+        Call<RideDTO> call = IRideService.service.endRide(currentRide.getId());
         call.enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {

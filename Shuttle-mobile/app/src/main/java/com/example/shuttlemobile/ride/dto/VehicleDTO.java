@@ -1,5 +1,7 @@
 package com.example.shuttlemobile.ride.dto;
 
+import com.example.shuttlemobile.route.LocationDTO;
+
 public class VehicleDTO {
     Long id;
     private Long driverId;
