@@ -2,23 +2,32 @@ package com.example.shuttlemobile.passenger.fragments.home;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.common.UserChatActivity;
 import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
+import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.passenger.fragments.PassengerHome;
 import com.example.shuttlemobile.passenger.services.PassengerRideService;
 import com.example.shuttlemobile.ride.Ride;
@@ -99,10 +108,47 @@ public class PassengerCurrentRide extends Fragment {
         imgBaby = view.findViewById(R.id.img_p_cur_ride_baby);
         imgPet = view.findViewById(R.id.img_p_cur_ride_pet);
         txtDriver = view.findViewById(R.id.txt_p_cur_ride_driver);
+
+        initDriverInfoClick();
+    }
+
+    private void initDriverInfoClick() {
         txtDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("A", "A");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = requireActivity().getLayoutInflater();
+                View v = inflater.inflate(R.layout.alert_driver_info, null);
+                TextView txtReason = v.findViewById(R.id.txt_alert_driver_info_email);
+                Button btnMessage = v.findViewById(R.id.btn_alert_driver_info_message);
+                Button btnCall = v.findViewById(R.id.btn_alert_driver_info_call);
+
+                txtReason.setText(ride.getDriver().getEmail());
+                btnMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO This will crash because chat activity uses the obsolete 'session'.
+                        Intent intent = new Intent(PassengerCurrentRide.this.getActivity(), UserChatActivity.class);
+                        //intent.putExtra(UserChatActivity.PARAM_SESSION, null); no need for session anymore.
+                        intent.putExtra(UserChatActivity.PARAM_CHAT, new Chat());
+                        startActivity(intent);
+                    }
+                });
+                btnCall.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getContext(), "Call user", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                builder.setView(v).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.show();
             }
         });
     }
