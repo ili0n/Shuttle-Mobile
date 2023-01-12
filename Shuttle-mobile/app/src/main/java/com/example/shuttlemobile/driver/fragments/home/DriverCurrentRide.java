@@ -2,24 +2,29 @@ package com.example.shuttlemobile.driver.fragments.home;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +36,8 @@ import com.example.shuttlemobile.driver.fragments.PanicPromptFragment;
 import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.IRideService;
+import com.example.shuttlemobile.ride.dto.PanicDTO;
+import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
 import com.example.shuttlemobile.route.LocationDTO;
@@ -172,23 +179,8 @@ public class DriverCurrentRide extends Fragment {
         cbBaby.setChecked(this.currentRide.getBabyTransport());
         cbPet.setChecked(this.currentRide.getPetTransport());
         btnFinish.setOnClickListener(view -> finishRide());
-        btnPanic.setOnClickListener(view -> openPanicDialog());
-    }
 
-    private void openPanicDialog() {
-//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//        PanicPromptFragment panicFragment = new PanicPromptFragment();
-//
-//        if (isLargeLayout) {
-//            // The device is using a large layout, so show the fragment as a dialog
-//            panicFragment.show(fragmentManager, "dialog");
-//        } else {
-//            // The device is smaller, so show the fragment fullscreen
-//            FragmentTransaction transaction = fragmentManager.beginTransaction();
-//            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//            transaction.add(android.R.id.content, panicFragment)
-//                    .addToBackStack(null).commit();
-//        }
+        initPanicButton();
     }
 
     private void fillPassengers() {
@@ -281,5 +273,68 @@ public class DriverCurrentRide extends Fragment {
             intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
             requireActivity().startService(intent);
         }
+    }
+
+    private void initPanicButton() {
+        btnPanic.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = requireActivity().getLayoutInflater();
+            View v = inflater.inflate(R.layout.alert_reject_reason, null);
+            EditText txtReason = v.findViewById(R.id.txt_reject_reason);
+
+            builder.setView(v)
+                    .setPositiveButton(R.string.panic, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            sendPanic(txtReason.getText().toString());
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+            AlertDialog dialog = builder.show();
+
+            // If the specified reason is empty, disable the button.
+
+            txtReason.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (charSequence.toString().trim().length() == 0) {
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+                    } else {
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+                    }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+                @Override
+                public void afterTextChanged(Editable editable) {}
+            });
+
+            // Disable it right from the start (onTextChanged() isn't called on its own).
+
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        });
+    }
+
+    private void sendPanic(String reason) {
+        if (currentRide == null) {
+            return;
+        }
+
+        IRideService.service.panicRide(currentRide.getId(), new PanicDTO(reason)).enqueue(new Callback<RideDTO>() {
+            @Override
+            public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
+            }
+
+            @Override
+            public void onFailure(Call<RideDTO> call, Throwable t) {
+                Log.e("REST Error", t.toString());
+            }
+        });
     }
 }

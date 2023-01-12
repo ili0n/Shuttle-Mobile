@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.ride;
 
+import com.example.shuttlemobile.ride.dto.PanicDTO;
 import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
@@ -33,6 +34,9 @@ public interface IRideService {
 
     @PUT("/api/ride/{id}/accept")
     Call<RideDTO> acceptRide(@Path("id") Long rideId);
+
+    @PUT("/api/ride/{id}/panic")
+    Call<RideDTO> panicRide(@Path("id") Long rideId, @Body PanicDTO panicDTO);
 
     IRideService service = RetrofitUtils.retrofit.create(IRideService.class);
 }
