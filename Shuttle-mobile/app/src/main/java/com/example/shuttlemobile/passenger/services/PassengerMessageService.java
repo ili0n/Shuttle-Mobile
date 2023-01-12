@@ -42,8 +42,8 @@ public class PassengerMessageService extends Service {
        // SharedPreferences prefs = getSharedPreferences(SettingsFragment.PREF_FILE, Context.MODE_PRIVATE);
         String message_sync_interval = prefs.getString("sync_msg", "");
 
-        Log.e("--------------has ", "" + prefs.contains("sync_msg"));
-        Log.e("--------------val ", prefs.getString("sync_msg", "not found"));
+        //Log.e("--------------has ", "" + prefs.contains("sync_msg"));
+        //Log.e("--------------val ", prefs.getString("sync_msg", "not found"));
         String[] possibleValues = getResources().getStringArray(R.array.sync_message_values);
 
         // TODO: Make delay longer, this is just for testing.
@@ -84,7 +84,7 @@ public class PassengerMessageService extends Service {
     }
 
     private void fetchNewMessages() {
-        Log.e("PassengerMessageService", "fetchNewMessages()");
+        //Log.e("PassengerMessageService", "fetchNewMessages()");
 
         //Message newMessage = new Message();
         //newMessage.setSender(new Passenger());

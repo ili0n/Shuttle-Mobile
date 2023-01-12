@@ -143,8 +143,6 @@ public class PassengerHome extends GenericUserMapFragment {
     }
 
     private void determineSubFragment(RideDTO dto) {
-        Log.e("?", dto == null ? "null" : dto.toString());
-
         if (dto == null) {
             setSubFragmentIfDifferent(searchRouteFragment);
             return;
