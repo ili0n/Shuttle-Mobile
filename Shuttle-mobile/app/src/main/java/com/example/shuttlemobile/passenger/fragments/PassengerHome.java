@@ -1,24 +1,14 @@
 package com.example.shuttlemobile.passenger.fragments;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,20 +21,16 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.SessionContext;
-import com.example.shuttlemobile.driver.fragments.home.DriverCurrentRide;
-import com.example.shuttlemobile.driver.fragments.home.DriverHomeAcceptanceRide;
-import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.driver.services.DriversLocationService;
 import com.example.shuttlemobile.passenger.fragments.home.PassengerCurrentRide;
 import com.example.shuttlemobile.passenger.fragments.home.PassengerSearchRoute;
+import com.example.shuttlemobile.passenger.services.PassengerRideService;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.VehicleLocationDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.mapbox.geojson.Point;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PassengerHome extends GenericUserMapFragment {
@@ -157,6 +143,8 @@ public class PassengerHome extends GenericUserMapFragment {
     }
 
     private void determineSubFragment(RideDTO dto) {
+        Log.e("?", dto == null ? "null" : dto.toString());
+
         if (dto == null) {
             setSubFragmentIfDifferent(searchRouteFragment);
             return;
@@ -190,7 +178,7 @@ public class PassengerHome extends GenericUserMapFragment {
                 .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_bottom)
                 .setReorderingAllowed(true)
                 .replace(R.id.passenger_home_fragment_frame_home, fragment);
-        fragmentTransaction.addToBackStack("DriverHome");
+        fragmentTransaction.addToBackStack("PassengerHome");
         fragmentTransaction.commit();
         currentFragment = fragment;
     }
@@ -223,7 +211,7 @@ public class PassengerHome extends GenericUserMapFragment {
         rideReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                RideDTO rideDTO = (RideDTO)intent.getSerializableExtra(DriverRideService.INTENT_RIDE_KEY);
+                RideDTO rideDTO = (RideDTO)intent.getSerializableExtra(PassengerRideService.INTENT_RIDE_KEY);
                 onGetRide(rideDTO);
             }
         };
@@ -237,7 +225,7 @@ public class PassengerHome extends GenericUserMapFragment {
         }
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(DriverRideService.BROADCAST_CHANNEL);
+        intentFilter.addAction(PassengerRideService.BROADCAST_CHANNEL);
         getActivity().registerReceiver(rideReceiver, intentFilter);
     }
 
