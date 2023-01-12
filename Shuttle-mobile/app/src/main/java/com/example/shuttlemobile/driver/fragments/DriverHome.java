@@ -27,6 +27,7 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.driver.fragments.home.DriverCurrentRide;
 import com.example.shuttlemobile.driver.fragments.home.DriverHomeAcceptanceRide;
 import com.example.shuttlemobile.driver.services.CurrentRideStatusService;
@@ -56,7 +57,7 @@ public class DriverHome extends GenericUserMapFragment {
     private BroadcastReceiver driversLocationReceiver;
 
     private BlankFragment blankFragment;
-    private DriverCurrentRide currentRideFragment = new DriverCurrentRide();
+    private DriverCurrentRide currentRideFragment;
     private DriverHomeAcceptanceRide fragmentAcceptance;
 
     private Fragment currentFragment = null;
@@ -70,34 +71,9 @@ public class DriverHome extends GenericUserMapFragment {
         return fragment;
     }
 
-    public void setCurrentFragment(Fragment fragment){
-        FragmentTransaction fragmentTransaction = getChildFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .setReorderingAllowed(true)
-                .replace(R.id.driver_home_fragment_frame_home, fragment);
-        fragmentTransaction.addToBackStack("DriverHome");
-        fragmentTransaction.commit();
-        currentFragment = fragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(getLayoutID(), container, false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        setReceiveOperations();
-        setPullingRideStatus();
-        registerReceivers();
-    }
-
-    @Override
-    public void onStop() {
-        unregisterReceivers();
-        super.onStop();
     }
 
     @Override
@@ -121,14 +97,6 @@ public class DriverHome extends GenericUserMapFragment {
             lookAtPoint(Point.fromLngLat(location.getLongitude(), location.getLatitude()), 15, 4000);
             initiallyMovedToLocation = true;
         }
-    }
-
-    private void placeFragment(){
-        this.setCurrentFragment(currentRideFragment);
-    }
-
-    private void removeFragment() {
-        this.setCurrentFragment(blankFragment);
     }
 
     private void registerReceivers(){
@@ -245,51 +213,26 @@ public class DriverHome extends GenericUserMapFragment {
     public void onPause() {
         super.onPause();
         getActivity().unregisterReceiver(rideReceiver);
+        unregisterReceivers();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        setReceiveOperations();
+        setPullingRideStatus();
+        registerReceivers();
+
         if (rideReceiver != null) {
             subscribeToRideReceiver();
         }
     }
 
-    private void initSwitchToggle() {
-        activeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (compoundButton.isPressed() == false)
-                    return;
-
-                if (isChecked) {
-                    IUserService.service.setActive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
-                        @Override
-                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {}
-
-                        @Override
-                        public void onFailure(Call<Boolean> call, Throwable t) {
-                            Log.e("REST ERROR", t.toString());
-                        }
-                    });
-                } else {
-                    IUserService.service.setInactive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
-                        @Override
-                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {}
-
-                        @Override
-                        public void onFailure(Call<Boolean> call, Throwable t) {
-                            Log.e("REST ERROR", t.toString());
-                        }
-                    });
-                }
-            }
-        });
-    }
-
     private void initFragments() {
         blankFragment = BlankFragment.newInstance();
         fragmentAcceptance = DriverHomeAcceptanceRide.newInstance();
+        currentRideFragment = DriverCurrentRide.newInstance();
     }
 
     private void setSubFragmentIfDifferent(Fragment fragment) {
@@ -373,5 +316,37 @@ public class DriverHome extends GenericUserMapFragment {
             default:
                 throw new IllegalStateException("Unsupported state: " + state);
         }
+    }
+
+    private void initSwitchToggle() {
+        activeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (compoundButton.isPressed() == false)
+                    return;
+
+                if (isChecked) {
+                    IUserService.service.setActive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {}
+
+                        @Override
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+                            Log.e("REST ERROR", t.toString());
+                        }
+                    });
+                } else {
+                    IUserService.service.setInactive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {}
+
+                        @Override
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+                            Log.e("REST ERROR", t.toString());
+                        }
+                    });
+                }
+            }
+        });
     }
 }

@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.driver.fragments.PanicPromptFragment;
 import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
+import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
@@ -44,14 +46,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DriverCurrentRide#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DriverCurrentRide extends Fragment {
-    private boolean isLargeLayout;
-
     private ListView lvPassengers;
     private ListView lvLocations;
     private CheckBox cbBaby;
@@ -60,18 +55,13 @@ public class DriverCurrentRide extends Fragment {
     private Button btnFinish;
     private Button btnPanic;
 
-    private Point destination;
-    private Point departure;
-    private RideDTO currentRide;
-/*
-    private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Utils.ServerOrigin)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(RetrofitUtils.basicJsonJwtClient())
-            .build();
+    private RideDTO currentRide = null;
 
-    private final IRideService rideService = retrofit.create(IRideService.class);
-*/
+    private Point A = null;
+    private Point B = null;
+
+    private DriverHome parent = null;
+    private BroadcastReceiver rideReceiver;
     private BroadcastReceiver timeReceiver;
 
     public static DriverCurrentRide newInstance() {
@@ -80,24 +70,45 @@ public class DriverCurrentRide extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initParent();
+
+        initTimeReceiver();
+        initRideReceiver();
+
+        initViewElements(view);
+
+        Log.e("?", currentRide == null ? "null" : currentRide.toString());
+    }
+
+    private void initParent() {
+        parent = (DriverHome)DriverCurrentRide.this.getParentFragment();
+        if (parent == null) {
+            throw new IllegalStateException("Parent is null (should be DriverHome)");
+        }
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        setReceiveOperations();
-        registerReceivers();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_driver_current_ride, container, false);
     }
 
-    @Override
-    public void onStop() {
-        unregisterReceivers();
-        super.onStop();
+    private void initRideReceiver() {
+        rideReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                RideDTO rideDTO = (RideDTO)intent.getSerializableExtra(DriverRideService.INTENT_RIDE_KEY);
+                onGetRide(rideDTO);
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DriverRideService.BROADCAST_CHANNEL);
+        getActivity().registerReceiver(rideReceiver, intentFilter);
     }
 
-    private void setReceiveOperations() {
+    private void initTimeReceiver() {
         timeReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -105,41 +116,49 @@ public class DriverCurrentRide extends Fragment {
                 tvTime.setText(s);
             }
         };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(CurrentRideTimeService.RESULT);
+        getActivity().registerReceiver(timeReceiver, intentFilter);
     }
 
-    private void registerReceivers() {
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((timeReceiver),
-                new IntentFilter(CurrentRideTimeService.RESULT)
-        );
-    }
-
-    private void unregisterReceivers() {
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(timeReceiver);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        isLargeLayout = getResources().getBoolean(R.bool.large_layout);
-        return inflater.inflate(R.layout.fragment_driver_current_ride, container, false);
-    }
-
-    private void setPoints(){
-        LocationDTO departure = currentRide.getLocations().get(0).getDeparture();
-        LocationDTO destination = currentRide.getLocations().get(0).getDestination();
-        this.departure = Point.fromLngLat(departure.getLongitude(), departure.getLatitude());
-        this.destination = Point.fromLngLat(destination.getLongitude(), destination.getLatitude());
-        DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
-        if (parentFrag != null) {
-            requireActivity().runOnUiThread(() -> parentFrag.drawRoute(DriverCurrentRide.this.departure,
-                    DriverCurrentRide.this.destination, "#c92418"));
+    private void onGetRide(RideDTO dto) {
+        if (dto == null) {
+            currentRide = null;
+            A = null;
+            B = null;
+            return;
         }
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initViewElements(view);
+        // If the currently cached ride is different from this one, redraw the route and focus on it.
+
+        boolean isNewRide = false;
+        if (currentRide == null || !currentRide.getId().equals(dto.getId())) {
+            isNewRide = true;
+        }
+
+        // Update ride.
+
+        currentRide = dto;
+        final LocationDTO A_loc = currentRide.getLocations().get(0).getDeparture();
+        final LocationDTO B_loc = currentRide.getLocations().get(currentRide.getLocations().size() - 1).getDestination();
+
+        A = Point.fromLngLat(A_loc.getLongitude(), A_loc.getLatitude());
+        B = Point.fromLngLat(B_loc.getLongitude(), B_loc.getLatitude());
+
+        if (isNewRide) {
+            Intent intent = new Intent(getActivity(), CurrentRideTimeService.class);
+            if (currentRide.getStartTime() != null) {
+                intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
+                requireActivity().startService(intent);
+                fillData();
+
+                // Draw route.
+
+                parent.drawRoute(A, B, "#FF0000");
+                parent.fitViewport(A, B, 3000);
+            }
+        }
     }
 
     private void initViewElements(View view) {
@@ -152,33 +171,7 @@ public class DriverCurrentRide extends Fragment {
         btnPanic = view.findViewById(R.id.btn_d_panic);
     }
 
-    public void setRide(long driverId){
-        Call<RideDTO> call =  IRideService.service.getActiveRide(driverId);
-        call.enqueue(new Callback<RideDTO>() {
-            @Override
-            public void onResponse(@NonNull Call<RideDTO> call, @NonNull Response<RideDTO> response) {
-                if(response.isSuccessful()){
-                    DriverCurrentRide.this.currentRide = response.body();
-                    Intent intent = new Intent(getActivity(), CurrentRideTimeService.class);
-                    if(currentRide.getStartTime() != null){
-                        intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
-                        requireActivity().startService(intent);
-                        fillData();
-                        setPoints();
-                    }
-                }
-                else{
-                    Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<RideDTO> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private void fillData(){
+    private void fillData() {
         fillPassengers();
         fillLocations();
         cbBaby.setChecked(this.currentRide.getBabyTransport());
@@ -188,19 +181,19 @@ public class DriverCurrentRide extends Fragment {
     }
 
     private void openPanicDialog() {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        PanicPromptFragment panicFragment = new PanicPromptFragment();
-
-        if (isLargeLayout) {
-            // The device is using a large layout, so show the fragment as a dialog
-            panicFragment.show(fragmentManager, "dialog");
-        } else {
-            // The device is smaller, so show the fragment fullscreen
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.add(android.R.id.content, panicFragment)
-                    .addToBackStack(null).commit();
-        }
+//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//        PanicPromptFragment panicFragment = new PanicPromptFragment();
+//
+//        if (isLargeLayout) {
+//            // The device is using a large layout, so show the fragment as a dialog
+//            panicFragment.show(fragmentManager, "dialog");
+//        } else {
+//            // The device is smaller, so show the fragment fullscreen
+//            FragmentTransaction transaction = fragmentManager.beginTransaction();
+//            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//            transaction.add(android.R.id.content, panicFragment)
+//                    .addToBackStack(null).commit();
+//        }
     }
 
     private void fillPassengers() {
@@ -231,7 +224,7 @@ public class DriverCurrentRide extends Fragment {
 
     private void fillLocations() {
         List<String> locations = currentRide.getLocations().stream()
-                .map(route -> route.getDeparture() + " -> " + route.getDestination())
+                .map(route -> route.getDeparture().getAddress() + " -> " + route.getDestination().getAddress())
                 .collect(Collectors.toList());
         lvLocations.setAdapter(new EasyListAdapter<String>() {
             @Override
@@ -257,44 +250,48 @@ public class DriverCurrentRide extends Fragment {
         });
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-    }
-
     private void finishRide(){
         Call<RideDTO> call = IRideService.service.endRide(currentRide.getId());
         call.enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
-                if(response.isSuccessful()){
-
-//                  stop receiving messages
-                    stopTimer();
-                    Toast.makeText(getActivity(), "Finished ride", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-                }
             }
 
             @Override
             public void onFailure(Call<RideDTO> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    public void stopTimer(){
+    private void stopTimer() {
         Intent myService = new Intent(requireContext(), CurrentRideTimeService.class);
         requireContext().stopService(myService);
     }
 
-    public void clearRoute() {
-        DriverHome parentFrag = ((DriverHome)DriverCurrentRide.this.getParentFragment());
-        if (parentFrag != null) {
-            parentFrag.deleteAllRoutes();
-            parentFrag.deleteAllRouteCircles();
-        }
-    }
+//    public void setRide(long driverId){
+//        Call<RideDTO> call =  IRideService.service.getActiveRide(driverId);
+//        call.enqueue(new Callback<RideDTO>() {
+//            @Override
+//            public void onResponse(@NonNull Call<RideDTO> call, @NonNull Response<RideDTO> response) {
+//                if(response.isSuccessful()){
+//                    DriverCurrentRide.this.currentRide = response.body();
+//                    Intent intent = new Intent(getActivity(), CurrentRideTimeService.class);
+//                    if(currentRide.getStartTime() != null){
+//                        intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
+//                        requireActivity().startService(intent);
+//                        fillData();
+//                        setPoints();
+//                    }
+//                }
+//                else{
+//                    Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<RideDTO> call, Throwable t) {
+//                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
+
 }

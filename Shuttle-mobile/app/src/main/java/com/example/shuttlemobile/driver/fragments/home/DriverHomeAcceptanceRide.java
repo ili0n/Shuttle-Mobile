@@ -273,7 +273,6 @@ public class DriverHomeAcceptanceRide extends Fragment {
         txtPrice.setText(dto.getTotalCost() + " RSD");
         txtPassengerCount.setText(dto.getPassengers().size() + "");
 
-
         // Update the things from above if neccessary.
 
         if (shouldRedrawRoute) {
