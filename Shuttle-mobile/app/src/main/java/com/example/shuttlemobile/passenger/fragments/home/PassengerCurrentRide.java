@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,12 +27,23 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.UserChatActivity;
 import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
 import com.example.shuttlemobile.message.Chat;
+import com.example.shuttlemobile.message.Message;
+import com.example.shuttlemobile.message.MessageDTO;
+import com.example.shuttlemobile.message.SendMessageDTO;
 import com.example.shuttlemobile.passenger.fragments.PassengerHome;
 import com.example.shuttlemobile.passenger.services.PassengerRideService;
+import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.ride.dto.PanicDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
+import com.example.shuttlemobile.user.IUserService;
+import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PassengerCurrentRide extends Fragment {
     private TextView txtDeparture;
@@ -42,6 +52,8 @@ public class PassengerCurrentRide extends Fragment {
     private ImageView imgPet;
     private ImageView imgBaby;
     private TextView txtDriver;
+    private Button btnNote;
+    private Button btnPanic;
 
     private TextView txtElapsedTime;
 
@@ -108,8 +120,70 @@ public class PassengerCurrentRide extends Fragment {
         imgBaby = view.findViewById(R.id.img_p_cur_ride_baby);
         imgPet = view.findViewById(R.id.img_p_cur_ride_pet);
         txtDriver = view.findViewById(R.id.txt_p_cur_ride_driver);
+        btnNote = view.findViewById(R.id.btn_p_cur_ride_note);
+        btnPanic = view.findViewById(R.id.btn_p_cur_ride_panic);
 
         initDriverInfoClick();
+        initNoteButtonClick();
+        initPanicButtonClick();
+    }
+
+    private void initNoteButtonClick() {
+        btnNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendNote();
+            }
+        });
+    }
+
+    private void initPanicButtonClick() {
+        btnPanic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = requireActivity().getLayoutInflater();
+                View v = inflater.inflate(R.layout.alert_reject_reason, null);
+                EditText txtReason = v.findViewById(R.id.txt_reject_reason);
+
+                builder.setView(v)
+                        .setPositiveButton(R.string.panic, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                sendPanic(txtReason.getText().toString());
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.show();
+
+                // If the specified reason is empty, disable the button.
+
+                txtReason.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        if (charSequence.toString().trim().length() == 0) {
+                            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+                        } else {
+                            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+                        }
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+                    @Override
+                    public void afterTextChanged(Editable editable) {}
+                });
+
+                // Disable it right from the start (onTextChanged() isn't called on its own).
+
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+            }
+        });
     }
 
     private void initDriverInfoClick() {
@@ -199,7 +273,6 @@ public class PassengerCurrentRide extends Fragment {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private void onGetRide(RideDTO dto) {
-        Log.e("?", ride == null ? "null" : ride.toString());
         if (dto == null) {
             ride = null;
             A = null;
@@ -217,10 +290,17 @@ public class PassengerCurrentRide extends Fragment {
 
         boolean shouldShowTimer = false;
         if (ride != null) {
-            Ride.Status currentStatus = Ride.Status.valueOf(ride.getStatus());
             Ride.Status dtoStatus = Ride.Status.valueOf(dto.getStatus());
             if (dtoStatus == Ride.Status.Accepted && dto.getStartTime() != null) {
                 shouldShowTimer = true;
+            }
+        }
+
+        boolean canPanicOrNote = false;
+        if (dto != null) {
+            Ride.Status dtoStatus = Ride.Status.valueOf(dto.getStatus());
+            if (dtoStatus == Ride.Status.Accepted || dtoStatus == Ride.Status.Started) {
+                canPanicOrNote = true;
             }
         }
 
@@ -243,6 +323,9 @@ public class PassengerCurrentRide extends Fragment {
         } else {
             stopTimer();
         }
+
+        btnPanic.setEnabled(canPanicOrNote);
+        btnNote.setEnabled(canPanicOrNote);
     }
 
     private void startTimer() {
@@ -265,6 +348,7 @@ public class PassengerCurrentRide extends Fragment {
             parent.fitViewport(A, B, 3000);
         }
     }
+
     private void updateViewElements(LocationDTO A_loc, LocationDTO B_loc) {
         txtDeparture.setText(A_loc.getAddress());
         txtDestination.setText(B_loc.getAddress());
@@ -274,5 +358,41 @@ public class PassengerCurrentRide extends Fragment {
         imgPet.setAlpha(ride.getPetTransport() ? 1.0f : 0.25f);
 
         txtDriver.setText(ride.getDriver().getEmail());
+    }
+
+    private void sendPanic(String reason) {
+        if (ride == null) {
+            return;
+        }
+
+        IRideService.service.panicRide(ride.getId(), new PanicDTO(reason)).enqueue(new Callback<RideDTO>() {
+            @Override
+            public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
+            }
+
+            @Override
+            public void onFailure(Call<RideDTO> call, Throwable t) {
+                Log.e("REST Error", t.toString());
+            }
+        });
+    }
+
+    private void sendNote() {
+        IUserService.service.sendMessage(SettingsUtil.getUserJWT().getId(), new SendMessageDTO(
+                Long.valueOf(-1),
+                "The driver is not following the expected route",
+                Message.Type.RIDE.toString(),
+                ride.getId()
+        )).enqueue(new Callback<MessageDTO>() {
+            @Override
+            public void onResponse(Call<MessageDTO> call, Response<MessageDTO> response) {
+                Toast.makeText(getContext(), "Note sent!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<MessageDTO> call, Throwable t) {
+
+            }
+        });
     }
 }

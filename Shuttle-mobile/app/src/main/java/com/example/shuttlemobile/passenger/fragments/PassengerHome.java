@@ -145,6 +145,11 @@ public class PassengerHome extends GenericUserMapFragment {
     private void determineSubFragment(RideDTO dto) {
         if (dto == null) {
             setSubFragmentIfDifferent(searchRouteFragment);
+
+            if (ride != null) {
+                ride = null;
+                removeRoute();
+            }
             return;
         }
 

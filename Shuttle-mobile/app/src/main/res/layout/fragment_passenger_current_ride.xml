@@ -94,12 +94,12 @@
         android:layout_width="97dp"
         android:layout_height="19dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="sans-serif-light"
         android:text="Elapsed time:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbl_p_cur_ride_driver" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_p_cur_ride_note" />
 
     <TextView
         android:id="@+id/txt_p_cur_ride_timer"
@@ -179,5 +179,26 @@
         app:layout_constraintStart_toEndOf="@+id/lbl_p_cur_ride_driver"
         app:layout_constraintTop_toBottomOf="@+id/divider4"
         tools:text="bob@gmail.com" />
+
+    <Button
+        android:id="@+id/btn_p_cur_ride_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#F06292"
+        android:text="Note"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider5" />
+
+    <Button
+        android:id="@+id/btn_p_cur_ride_panic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:backgroundTint="#C62828"
+        android:text="Panic"
+        app:layout_constraintStart_toEndOf="@+id/btn_p_cur_ride_note"
+        app:layout_constraintTop_toTopOf="@+id/btn_p_cur_ride_note" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
