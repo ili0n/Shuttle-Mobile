@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,13 @@ import com.example.shuttlemobile.route.LocationDTO;
 import com.mapbox.geojson.Point;
 
 public class PassengerCurrentRide extends Fragment {
+    private TextView txtDeparture;
+    private TextView txtDestination;
+    private TextView txtDistance;
+    private ImageView imgPet;
+    private ImageView imgBaby;
+    private TextView txtDriver;
+
     private TextView txtElapsedTime;
 
     private RideDTO ride = null;
@@ -83,7 +92,19 @@ public class PassengerCurrentRide extends Fragment {
     }
 
     private void initViewElements(View view) {
+        txtDeparture = view.findViewById(R.id.txt_p_cur_ride_departure);
+        txtDestination = view.findViewById(R.id.txt_p_cur_ride_destination);
+        txtDistance = view.findViewById(R.id.txt_p_cur_ride_distance);
         txtElapsedTime = view.findViewById(R.id.txt_p_cur_ride_timer);
+        imgBaby = view.findViewById(R.id.img_p_cur_ride_baby);
+        imgPet = view.findViewById(R.id.img_p_cur_ride_pet);
+        txtDriver = view.findViewById(R.id.txt_p_cur_ride_driver);
+        txtDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("A", "A");
+            }
+        });
     }
 
     private void initTimeReceiver() {
@@ -166,7 +187,7 @@ public class PassengerCurrentRide extends Fragment {
         B = Point.fromLngLat(B_loc.getLongitude(), B_loc.getLatitude());
 
         if (isNewRide) {
-            updateViewElements();
+            updateViewElements(A_loc, B_loc);
             drawAndFocusCurrentRoute();
         }
 
@@ -198,7 +219,14 @@ public class PassengerCurrentRide extends Fragment {
             parent.fitViewport(A, B, 3000);
         }
     }
-    private void updateViewElements() {
+    private void updateViewElements(LocationDTO A_loc, LocationDTO B_loc) {
+        txtDeparture.setText(A_loc.getAddress());
+        txtDestination.setText(B_loc.getAddress());
+        txtDistance.setText("???");
 
+        imgBaby.setAlpha(ride.getBabyTransport() ? 1.0f : 0.25f);
+        imgPet.setAlpha(ride.getPetTransport() ? 1.0f : 0.25f);
+
+        txtDriver.setText(ride.getDriver().getEmail());
     }
 }

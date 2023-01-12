@@ -20,10 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1e9a298b-a87a-4bd0-9046-5f0d90278529" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_child_care_24.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_pets_24.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/fragments/PassengerHome.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/fragments/PassengerHome.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/fragments/home/PassengerCurrentRide.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/fragments/home/PassengerCurrentRide.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/services/PassengerMessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/services/PassengerMessageService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_passenger_current_ride.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_passenger_current_ride.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
