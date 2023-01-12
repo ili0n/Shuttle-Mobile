@@ -26,12 +26,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mapForm"
-        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorControlHighlight"
+        android:background="#EDE7F6"
+        android:padding="8dp"
         mapbox:layout_constraintBottom_toBottomOf="parent"
         mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintHorizontal_bias="0.0"
         mapbox:layout_constraintStart_toStartOf="parent"
         mapbox:layout_constraintTop_toBottomOf="@+id/map_acceptance_ride">
 
@@ -50,11 +51,12 @@
             android:id="@+id/txt_acceptance_ride_departure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
-            android:text="123 Street"
             android:textSize="16sp"
             mapbox:layout_constraintStart_toEndOf="@+id/lbl_acceptance_ride_departure"
-            mapbox:layout_constraintTop_toTopOf="@+id/lbl_acceptance_ride_departure" />
+            mapbox:layout_constraintTop_toTopOf="@+id/lbl_acceptance_ride_departure"
+            tools:text="123 Street" />
 
         <TextView
             android:id="@+id/lbl_acceptance_ride_destination"
@@ -70,27 +72,29 @@
             android:id="@+id/txt_acceptance_ride_destination"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
-            android:text="123 Street"
             android:textSize="16sp"
             mapbox:layout_constraintStart_toEndOf="@+id/lbl_acceptance_ride_destination"
-            mapbox:layout_constraintTop_toTopOf="@+id/lbl_acceptance_ride_destination" />
+            mapbox:layout_constraintTop_toTopOf="@+id/lbl_acceptance_ride_destination"
+            tools:text="123 Street" />
 
         <TextView
             android:id="@+id/lbl_acceptance_ride_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-light"
-            android:text="Distance:"
+            android:text="Total distance:"
             android:textSize="16sp"
             mapbox:layout_constraintStart_toStartOf="@+id/lbl_acceptance_ride_destination"
-            mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_destination" />
+            mapbox:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <TextView
             android:id="@+id/txt_acceptance_ride_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
             android:text="1,3km"
             android:textSize="16sp"
@@ -102,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:text="Duration:"
+            android:text="Estimated duration:"
             android:textSize="16sp"
             mapbox:layout_constraintStart_toStartOf="@+id/lbl_acceptance_ride_distance"
             mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_distance" />
@@ -111,11 +115,12 @@
             android:id="@+id/txt_acceptance_ride_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
-            android:text="35min"
             android:textSize="16sp"
             mapbox:layout_constraintStart_toEndOf="@+id/lbl_acceptance_ride_duration"
-            mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_distance" />
+            mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_distance"
+            tools:text="35min" />
 
         <TextView
             android:id="@+id/lbl_acceptance_ride_price"
@@ -131,37 +136,42 @@
             android:id="@+id/txt_acceptance_ride_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
-            android:text="1234 RSD"
             android:textSize="16sp"
             mapbox:layout_constraintStart_toEndOf="@+id/lbl_acceptance_ride_price"
-            mapbox:layout_constraintTop_toTopOf="@+id/lbl_acceptance_ride_price" />
+            mapbox:layout_constraintTop_toTopOf="@+id/lbl_acceptance_ride_price"
+            tools:text="1234 RSD" />
 
         <TextView
             android:id="@+id/txt_acceptance_ride_passengers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
             android:text="4"
             android:textSize="16sp"
             mapbox:layout_constraintStart_toEndOf="@+id/lbl_acceptance_ride_passengers"
-            mapbox:layout_constraintTop_toTopOf="@+id/lbl_acceptance_ride_passengers" />
+            mapbox:layout_constraintTop_toTopOf="@+id/lbl_acceptance_ride_passengers"
+            tools:text="4" />
 
         <TextView
             android:id="@+id/lbl_acceptance_ride_passengers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-light"
             android:text="Passengers:"
             android:textSize="16sp"
             mapbox:layout_constraintStart_toStartOf="@+id/lbl_acceptance_ride_price"
-            mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_price" />
+            mapbox:layout_constraintTop_toBottomOf="@+id/divider2" />
 
         <Button
             android:id="@+id/btn_acceptance_ride_begin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:backgroundTint="#00838F"
             android:text="Begin"
             mapbox:layout_constraintEnd_toEndOf="parent"
             mapbox:layout_constraintHorizontal_bias="0.17"
@@ -172,11 +182,32 @@
             android:id="@+id/btn_acceptance_ride_reject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#C62828"
             android:text="Reject"
             mapbox:layout_constraintEnd_toEndOf="parent"
             mapbox:layout_constraintHorizontal_bias="0.721"
             mapbox:layout_constraintStart_toEndOf="@+id/btn_acceptance_ride_begin"
             mapbox:layout_constraintTop_toTopOf="@+id/btn_acceptance_ride_begin" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="391dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:attr/listDivider"
+            mapbox:layout_constraintEnd_toEndOf="parent"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_destination" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="391dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:attr/listDivider"
+            mapbox:layout_constraintEnd_toEndOf="parent"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_price" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
