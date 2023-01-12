@@ -3,14 +3,21 @@ package com.example.shuttlemobile.passenger.orderride.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.passenger.orderride.InvitesAdapter;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,14 +26,9 @@ import com.example.shuttlemobile.common.SessionContext;
  */
 public class InviteFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ArrayList<String> invites = new ArrayList<>();
+    InvitesAdapter invitesAdapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public InviteFragment() {
         // Required empty public constructor
@@ -43,16 +45,51 @@ public class InviteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_invite, container, false);
+        View view = inflater.inflate(R.layout.fragment_invite, container, false);
+        setRecyclerView(view);
+        EditText inviteField = (EditText) view.findViewById(R.id.edit_u_invite);
+        ((Button) view.findViewById(R.id.btn_u_invite)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addItem(inviteField.getText().toString().trim());
+                Log.println(Log.ASSERT, "TextField", inviteField.getText().toString().trim());
+            }
+        });
+
+        return view;
+    }
+
+    private void setRecyclerView(View view) {
+        invitesAdapter = new InvitesAdapter(invites, getContext());
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.invites_recycler);
+        recyclerView.setAdapter(invitesAdapter);
+        recyclerView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                recyclerView.getChildAdapterPosition(view);
+                Log.println(Log.ASSERT, "Adapter", recyclerView.getChildAdapterPosition(view) + "");
+                return false;
+            }
+        });
+
+    }
+
+    private void addItem(String item) {
+        // on below line we are checking
+        // if item is empty or not.
+        if (!item.isEmpty()) {
+            // on below line we are adding
+            // item to our list
+            invites.add(item);
+            // on below line we are notifying
+            // adapter that data has updated.
+            invitesAdapter.notifyItemInserted(invites.size()-1);
+        }
     }
 }

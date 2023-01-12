@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
@@ -62,18 +64,33 @@ public class ScheduleRide extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_schedule_ride, container, false);
-        setHourSpinnerItems(view);
-        setMinuteSpinnerItems(view);
+        Spinner hourSpinner = (Spinner) view.findViewById(R.id.hour_spinner);
+        Spinner minuteSpinner = (Spinner) view.findViewById(R.id.minute_spinner);
+        setHourSpinnerItems(hourSpinner);
+        setMinuteSpinnerItems(minuteSpinner);
+        setSwitchListener(view, hourSpinner, minuteSpinner);
+
+
         return view;
     }
 
+    private void setSwitchListener(View view, Spinner hourSpinner, Spinner minuteSpinner) {
+        Switch schedule = (Switch) view.findViewById(R.id.schedule_switch);
+        schedule.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                hourSpinner.setEnabled(isChecked);
+                minuteSpinner.setEnabled(isChecked);
+            }
+            });
+    }
 
-    private void setMinuteSpinnerItems(View view) {
-        Spinner spinner = (Spinner) view.findViewById(R.id.minute_spinner);
+    private void setMinuteSpinnerItems(Spinner spinner) {
+
         List<Integer> hours = getMinuteValues();
         ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, hours);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setEnabled(false);
     }
 
     List<Integer> getMinuteValues() {
@@ -84,12 +101,12 @@ public class ScheduleRide extends Fragment {
         return minutes;
     }
 
-    private void setHourSpinnerItems(View view) {
-        Spinner spinner = (Spinner) view.findViewById(R.id.hour_spinner);
+    private void setHourSpinnerItems(Spinner spinner) {
         List<Integer> hours = getHourValues();
         ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, hours);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setEnabled(false);
     }
 
     List<Integer> getHourValues() {

@@ -11,13 +11,14 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/invites_recycler"
             android:layout_width="fill_parent"
-            android:layout_height="394dp"
+            android:layout_height="721dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/edit_u_chat_box"
+            android:id="@+id/edit_u_invite"
             android:layout_width="299dp"
             android:layout_height="79dp"
             android:layout_marginBottom="4dp"
@@ -26,12 +27,12 @@
             android:inputType="textPersonName"
             android:singleLine="false"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_u_chat_send"
+            app:layout_constraintEnd_toStartOf="@+id/btn_u_invite"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/btn_u_chat_send"
+            android:id="@+id/btn_u_invite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
