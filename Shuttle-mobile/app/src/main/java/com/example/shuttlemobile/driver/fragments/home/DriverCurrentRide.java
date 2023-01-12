@@ -282,31 +282,4 @@ public class DriverCurrentRide extends Fragment {
             requireActivity().startService(intent);
         }
     }
-
-//    public void setRide(long driverId){
-//        Call<RideDTO> call =  IRideService.service.getActiveRide(driverId);
-//        call.enqueue(new Callback<RideDTO>() {
-//            @Override
-//            public void onResponse(@NonNull Call<RideDTO> call, @NonNull Response<RideDTO> response) {
-//                if(response.isSuccessful()){
-//                    DriverCurrentRide.this.currentRide = response.body();
-//                    Intent intent = new Intent(getActivity(), CurrentRideTimeService.class);
-//                    if(currentRide.getStartTime() != null){
-//                        intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
-//                        requireActivity().startService(intent);
-//                        fillData();
-//                        setPoints();
-//                    }
-//                }
-//                else{
-//                    Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<RideDTO> call, Throwable t) {
-//                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-//    }
-
 }

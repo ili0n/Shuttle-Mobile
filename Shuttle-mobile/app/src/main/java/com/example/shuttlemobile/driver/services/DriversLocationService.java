@@ -33,10 +33,9 @@ public class DriversLocationService extends PullingService {
     static final public String NEW_VEHICLES_LOCATIONS = PREFIX + "VEHICLES_LOCATIONS_MESSAGE";
 
     public void sendResult(List<VehicleLocationDTO> result) {
-
         Intent intent = new Intent(RESULT);
         intent.putExtra(NEW_VEHICLES_LOCATIONS, (Serializable) result);
-        broadcaster.sendBroadcast(intent);
+        /*broadcaster.*/sendBroadcast(intent);
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,15 +26,14 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.SessionContext;
-import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.driver.fragments.home.DriverCurrentRide;
 import com.example.shuttlemobile.driver.fragments.home.DriverHomeAcceptanceRide;
-import com.example.shuttlemobile.driver.services.CurrentRideStatusService;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.driver.services.DriversLocationService;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.VehicleLocationDTO;
+import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.user.IUserService;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
@@ -51,10 +49,9 @@ public class DriverHome extends GenericUserMapFragment {
     private FragmentContainerView fragmentContainerView;
     private BroadcastReceiver rideReceiver;
     private BroadcastReceiver isActiveReceiver;
+    private BroadcastReceiver driversLocationReceiver;
     private Switch activeSwitch;
 
-    private BroadcastReceiver rideStatusReceiver;
-    private BroadcastReceiver driversLocationReceiver;
 
     private BlankFragment blankFragment;
     private DriverCurrentRide currentRideFragment;
@@ -69,6 +66,21 @@ public class DriverHome extends GenericUserMapFragment {
         bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViewElements(view);
+        initFragments();
+
+        initRideReceiver();
+        initIsActiveReceiver();
+        initDriversLocationReceiver();
+
+        startDriversLocationService();
+
+        determineSubFragment(null);
     }
 
     @Override
@@ -99,108 +111,14 @@ public class DriverHome extends GenericUserMapFragment {
         }
     }
 
-    private void registerReceivers(){
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((rideStatusReceiver),
-                new IntentFilter(CurrentRideStatusService.RESULT)
-        );
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((driversLocationReceiver),
-                new IntentFilter(DriversLocationService.RESULT)
-        );
-    }
-
-    private void unregisterReceivers(){
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(rideStatusReceiver);
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(driversLocationReceiver);
-    }
-
-    private void setPullingRideStatus() {
-        Intent intent = new Intent(getActivity(), CurrentRideStatusService.class);
-        long driverId = SettingsUtil.getUserJWT().getId();
-        intent.putExtra(CurrentRideStatusService.DRIVER_ID, driverId);
-        requireActivity().startService(intent);
-    }
-
-    private void setPullingLocation() {
+    private void startDriversLocationService() {
         Intent intent = new Intent(getActivity(), DriversLocationService.class);
         requireActivity().startService(intent);
-    }
-
-    private void setReceiveOperations() {
-        //Handler handler = new Handler();
-        rideStatusReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-//                if (intent.hasExtra(CurrentRideStatusService.ERROR)) {
-//                    String message =  intent.getStringExtra(CurrentRideStatusService.NEW_ERROR_MESSAGE);
-//                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
-//                } else {
-//                    String status = intent.getStringExtra(CurrentRideStatusService.NEW_STATUS_UPDATE);
-//
-//                    /*
-//                    if status changed
-//                        if accepted
-//                            OPEN ACCEPTED
-//                        else
-//                            if current one was accepted
-//
-//
-//                    */
-//
-//                    if (lastDto.getStatus() != status) {
-//                        if (status == Ride.Status.Accepted)  {
-//                            rideStatus = Ride.Status.Accepted;
-//                            placeFragment();
-//                            long driverId = SettingsUtil.getUserJWT().getId();
-//                            currentRideFragment.setRide(driverId);
-//                        } else {
-//                            if (rideStatus == Ride.Status.Accepted) {
-//                                currentRideFragment.stopTimer();
-//                            }
-//                            rideStatus = null;
-//                            currentRideFragment.clearRoute();
-//                            removeFragment();
-//                        }
-//                    }
-//                }
-            }
-        };
-        driversLocationReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-//                if(intent.hasExtra(DriversLocationService.ERROR)){
-//                    String message =  intent.getStringExtra(DriversLocationService.NEW_ERROR_MESSAGE);
-//                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
-//                }
-//                else{
-//                    List<VehicleLocationDTO> locations =
-//                            (List<VehicleLocationDTO>) intent.getSerializableExtra(DriversLocationService.NEW_VEHICLES_LOCATIONS);
-//                    deleteAllPoints();
-//                    for(VehicleLocationDTO dto: locations){
-//                        LocationDTO location = dto.getLocation();
-//                        Point driverLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
-//                        handler.post(() -> drawCar(driverLocation, dto.getAvailable()));
-//                    }
-//                }
-            }
-        };
     }
 
     @Override
     public int getMapViewID() {
         return R.id.map_driver_home;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initViewElements(view);
-        initFragments();
-
-        initRideReceiver();
-        initIsActiveReceiver();
-        determineSubFragment(null);
-
-        setPullingLocation();
     }
 
     private void initViewElements(@NonNull View view) {
@@ -212,21 +130,19 @@ public class DriverHome extends GenericUserMapFragment {
     @Override
     public void onPause() {
         super.onPause();
+
         getActivity().unregisterReceiver(rideReceiver);
-        unregisterReceivers();
+        getActivity().unregisterReceiver(isActiveReceiver);
+        getActivity().unregisterReceiver(driversLocationReceiver);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        setReceiveOperations();
-        setPullingRideStatus();
-        registerReceivers();
-
-        if (rideReceiver != null) {
-            subscribeToRideReceiver();
-        }
+        subscribeToRideReceiver();
+        subscribeToIsActiveReceiver();
+        subscribeToDriversLocationReceiver();
     }
 
     private void initFragments() {
@@ -253,6 +169,24 @@ public class DriverHome extends GenericUserMapFragment {
         currentFragment = fragment;
     }
 
+    private void initDriversLocationReceiver() {
+        Handler handler = new Handler();
+        driversLocationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                List<VehicleLocationDTO> locations = (List<VehicleLocationDTO>) intent.getSerializableExtra(DriversLocationService.NEW_VEHICLES_LOCATIONS);
+                deleteAllPoints();
+                for (VehicleLocationDTO dto : locations) {
+                    LocationDTO location = dto.getLocation();
+                    Point driverLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
+                    handler.post(() -> drawCar(driverLocation, dto.getAvailable()));
+                }
+            }
+        };
+
+        subscribeToDriversLocationReceiver();
+    }
+
     private void initRideReceiver() {
         rideReceiver = new BroadcastReceiver() {
             @Override
@@ -265,12 +199,6 @@ public class DriverHome extends GenericUserMapFragment {
         subscribeToRideReceiver();
     }
 
-    private void subscribeToRideReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(DriverRideService.BROADCAST_CHANNEL);
-        getActivity().registerReceiver(rideReceiver, intentFilter);
-    }
-
     private void initIsActiveReceiver() {
         isActiveReceiver = new BroadcastReceiver() {
             @Override
@@ -279,6 +207,34 @@ public class DriverHome extends GenericUserMapFragment {
                 onGetIsActive(isActive);
             }
         };
+
+        subscribeToIsActiveReceiver();
+    }
+
+    private void subscribeToDriversLocationReceiver() {
+        if (driversLocationReceiver == null) {
+            return;
+        }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DriversLocationService.RESULT);
+        getActivity().registerReceiver(driversLocationReceiver, intentFilter);
+    }
+
+    private void subscribeToRideReceiver() {
+        if (rideReceiver == null) {
+            return;
+        }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DriverRideService.BROADCAST_CHANNEL);
+        getActivity().registerReceiver(rideReceiver, intentFilter);
+    }
+
+    private void subscribeToIsActiveReceiver() {
+        if (isActiveReceiver == null) {
+            return;
+        }
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(DriverRideService.ACTIVE_CHANNEL);

@@ -15,5 +15,5 @@ import retrofit2.http.Path;
 public interface IVehicleService {
     @GET("/api/vehicle/active")
     Call<List<VehicleLocationDTO>> getDriversLocation();
-    public final IVehicleService service = RetrofitUtils.retrofit.create(IVehicleService.class);
+    IVehicleService service = RetrofitUtils.retrofit.create(IVehicleService.class);
 }

@@ -44,7 +44,7 @@ public class DriverRideService extends Service {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            fetchNewMessages();
+                            fetchRide();
                             fetchActiveState();
                             handler.postDelayed(this, delay);
                         }
@@ -60,7 +60,7 @@ public class DriverRideService extends Service {
         return null;
     }
 
-    private void fetchNewMessages() {
+    private void fetchRide() {
         final JWT jwt = SettingsUtil.getUserJWT();
         Call<RideDTO> call = IRideService.service.getActiveRideDriver(jwt.getId());
         call.enqueue(new Callback<RideDTO>() {

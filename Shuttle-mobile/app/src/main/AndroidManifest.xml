@@ -22,11 +22,7 @@
         android:name=".driver.services.PullingService"
         android:enabled="true"
         android:exported="true"/>
-    <service
-        android:name=".driver.services.CurrentRideStatusService"
-        android:enabled="true"
-        android:exported="true" />
-    <service
+      <service
         android:name=".driver.services.DriversLocationService"
         android:enabled="true"
         android:exported="true" />
@@ -36,10 +32,6 @@
         android:exported="true"/>
     <service
         android:name=".driver.services.DriverRideService"
-        android:enabled="true"
-        android:exported="true" />
-    <service
-        android:name=".driver.services.DriverLocationMockService"
         android:enabled="true"
         android:exported="true" />
     <service
