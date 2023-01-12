@@ -98,6 +98,20 @@ public class DriverHome extends GenericUserMapFragment {
         initSwitchToggle();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(rideReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (rideReceiver != null) {
+            subscribeToRideReceiver();
+        }
+    }
+
     private void initSwitchToggle() {
         activeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -162,6 +176,10 @@ public class DriverHome extends GenericUserMapFragment {
             }
         };
 
+        subscribeToRideReceiver();
+    }
+
+    private void subscribeToRideReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(DriverRideService.BROADCAST_CHANNEL);
         getActivity().registerReceiver(rideReceiver, intentFilter);
