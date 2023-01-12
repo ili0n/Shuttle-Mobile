@@ -29,10 +29,15 @@
             android:name=".driver.services.DriversLocationService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name=".driver.services.CurrentRideTimeService"
-            android:enabled="true"
-            android:exported="true" />
+<!--        <service-->
+<!--            android:name=".driver.services.CurrentRideTimeService"-->
+<!--            android:name=".driver.services.DriverLocationMockService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true"></service>-->
+<!--        <service-->
+<!--            android:name=".driver.services.DriverRideService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true" />-->
 
         <activity
             android:name=".common.SettingsActivity"

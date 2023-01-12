@@ -9,6 +9,7 @@ import com.example.shuttlemobile.vehicle.Vehicle;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Ride extends Entity {
@@ -19,18 +20,19 @@ public class Ride extends Entity {
     private LocalDateTime end;
     private double cost;
     private State state;
-    private List<Passenger> passengers;
+    private List<Passenger> passengers = new ArrayList<>();
     private Driver driver;
 
     public Ride() {
     }
 
     public enum State {
-        STATE_PENDING,
-        STATE_ACCEPTED,
-        STATE_REJECTED,
-        STATE_ACTIVE,
-        STATE_FINISHED
+        PENDING,
+        ACCEPTED,
+        REJECTED,
+        CANCELED,
+        FINISHED,
+        STARTED,
     };
 
     public enum Status {
@@ -96,7 +98,6 @@ public class Ride extends Entity {
     public void setState(State state) {
         this.state = state;
     }
-
 
     public List<Passenger> getPassengers() {
         return passengers;

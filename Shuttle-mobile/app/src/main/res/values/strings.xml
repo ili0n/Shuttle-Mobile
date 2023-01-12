@@ -26,4 +26,6 @@
     <string name="elapsed_time">Elapsed time: </string>
     <string name="reason">Reason</string>
     <string name="panic_header">Specify a reason</string>
+    <string name="reject">Reject</string>
+    <string name="cancel">Cancel</string>
 </resources>
