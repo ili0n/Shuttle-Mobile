@@ -170,13 +170,13 @@
             android:id="@+id/btn_acceptance_ride_begin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:backgroundTint="#00838F"
             android:text="Begin"
             mapbox:layout_constraintEnd_toEndOf="parent"
             mapbox:layout_constraintHorizontal_bias="0.17"
             mapbox:layout_constraintStart_toStartOf="parent"
-            mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_passengers" />
+            mapbox:layout_constraintTop_toBottomOf="@+id/divider3" />
 
         <Button
             android:id="@+id/btn_acceptance_ride_reject"
@@ -208,6 +208,27 @@
             mapbox:layout_constraintEnd_toEndOf="parent"
             mapbox:layout_constraintStart_toStartOf="parent"
             mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_price" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="391dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:attr/listDivider"
+            mapbox:layout_constraintEnd_toEndOf="parent"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            mapbox:layout_constraintTop_toBottomOf="@+id/btn_acceptance_ride_passengers" />
+
+        <Button
+            android:id="@+id/btn_acceptance_ride_passengers"
+            android:layout_width="164dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#FFB74D"
+            android:text="View Passengers"
+            android:textSize="12sp"
+            mapbox:layout_constraintStart_toStartOf="@+id/lbl_acceptance_ride_passengers"
+            mapbox:layout_constraintTop_toBottomOf="@+id/lbl_acceptance_ride_passengers" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

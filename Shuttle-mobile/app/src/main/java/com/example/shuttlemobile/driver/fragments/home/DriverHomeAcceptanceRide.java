@@ -7,13 +7,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,15 +25,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
+import com.example.shuttlemobile.user.UserEmailDTO;
 import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +53,7 @@ public class DriverHomeAcceptanceRide extends Fragment {
     private TextView txtPassengerCount;
     private Button btnReject;
     private Button btnBegin;
+    private Button btnViewPassengers;
 
     private DriverHome parent = null;
 
@@ -102,9 +111,11 @@ public class DriverHomeAcceptanceRide extends Fragment {
         txtPassengerCount = view.findViewById(R.id.txt_acceptance_ride_passengers);
         btnReject = view.findViewById(R.id.btn_acceptance_ride_reject);
         btnBegin = view.findViewById(R.id.btn_acceptance_ride_begin);
+        btnViewPassengers = view.findViewById(R.id.btn_acceptance_ride_passengers);
 
         initRejectButton();
         initBeginButton();
+        initViewPassengersButton();
     }
 
     private void initRejectButton() {
@@ -159,6 +170,29 @@ public class DriverHomeAcceptanceRide extends Fragment {
             public void onClick(View view) {
                 beginRide();
             }
+        });
+    }
+
+    private void initViewPassengersButton() {
+        btnViewPassengers.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = requireActivity().getLayoutInflater();
+            View v = inflater.inflate(R.layout.alert_ride_passenger_list, null);
+
+            builder.setView(v)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).setItems(
+                    ride.getPassengers().stream().map(o -> o.getEmail()).collect(Collectors.toList()).toArray(new String[0]),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {}
+                    }
+                );
+            AlertDialog dialog = builder.show();
         });
     }
 
