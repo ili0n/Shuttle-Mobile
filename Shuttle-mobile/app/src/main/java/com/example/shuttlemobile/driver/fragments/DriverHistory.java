@@ -74,7 +74,7 @@ public class DriverHistory extends GenericUserFragment implements SensorEventLis
         ///////////////////////////////
 
         sendNotification();
-        getActivity().startService(new Intent(getActivity(), DriverMessageService.class));
+        //getActivity().startService(new Intent(getActivity(), DriverMessageService.class));
 
         ///////////////////////////////
 

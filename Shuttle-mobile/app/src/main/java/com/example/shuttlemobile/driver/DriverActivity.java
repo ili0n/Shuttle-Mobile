@@ -15,6 +15,7 @@ import com.example.shuttlemobile.driver.fragments.DriverHistory;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.common.InboxFragment;
 import com.example.shuttlemobile.driver.services.DriverMessageService;
+import com.example.shuttlemobile.driver.services.DriverRideService;
 
 public class DriverActivity extends GenericUserActivity {
     @Override
@@ -22,6 +23,7 @@ public class DriverActivity extends GenericUserActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver);
         startService(new Intent(this, DriverMessageService.class));
+        startService(new Intent(this, DriverRideService.class));
     }
 
     @Override
@@ -45,7 +47,7 @@ public class DriverActivity extends GenericUserActivity {
 
     @Override
     protected int getFragmentFrameId() {
-        return R.id.driver_fragment_frame;
+        return R.id.driver_home_fragment_frame;
     }
 
     @Override

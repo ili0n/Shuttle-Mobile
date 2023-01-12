@@ -35,9 +35,17 @@ public interface IRideService {
 
     //@PUT("/api/ride/{id}/cancel")
     //Call<RideDTO> rejectRide(@Path("id") Long rideId, @Body RejectionDTOMinimal rejectionDTOMinimal);
+    @PUT("/api/ride/{id}/cancel")
+    Call<RideDTO> rejectRide(@Path("id") Long rideId, @Body RejectionDTOMinimal rejectionDTOMinimal);
 
     @PUT("/api/ride/{id}/accept")
     Call<RideDTO> acceptRide(@Path("id") Long rideId);
 
     IRideService service = RetrofitUtils.retrofit.create(IRideService.class);
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(Utils.ServerOrigin)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(RetrofitUtils.basicJsonJwtClient())
+            .build();
+    IRideService service = retrofit.create(IRideService.class);
 }

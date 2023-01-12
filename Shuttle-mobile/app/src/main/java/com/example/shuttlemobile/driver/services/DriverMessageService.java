@@ -44,6 +44,6 @@ public class DriverMessageService extends Service {
     }
 
     private void fetchNewMessages() {
-        Log.e("DriverMessageService", "fetchNewMessages()");
+        //Log.e("DriverMessageService", "fetchNewMessages()");
     }
 }
