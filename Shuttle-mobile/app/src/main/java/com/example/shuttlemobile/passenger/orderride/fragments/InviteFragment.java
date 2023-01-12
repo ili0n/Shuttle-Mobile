@@ -3,6 +3,7 @@ package com.example.shuttlemobile.passenger.orderride.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -58,7 +59,7 @@ public class InviteFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 addItem(inviteField.getText().toString().trim());
-                Log.println(Log.ASSERT, "TextField", inviteField.getText().toString().trim());
+                Log.println(Log.ASSERT, "TextField", invitesAdapter.getItemCount() + "");
             }
         });
 
@@ -68,16 +69,15 @@ public class InviteFragment extends Fragment {
     private void setRecyclerView(View view) {
         invitesAdapter = new InvitesAdapter(invites, getContext());
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.invites_recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(invitesAdapter);
         recyclerView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                recyclerView.getChildAdapterPosition(view);
-                Log.println(Log.ASSERT, "Adapter", recyclerView.getChildAdapterPosition(view) + "");
+
                 return false;
             }
         });
-
     }
 
     private void addItem(String item) {
@@ -89,7 +89,7 @@ public class InviteFragment extends Fragment {
             invites.add(item);
             // on below line we are notifying
             // adapter that data has updated.
-            invitesAdapter.notifyItemInserted(invites.size()-1);
+            invitesAdapter.notifyDataSetChanged();
         }
     }
 }
