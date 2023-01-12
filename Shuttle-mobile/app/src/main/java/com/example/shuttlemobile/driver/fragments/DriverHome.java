@@ -20,27 +20,20 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.shuttlemobile.BlankFragment;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.driver.fragments.home.DriverCurrentRide;
 import com.example.shuttlemobile.driver.services.CurrentRideStatusService;
 import com.example.shuttlemobile.driver.services.DriversLocationService;
 import com.example.shuttlemobile.ride.Ride;
-import com.example.shuttlemobile.ride.dto.LocationDTO;
 import com.example.shuttlemobile.ride.dto.VehicleLocationDTO;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
@@ -57,6 +50,9 @@ public class DriverHome extends GenericUserMapFragment {
     BlankFragment blankFragment = new BlankFragment();
 
     private Ride.Status rideStatus;
+
+    public static Fragment newInstance(SessionContext session) {
+    }
 import com.example.shuttlemobile.driver.fragments.home.DriverHomeAcceptanceRide;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.Ride;

@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.ride;
+package com.example.shuttlemobile.ride.dto;
 
 import java.io.Serializable;
 

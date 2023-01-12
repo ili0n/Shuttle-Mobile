@@ -32,7 +32,8 @@ public class CurrentRideStatusService extends PullingService {
     static final public String NEW_STATUS_UPDATE = PREFIX + "STATUS_MESSAGE";
     static final public String DRIVER_ID = PREFIX + "driver id";
 
-    public void sendResult(Ride.Status status) {
+    public void sendResult(String s) {
+        Ride.Status status = Ride.Status.valueOf(s.toUpperCase());
         Intent intent = new Intent(RESULT);
         intent.putExtra(NEW_STATUS_UPDATE, status);
         broadcaster.sendBroadcast(intent);

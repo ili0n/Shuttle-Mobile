@@ -10,7 +10,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.shuttlemobile.ride.IRideService;
-import com.example.shuttlemobile.ride.RideDTO;
+import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.user.JWT;
 import com.example.shuttlemobile.util.SettingsUtil;
 

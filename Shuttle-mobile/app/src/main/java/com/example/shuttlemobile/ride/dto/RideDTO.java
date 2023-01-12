@@ -1,23 +1,44 @@
 package com.example.shuttlemobile.ride.dto;
 
-import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.route.RouteDTO;
+import com.example.shuttlemobile.user.UserEmailDTO;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class RideDTO {
+public class RideDTO implements Serializable {
     private Long id;
-    private List<RouteDTO> locations;
     private String startTime;
     private String endTime;
     private Double totalCost;
-    private RideDriverDTO driver;
-    private List<RidePassengerDTO> passengers;
-    private Integer estimatedTimeInMinutes;
+    private UserEmailDTO driver;
+    private List<UserEmailDTO> passengers;
+    private Long estimatedTimeInMinutes;
+    private String vehicleType;
     private Boolean babyTransport;
     private Boolean petTransport;
-    private String vehicleType;
-    private CancellationDTO rejection;
-    private Ride.Status status;
+    private RejectionDTO rejection;
+    private List<com.example.shuttlemobile.route.RouteDTO> locations;
+    private String status;
+
+    public RideDTO() {
+    }
+
+    public RideDTO(Long id, String startTime, String endTime, Double totalCost, UserEmailDTO driver, List<UserEmailDTO> passengers, Long estimatedTimeInMinutes, String vehicleType, Boolean babyTransport, Boolean petTransport, RejectionDTO rejection, List<com.example.shuttlemobile.route.RouteDTO> locations, String status) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.totalCost = totalCost;
+        this.driver = driver;
+        this.passengers = passengers;
+        this.estimatedTimeInMinutes = estimatedTimeInMinutes;
+        this.vehicleType = vehicleType;
+        this.babyTransport = babyTransport;
+        this.petTransport = petTransport;
+        this.rejection = rejection;
+        this.locations = locations;
+        this.status = status;
+    }
 
     public Long getId() {
         return id;
@@ -25,14 +46,6 @@ public class RideDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<RouteDTO> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(List<RouteDTO> locations) {
-        this.locations = locations;
     }
 
     public String getStartTime() {
@@ -59,28 +72,36 @@ public class RideDTO {
         this.totalCost = totalCost;
     }
 
-    public RideDriverDTO getDriver() {
+    public UserEmailDTO getDriver() {
         return driver;
     }
 
-    public void setDriver(RideDriverDTO driver) {
+    public void setDriver(UserEmailDTO driver) {
         this.driver = driver;
     }
 
-    public List<RidePassengerDTO> getPassengers() {
+    public List<UserEmailDTO> getPassengers() {
         return passengers;
     }
 
-    public void setPassengers(List<RidePassengerDTO> passengers) {
+    public void setPassengers(List<UserEmailDTO> passengers) {
         this.passengers = passengers;
     }
 
-    public Integer getEstimatedTimeInMinutes() {
+    public Long getEstimatedTimeInMinutes() {
         return estimatedTimeInMinutes;
     }
 
-    public void setEstimatedTimeInMinutes(Integer estimatedTimeInMinutes) {
+    public void setEstimatedTimeInMinutes(Long estimatedTimeInMinutes) {
         this.estimatedTimeInMinutes = estimatedTimeInMinutes;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     public Boolean getBabyTransport() {
@@ -99,28 +120,46 @@ public class RideDTO {
         this.petTransport = petTransport;
     }
 
-    public String getVehicleType() {
-        return vehicleType;
-    }
-
-    public void setVehicleType(String vehicleType) {
-        this.vehicleType = vehicleType;
-    }
-
-    public CancellationDTO getRejection() {
+    public RejectionDTO getRejection() {
         return rejection;
     }
 
-    public void setRejection(CancellationDTO rejection) {
+    public void setRejection(RejectionDTO rejection) {
         this.rejection = rejection;
     }
 
-    public Ride.Status getStatus() {
+    public List<com.example.shuttlemobile.route.RouteDTO> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<RouteDTO> locations) {
+        this.locations = locations;
+    }
+
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Ride.Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
-}
 
+    @Override
+    public String toString() {
+        return "RideDTO{" +
+                "id=" + id +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", totalCost=" + totalCost +
+                ", driver=" + driver +
+                ", passengers=" + passengers +
+                ", estimatedTimeInMinutes=" + estimatedTimeInMinutes +
+                ", vehicleType='" + vehicleType + '\'' +
+                ", babyTransport=" + babyTransport +
+                ", petTransport=" + petTransport +
+                ", rejection=" + rejection +
+                ", locations=" + locations +
+                ", status='" + status + '\'' +
+                '}';
+    }
+}

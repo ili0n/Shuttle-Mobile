@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.driver.fragments;
+package com.example.shuttlemobile.driver.fragments.home;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +24,13 @@ import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
-import com.example.shuttlemobile.driver.services.DriversLocationService;
+import com.example.shuttlemobile.driver.fragments.DriverHome;
+import com.example.shuttlemobile.driver.fragments.PanicPromptFragment;
 import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
 import com.example.shuttlemobile.ride.IRideService;
-import com.example.shuttlemobile.ride.dto.LocationDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
+import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
 import com.mapbox.geojson.Point;
@@ -204,9 +204,7 @@ public class DriverCurrentRide extends Fragment {
     }
 
     private void fillPassengers() {
-        List<String> passengers = this.currentRide.getPassengers().stream()
-                .map( RidePassengerDTO::getEmail)
-                .collect(Collectors.toList());
+        List<String> passengers = currentRide.getPassengers().stream().map(p -> p.getEmail()).collect(Collectors.toList());
         lvPassengers.setAdapter(new EasyListAdapter<String>() {
             @Override
             public List<String> getList() {

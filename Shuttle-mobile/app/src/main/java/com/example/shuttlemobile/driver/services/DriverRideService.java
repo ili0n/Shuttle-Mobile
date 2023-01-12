@@ -10,13 +10,9 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.shuttlemobile.ride.IRideService;
-import com.example.shuttlemobile.ride.RideDTO;
-import com.example.shuttlemobile.unregistered.login.ILoginService;
-import com.example.shuttlemobile.unregistered.login.LoginDTO;
-import com.example.shuttlemobile.unregistered.login.TokenDTO;
+import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.user.IUserService;
 import com.example.shuttlemobile.user.JWT;
-import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.concurrent.ExecutorService;
