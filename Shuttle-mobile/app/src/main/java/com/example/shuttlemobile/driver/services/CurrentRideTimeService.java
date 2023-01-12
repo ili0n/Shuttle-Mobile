@@ -36,13 +36,18 @@ public class CurrentRideTimeService extends PullingService {
 
     @Override
     protected void startExecutor(Intent intent){
-        String startTimeStr =  intent.getExtras().getString(TIME_START);
+        String startTimeStr = intent.getExtras().getString(TIME_START);
         startTime = LocalDateTime.parse(startTimeStr, DateTimeFormatter.ISO_DATE_TIME);
+
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleWithFixedDelay(() -> {
-            long secondsTotal = ChronoUnit.SECONDS.between(startTime, LocalDateTime.now());
-            @SuppressLint("DefaultLocale")
-            String result = String.format("%d:%02d:%02d", secondsTotal / 3600, (secondsTotal % 3600) / 60, secondsTotal % 60);
+            LocalDateTime now = LocalDateTime.now();
+
+            final long seconds = ChronoUnit.SECONDS.between(startTime, now) % 60;
+            final long minutes = ChronoUnit.MINUTES.between(startTime, now);
+            final long hours = ChronoUnit.HOURS.between(startTime, now);
+
+            String result = String.format("%02d:%02d:%02d", hours, minutes, seconds);
             sendResult(getResources().getString(R.string.elapsed_time) + result);
         }, 0, 1, TimeUnit.SECONDS);
     }
