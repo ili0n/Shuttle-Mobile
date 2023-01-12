@@ -145,6 +145,7 @@ public class DriverHome extends GenericUserMapFragment {
         FragmentTransaction fragmentTransaction = getChildFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_bottom)
                 .setReorderingAllowed(true)
                 .replace(R.id.driver_home_fragment_frame_home, fragment);
         fragmentTransaction.addToBackStack("DriverHome");
