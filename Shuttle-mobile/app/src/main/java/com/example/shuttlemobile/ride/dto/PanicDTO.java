@@ -1,15 +1,13 @@
-package com.example.shuttlemobile.ride;
+package com.example.shuttlemobile.ride.dto;
 
-import java.io.Serializable;
-
-public class RejectionDTOMinimal implements Serializable {
+public class PanicDTO {
     private String reason;
 
-    public RejectionDTOMinimal(String reason) {
+    public PanicDTO(String reason) {
         this.reason = reason;
     }
 
-    public RejectionDTOMinimal() {
+    public PanicDTO() {
     }
 
     public String getReason() {

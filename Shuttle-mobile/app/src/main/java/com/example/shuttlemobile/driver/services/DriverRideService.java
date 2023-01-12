@@ -10,13 +10,9 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.shuttlemobile.ride.IRideService;
-import com.example.shuttlemobile.ride.RideDTO;
-import com.example.shuttlemobile.unregistered.login.ILoginService;
-import com.example.shuttlemobile.unregistered.login.LoginDTO;
-import com.example.shuttlemobile.unregistered.login.TokenDTO;
+import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.user.IUserService;
 import com.example.shuttlemobile.user.JWT;
-import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.concurrent.ExecutorService;
@@ -48,7 +44,7 @@ public class DriverRideService extends Service {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            fetchNewMessages();
+                            fetchRide();
                             fetchActiveState();
                             handler.postDelayed(this, delay);
                         }
@@ -64,7 +60,7 @@ public class DriverRideService extends Service {
         return null;
     }
 
-    private void fetchNewMessages() {
+    private void fetchRide() {
         final JWT jwt = SettingsUtil.getUserJWT();
         Call<RideDTO> call = IRideService.service.getActiveRideDriver(jwt.getId());
         call.enqueue(new Callback<RideDTO>() {

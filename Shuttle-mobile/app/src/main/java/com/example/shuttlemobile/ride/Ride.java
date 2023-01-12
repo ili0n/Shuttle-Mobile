@@ -1,5 +1,7 @@
 package com.example.shuttlemobile.ride;
 
+import android.location.Location;
+
 import com.example.shuttlemobile.common.Entity;
 import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.passenger.Passenger;
@@ -22,7 +24,7 @@ public class Ride extends Entity {
     private Driver driver;
 
     public Ride() {
-            }
+    }
 
     public enum State {
         PENDING,
@@ -32,6 +34,10 @@ public class Ride extends Entity {
         FINISHED,
         STARTED,
     };
+
+    public enum Status {
+        Pending, Accepted, Rejected, Canceled, Finished, Started
+    }
 
     public Driver getDriver() { return driver; }
 

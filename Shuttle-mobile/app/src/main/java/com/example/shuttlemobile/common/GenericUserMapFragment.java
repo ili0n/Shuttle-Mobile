@@ -2,10 +2,8 @@ package com.example.shuttlemobile.common;
 
 import static com.mapbox.core.constants.Constants.PRECISION_6;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,7 +16,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.util.Utils;
@@ -223,6 +220,26 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
                 .withIconImage(image)
         ;
         pointAnnotationManager.create(pointAnnotationOptions);
+    }
+
+    public final void deleteAllPoints() {
+        pointAnnotationManager.deleteAll();
+    }
+
+    public final void deleteAllRoutes() {
+        routeAnnotationManager.deleteAll();
+    }
+
+    public final void deleteAllCircles() {
+        circleAnnotationManager.deleteAll();
+    }
+
+    public final void deleteAllPolylines() {
+        polylineAnnotationManager.deleteAll();
+    }
+
+    public final void deleteAllRouteCircles() {
+        routeCircleAnnotationManager.deleteAll();
     }
 
     /**

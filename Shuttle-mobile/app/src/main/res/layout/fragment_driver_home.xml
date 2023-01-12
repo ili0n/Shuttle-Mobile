@@ -7,6 +7,22 @@
     android:layout_height="match_parent"
     tools:context=".driver.fragments.DriverHome">
 
+<!--    <com.mapbox.maps.MapView-->
+<!--        android:id="@+id/d_mapView"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        mapbox:layout_constraintBottom_toTopOf="@+id/container_d_home"-->
+<!--        mapbox:layout_constraintEnd_toEndOf="parent"-->
+<!--        mapbox:layout_constraintStart_toStartOf="parent"-->
+<!--        mapbox:layout_constraintTop_toTopOf="parent"-->
+<!--        mapbox:mapbox_cameraTargetLat="40.7128"-->
+<!--        mapbox:mapbox_cameraTargetLng="-74.0060"-->
+<!--        mapbox:mapbox_cameraZoom="9.0" />-->
+
     <Switch
         android:id="@+id/switch_is_active"
         android:layout_width="wrap_content"
@@ -15,6 +31,7 @@
         android:text="Active"
         mapbox:layout_constraintStart_toStartOf="parent"
         mapbox:layout_constraintTop_toTopOf="parent" />
+
 
     <com.mapbox.maps.MapView
         android:id="@+id/map_driver_home"
@@ -27,8 +44,18 @@
         mapbox:mapbox_cameraTargetLat="40.7128"
         mapbox:mapbox_cameraTargetLng="-74.0060"
         mapbox:mapbox_cameraZoom="9.0">
-
     </com.mapbox.maps.MapView>
+
+<!--    <androidx.fragment.app.FragmentContainerView-->
+<!--        android:id="@+id/container_d_home"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="8dp"-->
+<!--        mapbox:layout_constraintBottom_toBottomOf="parent"-->
+<!--        mapbox:layout_constraintEnd_toEndOf="parent"-->
+<!--        mapbox:layout_constraintStart_toStartOf="parent"-->
+<!--        mapbox:layout_constraintTop_toBottomOf="@id/d_mapView"-->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/driver_home_fragment_frame_home"
@@ -42,6 +69,4 @@
         mapbox:layout_constraintTop_toBottomOf="@id/map_driver_home"
         tools:layout="@layout/fragment_blank"
         />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

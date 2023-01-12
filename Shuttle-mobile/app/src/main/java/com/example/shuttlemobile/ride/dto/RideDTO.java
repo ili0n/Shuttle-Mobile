@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.ride;
+package com.example.shuttlemobile.ride.dto;
 
 import com.example.shuttlemobile.route.RouteDTO;
 import com.example.shuttlemobile.user.UserEmailDTO;
@@ -18,13 +18,13 @@ public class RideDTO implements Serializable {
     private Boolean babyTransport;
     private Boolean petTransport;
     private RejectionDTO rejection;
-    private List<RouteDTO> locations;
+    private List<com.example.shuttlemobile.route.RouteDTO> locations;
     private String status;
 
     public RideDTO() {
     }
 
-    public RideDTO(Long id, String startTime, String endTime, Double totalCost, UserEmailDTO driver, List<UserEmailDTO> passengers, Long estimatedTimeInMinutes, String vehicleType, Boolean babyTransport, Boolean petTransport, RejectionDTO rejection, List<RouteDTO> locations, String status) {
+    public RideDTO(Long id, String startTime, String endTime, Double totalCost, UserEmailDTO driver, List<UserEmailDTO> passengers, Long estimatedTimeInMinutes, String vehicleType, Boolean babyTransport, Boolean petTransport, RejectionDTO rejection, List<com.example.shuttlemobile.route.RouteDTO> locations, String status) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -128,7 +128,7 @@ public class RideDTO implements Serializable {
         this.rejection = rejection;
     }
 
-    public List<RouteDTO> getLocations() {
+    public List<com.example.shuttlemobile.route.RouteDTO> getLocations() {
         return locations;
     }
 
