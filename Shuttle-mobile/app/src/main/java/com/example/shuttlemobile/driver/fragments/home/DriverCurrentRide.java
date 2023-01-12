@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,8 +79,6 @@ public class DriverCurrentRide extends Fragment {
         initRideReceiver();
 
         initViewElements(view);
-
-        Log.e("?", currentRide == null ? "null" : currentRide.toString());
     }
 
     private void initParent() {
@@ -147,17 +146,13 @@ public class DriverCurrentRide extends Fragment {
         B = Point.fromLngLat(B_loc.getLongitude(), B_loc.getLatitude());
 
         if (isNewRide) {
-            Intent intent = new Intent(getActivity(), CurrentRideTimeService.class);
-            if (currentRide.getStartTime() != null) {
-                intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
-                requireActivity().startService(intent);
-                fillData();
+            startTimer();
+            fillData();
 
-                // Draw route.
+            // Draw route.
 
-                parent.drawRoute(A, B, "#FF0000");
-                parent.fitViewport(A, B, 3000);
-            }
+            parent.drawRoute(A, B, "#FF0000");
+            parent.fitViewport(A, B, 3000);
         }
     }
 
@@ -263,9 +258,29 @@ public class DriverCurrentRide extends Fragment {
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopTimer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startTimer();
+    }
+
     private void stopTimer() {
         Intent myService = new Intent(requireContext(), CurrentRideTimeService.class);
         requireContext().stopService(myService);
+    }
+
+    private void startTimer() {
+        if (currentRide != null && currentRide.getStartTime() != null) {
+            Intent intent = new Intent(getActivity(), CurrentRideTimeService.class);
+            intent.putExtra(CurrentRideTimeService.TIME_START, currentRide.getStartTime());
+            requireActivity().startService(intent);
+        }
     }
 
 //    public void setRide(long driverId){

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -30,7 +31,7 @@ public class CurrentRideTimeService extends PullingService {
         Intent intent = new Intent(RESULT);
         if(message != null)
             intent.putExtra(NEW_TIME_MESSAGE, message);
-        broadcaster.sendBroadcast(intent);
+        sendBroadcast(intent);
     }
 
     @Override
@@ -40,8 +41,8 @@ public class CurrentRideTimeService extends PullingService {
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleWithFixedDelay(() -> {
             long secondsTotal = ChronoUnit.SECONDS.between(startTime, LocalDateTime.now());
-            @SuppressLint("DefaultLocale") String result = String.format("%d:%02d:%02d",
-                    secondsTotal / 3600, (secondsTotal % 3600) / 60, secondsTotal % 60);
+            @SuppressLint("DefaultLocale")
+            String result = String.format("%d:%02d:%02d", secondsTotal / 3600, (secondsTotal % 3600) / 60, secondsTotal % 60);
             sendResult(getResources().getString(R.string.elapsed_time) + result);
         }, 0, 1, TimeUnit.SECONDS);
     }
