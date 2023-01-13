@@ -81,11 +81,23 @@ public class DriverCurrentRide extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initParent();
-
         initTimeReceiver();
         initRideReceiver();
-
         initViewElements(view);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        unregisterReceivers();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        registerReceivers();
     }
 
     private void initParent() {
@@ -108,11 +120,23 @@ public class DriverCurrentRide extends Fragment {
                 onGetRide(rideDTO);
             }
         };
+    }
 
+    private void registerReceivers(){
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(DriverRideService.BROADCAST_CHANNEL);
         getActivity().registerReceiver(rideReceiver, intentFilter);
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(CurrentRideTimeService.RESULT);
+        getActivity().registerReceiver(timeReceiver, intentFilter);
     }
+
+    private void unregisterReceivers(){
+        getActivity().unregisterReceiver(rideReceiver);
+        getActivity().unregisterReceiver(timeReceiver);
+    }
+
 
     private void initTimeReceiver() {
         timeReceiver = new BroadcastReceiver() {
@@ -122,10 +146,6 @@ public class DriverCurrentRide extends Fragment {
                 tvTime.setText(s);
             }
         };
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(CurrentRideTimeService.RESULT);
-        getActivity().registerReceiver(timeReceiver, intentFilter);
     }
 
     private void onGetRide(RideDTO dto) {
