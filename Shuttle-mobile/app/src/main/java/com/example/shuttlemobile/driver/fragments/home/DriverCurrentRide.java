@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -33,6 +35,7 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.driver.fragments.PanicPromptFragment;
+import com.example.shuttlemobile.driver.fragments.PassengerData;
 import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.IRideService;
@@ -41,6 +44,7 @@ import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
 import com.example.shuttlemobile.route.LocationDTO;
+import com.example.shuttlemobile.user.UserEmailDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
 import com.mapbox.geojson.Point;
@@ -185,12 +189,23 @@ public class DriverCurrentRide extends Fragment {
 
     private void initViewElements(View view) {
         lvPassengers = view.findViewById(R.id.lv_d_passengers);
+        lvPassengers.setOnItemClickListener((adapterView, view1, position, id) -> showPassengerData(position));
         lvLocations = view.findViewById(R.id.lv_d_locations);
         cbBaby = view.findViewById(R.id.cb_d_baby);
         cbPet = view.findViewById(R.id.cb_d_pet);
         tvTime = view.findViewById(R.id.tv_d_estimated_time);
         btnFinish = view.findViewById(R.id.btn_d_finish);
         btnPanic = view.findViewById(R.id.btn_d_panic);
+    }
+
+    private void showPassengerData(int position) {
+        Bundle bundle = new Bundle();
+        long passengerId = lvPassengers.getAdapter().getItemId(position);
+        bundle.putLong(PassengerData.PASSENGER_ID, passengerId);
+
+        DialogFragment dialog = new PassengerData();
+        dialog.setArguments(bundle);
+        dialog.show(getChildFragmentManager(), "Passenger data");
     }
 
     private void fillData() {
@@ -204,10 +219,10 @@ public class DriverCurrentRide extends Fragment {
     }
 
     private void fillPassengers() {
-        List<String> passengers = currentRide.getPassengers().stream().map(p -> p.getEmail()).collect(Collectors.toList());
-        lvPassengers.setAdapter(new EasyListAdapter<String>() {
+        List<UserEmailDTO> passengers = currentRide.getPassengers();
+        lvPassengers.setAdapter(new EasyListAdapter<UserEmailDTO>() {
             @Override
-            public List<String> getList() {
+            public List<UserEmailDTO> getList() {
                 return passengers;
             }
 
@@ -217,9 +232,14 @@ public class DriverCurrentRide extends Fragment {
             }
 
             @Override
-            public void applyToView(View view, String passenger) {
+            public void applyToView(View view, UserEmailDTO passenger) {
                 TextView tvPassenger = view.findViewById(R.id.list_d_content);
-                tvPassenger.setText(passenger);
+                tvPassenger.setText(passenger.getEmail());
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return getList().get(i).getId();
             }
 
             @Override

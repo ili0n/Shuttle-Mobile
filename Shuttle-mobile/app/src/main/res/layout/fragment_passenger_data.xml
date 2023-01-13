@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".driver.fragments.PassengerData"
+    android:orientation="vertical"
+    android:padding="30sp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="60sp"
+        android:contentDescription="@string/passenger_profile_picture"
+        android:id="@+id/img_d_passenger_profile_picture"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/passenger_name"
+        android:textSize="22sp"
+        android:id="@+id/tv_d_passenger_name"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/passenger_surname"
+        android:textSize="22sp"
+        android:id="@+id/tv_d_passenger_surname"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/phone_number"
+        android:textSize="22sp"
+        android:id="@+id/tv_d_passenger_phone_number"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        android:textSize="22sp"
+        android:id="@+id/tv_d_passenger_email"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/address"
+        android:textSize="22sp"
+        android:id="@+id/tv_d_passenger_address"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/call"
+            android:layout_weight="1"
+            android:id="@+id/btn_d_passenger_call"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chat"
+            android:layout_weight="1"
+            android:id="@+id/btn_d_passenger_chat"/>
+    </LinearLayout>
+</LinearLayout>
