@@ -10,11 +10,14 @@ import android.view.MenuItem;
 import com.example.shuttlemobile.common.GenericUserActivity;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.SettingsFragment;
+import com.example.shuttlemobile.driver.services.DriverMessageService;
+import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.passenger.fragments.PassengerAccount;
 import com.example.shuttlemobile.passenger.fragments.PassengerHistory;
 import com.example.shuttlemobile.passenger.fragments.PassengerHome;
 import com.example.shuttlemobile.common.InboxFragment;
 import com.example.shuttlemobile.passenger.services.PassengerMessageService;
+import com.example.shuttlemobile.passenger.services.PassengerRideService;
 
 public class PassengerActivity extends GenericUserActivity {
 
@@ -23,6 +26,7 @@ public class PassengerActivity extends GenericUserActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger);
         startService(new Intent(this, PassengerMessageService.class));
+        startService(new Intent(this, PassengerRideService.class));
     }
 
     @Override

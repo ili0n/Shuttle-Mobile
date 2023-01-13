@@ -52,7 +52,6 @@ public class DriverHome extends GenericUserMapFragment {
     private BroadcastReceiver driversLocationReceiver;
     private Switch activeSwitch;
 
-
     private BlankFragment blankFragment;
     private DriverCurrentRide currentRideFragment;
     private DriverHomeAcceptanceRide fragmentAcceptance;
@@ -251,6 +250,7 @@ public class DriverHome extends GenericUserMapFragment {
 
     private void determineSubFragment(RideDTO dto) {
         if (dto == null) {
+            Log.e("A", "BBBBBBBBBBBBBBBBBBBBBBBBBBB");
             setSubFragmentIfDifferent(blankFragment);
             removeRoute();
             return;

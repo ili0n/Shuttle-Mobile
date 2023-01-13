@@ -44,10 +44,15 @@ public class CurrentRideTimeService extends PullingService {
             LocalDateTime now = LocalDateTime.now();
 
             final long seconds = ChronoUnit.SECONDS.between(startTime, now) % 60;
-            final long minutes = ChronoUnit.MINUTES.between(startTime, now);
-            final long hours = ChronoUnit.HOURS.between(startTime, now);
+            final long minutes = ChronoUnit.MINUTES.between(startTime, now) % 60;
+            final long hours = ChronoUnit.HOURS.between(startTime, now) % 24;
+            String result;
+            if (hours > 1) {
+                result = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+            } else {
+                result = String.format("%02d:%02d", minutes, seconds);
+            }
 
-            String result = String.format("%02d:%02d:%02d", hours, minutes, seconds);
             sendResult(getResources().getString(R.string.elapsed_time) + result);
         }, 0, 1, TimeUnit.SECONDS);
     }
