@@ -26,6 +26,7 @@ import com.example.shuttlemobile.driver.services.DriversLocationService;
 import com.example.shuttlemobile.passenger.fragments.home.PassengerCurrentRide;
 import com.example.shuttlemobile.passenger.fragments.home.PassengerSearchRoute;
 import com.example.shuttlemobile.passenger.services.PassengerRideService;
+import com.example.shuttlemobile.passenger.subactivities.PassengerRateRidePromptActivity;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.dto.RideDTO;
@@ -270,6 +271,9 @@ public class PassengerHome extends GenericUserMapFragment {
 
     private void promptToRateRide(RideDTO dto) {
         Toast.makeText(getActivity().getApplicationContext(), "Rate the ride.", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), PassengerRateRidePromptActivity.class);
+        intent.putExtra(PassengerRateRidePromptActivity.KEY_RIDE, dto);
+        startActivity(intent);
     }
 
 }
