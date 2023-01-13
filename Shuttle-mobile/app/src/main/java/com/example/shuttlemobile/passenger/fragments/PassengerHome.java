@@ -106,7 +106,7 @@ public class PassengerHome extends GenericUserMapFragment {
     public int getMapViewID() {
         return R.id.map_passenger_home;
     }
-    
+
     @Override
     public void onPause() {
         super.onPause();

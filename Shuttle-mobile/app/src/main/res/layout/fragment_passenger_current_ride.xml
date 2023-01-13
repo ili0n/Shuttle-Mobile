@@ -201,4 +201,18 @@
         app:layout_constraintStart_toEndOf="@+id/btn_p_cur_ride_note"
         app:layout_constraintTop_toTopOf="@+id/btn_p_cur_ride_note" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/lay_p_cur_ride_when_started"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_p_cur_ride_driver"
+        app:constraint_referenced_ids="lbl_p_cur_ride_timer, txt_p_cur_ride_timer, btn_p_cur_ride_note, btn_p_cur_ride_panic"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+    </androidx.constraintlayout.widget.Group>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

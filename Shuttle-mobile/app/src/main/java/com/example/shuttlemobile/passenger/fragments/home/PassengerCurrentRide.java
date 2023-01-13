@@ -21,6 +21,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 
 import com.example.shuttlemobile.R;
@@ -54,6 +56,7 @@ public class PassengerCurrentRide extends Fragment {
     private TextView txtDriver;
     private Button btnNote;
     private Button btnPanic;
+    private Group layWhenStarted;
 
     private TextView txtElapsedTime;
 
@@ -122,6 +125,7 @@ public class PassengerCurrentRide extends Fragment {
         txtDriver = view.findViewById(R.id.txt_p_cur_ride_driver);
         btnNote = view.findViewById(R.id.btn_p_cur_ride_note);
         btnPanic = view.findViewById(R.id.btn_p_cur_ride_panic);
+        layWhenStarted = (Group) view.findViewById(R.id.lay_p_cur_ride_when_started);
 
         initDriverInfoClick();
         initNoteButtonClick();
@@ -324,8 +328,11 @@ public class PassengerCurrentRide extends Fragment {
             stopTimer();
         }
 
-        btnPanic.setEnabled(canPanicOrNote);
-        btnNote.setEnabled(canPanicOrNote);
+        if (canPanicOrNote) {
+            layWhenStarted.setVisibility(View.VISIBLE);
+        } else {
+            layWhenStarted.setVisibility(View.GONE);
+        }
     }
 
     private void startTimer() {
