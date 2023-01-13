@@ -32,6 +32,7 @@ import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.VehicleLocationDTO;
 import com.example.shuttlemobile.route.LocationDTO;
+import com.example.shuttlemobile.util.NotificationUtil;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
@@ -105,8 +106,7 @@ public class PassengerHome extends GenericUserMapFragment {
     public int getMapViewID() {
         return R.id.map_passenger_home;
     }
-
-
+    
     @Override
     public void onPause() {
         super.onPause();
@@ -161,6 +161,13 @@ public class PassengerHome extends GenericUserMapFragment {
                         Ride.Status status = Ride.Status.valueOf(response.body().getStatus());
 
                         if (status == Ride.Status.Finished) {
+                            NotificationUtil.sendNotification(
+                                    getActivity().getApplicationContext(),
+                                    NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID,
+                                    "Ride finished",
+                                    "You can order new rides now.",
+                                    R.drawable.car_green,
+                                    1110101110);
                             promptToRateRide(response.body());
                         }
                     }
