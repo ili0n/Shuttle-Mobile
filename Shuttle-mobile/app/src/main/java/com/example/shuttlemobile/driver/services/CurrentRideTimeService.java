@@ -43,11 +43,10 @@ public class CurrentRideTimeService extends PullingService {
         executor.scheduleWithFixedDelay(() -> {
             LocalDateTime now = LocalDateTime.now();
 
-            final long seconds = ChronoUnit.SECONDS.between(startTime, now) % 60;
-            final long minutes = ChronoUnit.MINUTES.between(startTime, now);
-            final long hours = ChronoUnit.HOURS.between(startTime, now);
+            long secondsTotal = ChronoUnit.SECONDS.between(startTime, LocalDateTime.now());
+            @SuppressLint("DefaultLocale") String result = String.format("%d:%02d:%02d",
+                    secondsTotal / 3600, (secondsTotal % 3600) / 60, secondsTotal % 60);
 
-            String result = String.format("%02d:%02d:%02d", hours, minutes, seconds);
             sendResult(getResources().getString(R.string.elapsed_time) + result);
         }, 0, 1, TimeUnit.SECONDS);
     }
