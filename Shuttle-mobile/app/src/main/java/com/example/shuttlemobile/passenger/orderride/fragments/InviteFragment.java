@@ -12,13 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.passenger.orderride.ICheckUsersService;
 import com.example.shuttlemobile.passenger.orderride.InvitesAdapter;
+import com.example.shuttlemobile.unregistered.LoginActivity;
+import com.example.shuttlemobile.user.RidePassengerDTO;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +36,7 @@ import java.util.ArrayList;
 public class InviteFragment extends Fragment {
 
     private ArrayList<String> invites = new ArrayList<>();
+    private ArrayList<RidePassengerDTO> inviteUsers = new ArrayList<>();
     InvitesAdapter invitesAdapter;
 
 
@@ -83,13 +92,29 @@ public class InviteFragment extends Fragment {
     private void addItem(String item) {
         // on below line we are checking
         // if item is empty or not.
-        if (!item.isEmpty()) {
+        if (!item.isEmpty() && !invites.contains(item)) {
             // on below line we are adding
             // item to our list
-            invites.add(item);
-            // on below line we are notifying
-            // adapter that data has updated.
-            invitesAdapter.notifyDataSetChanged();
+
+            Call<RidePassengerDTO> call = ICheckUsersService.service.getUser(item);
+            call.enqueue(new Callback<RidePassengerDTO>() {
+                @Override
+                public void onResponse(Call<RidePassengerDTO> call, Response<RidePassengerDTO> response) {
+                    if (response.code() == 200) {
+                        inviteUsers.add(response.body());
+                        invites.add(item);
+                        invitesAdapter.notifyDataSetChanged();
+                    } else
+                        Toast.makeText(getContext(), "User doesn't exist", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailure(Call<RidePassengerDTO> call, Throwable t) {
+                    Toast.makeText(getContext(), "User doesn't exist", Toast.LENGTH_LONG).show();
+                }
+            });
+
+
         }
     }
 }

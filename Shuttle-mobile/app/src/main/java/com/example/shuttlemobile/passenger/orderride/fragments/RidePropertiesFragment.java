@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
@@ -24,7 +25,10 @@ import java.util.List;
  */
 public class RidePropertiesFragment extends Fragment {
 
+    Switch babySwitch;
+    Switch petSwitch;
 
+    Spinner spinner;
     public RidePropertiesFragment() {
         // Required empty public constructor
     }
@@ -49,12 +53,13 @@ public class RidePropertiesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_properties, container, false);
         setSpinnerItems(view);
-
+        petSwitch = (Switch) view.findViewById(R.id.pet_switch);
+        babySwitch = (Switch) view.findViewById(R.id.baby_switch);
         return view;
     }
 
     private void setSpinnerItems(View view) {
-        Spinner spinner = (Spinner) view.findViewById(R.id.vehicle_type_spinner);
+        spinner = (Spinner) view.findViewById(R.id.vehicle_type_spinner);
         List<String> types = getVehicleTypes();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, types);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -68,4 +73,14 @@ public class RidePropertiesFragment extends Fragment {
         list.add("LUXURY");
         return list;
     }
+    boolean isPetChecked(){
+        return petSwitch.isChecked();
+    }
+    boolean isBabyChecked(){
+        return babySwitch.isChecked();
+    }
+    String vehicleType(){
+        return spinner.getSelectedItem().toString();
+    }
+
 }

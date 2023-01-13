@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <Switch
-            android:id="@+id/switch2"
+            android:id="@+id/pet_switch"
             android:layout_width="107dp"
             android:layout_height="54dp"
             android:text="Pet"
@@ -23,7 +23,7 @@
             app:layout_constraintVertical_bias="0.235" />
 
         <Switch
-            android:id="@+id/switch3"
+            android:id="@+id/baby_switch"
             android:layout_width="108dp"
             android:layout_height="35dp"
             android:text="Child"
@@ -31,7 +31,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/switch2"
+            app:layout_constraintTop_toBottomOf="@+id/pet_switch"
             app:layout_constraintVertical_bias="0.085" />
 
         <Spinner
@@ -42,7 +42,7 @@
             android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/switch3" />
+            app:layout_constraintTop_toBottomOf="@+id/baby_switch" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

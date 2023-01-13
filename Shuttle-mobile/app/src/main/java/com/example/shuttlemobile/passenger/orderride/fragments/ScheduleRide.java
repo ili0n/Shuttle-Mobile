@@ -28,7 +28,8 @@ import java.util.List;
 public class ScheduleRide extends Fragment {
     private static final int MAX_HOURS = 5;
     private static final int MAX_MINUTES = 60;
-
+    Spinner hourSpinner;
+    Spinner minuteSpinner;
 
     public ScheduleRide() {
         // Required empty public constructor
@@ -53,8 +54,8 @@ public class ScheduleRide extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_schedule_ride, container, false);
-        Spinner hourSpinner = (Spinner) view.findViewById(R.id.hour_spinner);
-        Spinner minuteSpinner = (Spinner) view.findViewById(R.id.minute_spinner);
+        hourSpinner = (Spinner) view.findViewById(R.id.hour_spinner);
+        minuteSpinner = (Spinner) view.findViewById(R.id.minute_spinner);
         setHourSpinnerItems(hourSpinner);
         setMinuteSpinnerItems(minuteSpinner);
         setSwitchListener(view, hourSpinner, minuteSpinner);
@@ -70,7 +71,7 @@ public class ScheduleRide extends Fragment {
                 hourSpinner.setEnabled(isChecked);
                 minuteSpinner.setEnabled(isChecked);
             }
-            });
+        });
     }
 
     private void setMinuteSpinnerItems(Spinner spinner) {
@@ -104,5 +105,20 @@ public class ScheduleRide extends Fragment {
             hours.add(i);
         }
         return hours;
+    }
+
+    String getMinuteAdvance() {
+        if (minuteSpinner.isEnabled()) {
+            return minuteSpinner.getSelectedItem().toString();
+        }
+        return null;
+    }
+
+
+    String getHourAdvance() {
+        if (hourSpinner.isEnabled()) {
+            return hourSpinner.getSelectedItem().toString();
+        }
+        return null;
     }
 }

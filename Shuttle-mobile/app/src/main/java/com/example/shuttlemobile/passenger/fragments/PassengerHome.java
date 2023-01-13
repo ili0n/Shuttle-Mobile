@@ -7,8 +7,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,11 +20,14 @@ import androidx.annotation.Nullable;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
+import com.example.shuttlemobile.common.LocationDTO;
+import com.example.shuttlemobile.common.RouteDTO;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.passenger.orderride.OrderActivity;
 import com.mapbox.geojson.Point;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,12 +41,12 @@ public class PassengerHome extends GenericUserMapFragment {
     /**
      * Departure point.
      */
-    private Point A = null;
+    private Point departurePoint = null;
 
     /**
      * Destination point.
      */
-    private Point B = null;
+    private Point destinationPoint = null;
 
     public static PassengerHome newInstance(SessionContext session) {
         PassengerHome fragment = new PassengerHome();
@@ -93,7 +94,10 @@ public class PassengerHome extends GenericUserMapFragment {
             @Override
             public void onClick(View view) {
                 // Order route, create activity, send departure and destination through intent.
+
+
                 Intent i = new Intent(getActivity(), OrderActivity.class);
+                setIntentValues(i);
                 startActivity(i);
                 Toast.makeText(PassengerHome.this.getActivity(), "Order", Toast.LENGTH_SHORT).show();
             }
@@ -103,9 +107,20 @@ public class PassengerHome extends GenericUserMapFragment {
         moveCamera.setOnClickListener(view13 -> focusOnPointA());
     }
 
+    private void setIntentValues(Intent i) {
+        LocationDTO departure = new LocationDTO(departurePoint.latitude(), departurePoint.longitude(), txtDeparture.getText().toString());
+        LocationDTO destination = new LocationDTO(destinationPoint.latitude(), destinationPoint.longitude(), txtDestination.getText().toString());
+        RouteDTO routeDTO = new RouteDTO(departure, destination);
+        List<RouteDTO> routes = new ArrayList<>();
+        routes.add(routeDTO);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("routes", (Serializable) routes);
+        i.putExtra("routes", bundle);
+    }
+
     private void hideKeyboard() {
         try {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(btnCreateRoute.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
         } catch (Exception e) {
         }
@@ -130,17 +145,17 @@ public class PassengerHome extends GenericUserMapFragment {
 
             if (addressesDep.size() == 0) {
                 Log.e("E", "Could not find departure");
-                A = null;
+                departurePoint = null;
                 return;
             }
             if (addressesDest.size() == 0) {
                 Log.e("E", "Could not find destination");
-                B = null;
+                destinationPoint = null;
                 return;
             }
         } catch (IOException e) {
-            A = null;
-            B = null;
+            departurePoint = null;
+            destinationPoint = null;
             e.printStackTrace();
             return;
         }
@@ -148,9 +163,8 @@ public class PassengerHome extends GenericUserMapFragment {
         final Address adrA = addressesDep.get(0);
         final Address adrB = addressesDest.get(0);
 
-        A = Point.fromLngLat(adrA.getLongitude(), adrA.getLatitude());
-        B = Point.fromLngLat(adrB.getLongitude(), adrB.getLatitude());
-
+        departurePoint = Point.fromLngLat(adrA.getLongitude(), adrA.getLatitude());
+        destinationPoint = Point.fromLngLat(adrB.getLongitude(), adrB.getLatitude());
         drawRouteAndPoints();
         fitCameraToRoute();
     }
@@ -160,8 +174,8 @@ public class PassengerHome extends GenericUserMapFragment {
      * If either A or B are null, nothing happens.
      */
     private void drawRouteAndPoints() {
-        if (A != null && B != null) {
-            drawRoute(A, B, "#2369ED");
+        if (departurePoint != null && destinationPoint != null) {
+            drawRoute(departurePoint, destinationPoint, "#2369ED");
         }
     }
 
@@ -170,8 +184,8 @@ public class PassengerHome extends GenericUserMapFragment {
      * If either A or B are null, nothing happens.
      */
     private void fitCameraToRoute() {
-        if (A != null && B != null) {
-            fitViewport(A, B, 3000);
+        if (departurePoint != null && destinationPoint != null) {
+            fitViewport(departurePoint, destinationPoint, 3000);
         }
     }
 
@@ -180,13 +194,13 @@ public class PassengerHome extends GenericUserMapFragment {
      * If A is null, nothing happens.
      */
     private void focusOnPointA() {
-        if (A != null) {
-            lookAtPoint(A, 15, 3000);
+        if (departurePoint != null) {
+            lookAtPoint(departurePoint, 15, 3000);
         }
     }
 
     private boolean hasRoute() {
-        return A != null && B != null;
+        return departurePoint != null && destinationPoint != null;
     }
 
     @Override
@@ -222,4 +236,5 @@ public class PassengerHome extends GenericUserMapFragment {
     public int getMapViewID() {
         return R.id.mapView;
     }
+
 }
