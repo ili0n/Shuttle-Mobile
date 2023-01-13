@@ -255,7 +255,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:fontFamily="sans-serif-medium"
-        android:text="30s"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/lbl_p_cur_ride_est_arrival"
         app:layout_constraintStart_toEndOf="@+id/lbl_p_cur_ride_est_arrival"

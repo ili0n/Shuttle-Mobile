@@ -26,7 +26,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.UserChatActivity;
+import com.example.shuttlemobile.driver.IDriverService;
 import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
+import com.example.shuttlemobile.driver.services.DriversLocationService;
 import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.message.MessageDTO;
@@ -37,16 +39,17 @@ import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.dto.PanicDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
+import com.example.shuttlemobile.ride.dto.VehicleLocationDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.user.IUserService;
 import com.example.shuttlemobile.util.SettingsUtil;
+import com.example.shuttlemobile.vehicle.VehicleDTO;
 import com.mapbox.geojson.Point;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,7 +68,6 @@ public class PassengerCurrentRide extends Fragment {
     private Group grpWhenPending;
     private TextView txtScheduledFor;
     private TextView txtDriverArrival;
-
     private TextView txtElapsedTime;
 
     private RideDTO ride = null;
@@ -76,9 +78,10 @@ public class PassengerCurrentRide extends Fragment {
 
     private BroadcastReceiver rideReceiver;
     private BroadcastReceiver timeReceiver;
+    private BroadcastReceiver driversLocationReceiver;
 
+    private Long vehicleId = -1L;
     boolean startedTimer;
-
 
     public static PassengerCurrentRide newInstance() {
         return new PassengerCurrentRide();
@@ -96,6 +99,7 @@ public class PassengerCurrentRide extends Fragment {
         initViewElements(view);
         initTimeReceiver();
         initRideReceiver();
+        initDriversLocationReceiver();
     }
 
     @Override
@@ -103,6 +107,7 @@ public class PassengerCurrentRide extends Fragment {
         super.onPause();
         getActivity().unregisterReceiver(rideReceiver);
         getActivity().unregisterReceiver(timeReceiver);
+        getActivity().unregisterReceiver(driversLocationReceiver);
         stopTimer();
     }
 
@@ -111,6 +116,7 @@ public class PassengerCurrentRide extends Fragment {
         super.onResume();
         subscribeToRideReceiver();
         subscribeToTimeReceiver();
+        subscribeToDriversLocationReceiver();
         startTimer();
     }
 
@@ -285,6 +291,32 @@ public class PassengerCurrentRide extends Fragment {
         getActivity().registerReceiver(rideReceiver, intentFilter);
     }
 
+    private void initDriversLocationReceiver() {
+        driversLocationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+            List<VehicleLocationDTO> locations = (List<VehicleLocationDTO>) intent.getSerializableExtra(DriversLocationService.NEW_VEHICLES_LOCATIONS);
+            for (VehicleLocationDTO dto : locations) {
+                if (dto.getId().equals(vehicleId)) {
+                    recalcDriverArrivalTimeEst(dto.getLocation());
+                }
+            }
+            }
+        };
+
+        subscribeToDriversLocationReceiver();
+    }
+
+    private void subscribeToDriversLocationReceiver() {
+        if (driversLocationReceiver == null) {
+            return;
+        }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DriversLocationService.RESULT);
+        getActivity().registerReceiver(driversLocationReceiver, intentFilter);
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private void onGetRide(RideDTO dto) {
@@ -296,22 +328,25 @@ public class PassengerCurrentRide extends Fragment {
             return;
         }
 
-        // If the currently cached ride is different from this one, redraw the route and focus on it.
-
         Ride.Status dtoStatus = Ride.Status.valueOf(dto.getStatus());
+
+        // If the currently cached ride is different from this one, redraw the route and focus on it.
 
         boolean isNewRide = false;
         if (ride == null || !ride.getId().equals(dto.getId())) {
             isNewRide = true;
         }
 
+        // Show timer only if it's now shown and the ride has started.
+
         boolean shouldShowTimer = false;
         if (ride != null) {
-
             if (dtoStatus == Ride.Status.Accepted && dto.getStartTime() != null) {
                 shouldShowTimer = true;
             }
         }
+
+        // Hide the panic and note buttons (and other things) if the ride hasn't started yet.
 
         boolean canPanicOrNote = false;
         if (dto != null) {
@@ -328,6 +363,20 @@ public class PassengerCurrentRide extends Fragment {
         final LocationDTO B_loc = ride.getLocations().get(ride.getLocations().size() - 1).getDestination();
         A = Point.fromLngLat(A_loc.getLongitude(), A_loc.getLatitude());
         B = Point.fromLngLat(B_loc.getLongitude(), B_loc.getLatitude());
+
+        // Fetch vehicle ID from driver.
+
+        IDriverService.service.getVehicle(ride.getDriver().getId()).enqueue(new Callback<VehicleDTO>() {
+            @Override
+            public void onResponse(Call<VehicleDTO> call, Response<VehicleDTO> response) {
+                vehicleId = response.body().getId();
+            }
+
+            @Override
+            public void onFailure(Call<VehicleDTO> call, Throwable t) {}
+        });
+
+        // Perform logic.
 
         if (isNewRide) {
             updateViewElements(A_loc, B_loc);
@@ -425,5 +474,32 @@ public class PassengerCurrentRide extends Fragment {
 
             }
         });
+    }
+
+    private void recalcDriverArrivalTimeEst(LocationDTO vehicleLocation) {
+        if (ride == null) {
+            txtDriverArrival.setText("?");
+            return;
+        }
+
+        final Double driverY = vehicleLocation.getLatitude();
+        final Double driverX = vehicleLocation.getLongitude();
+        final Double startY = ride.getLocations().get(0).getDeparture().getLatitude();
+        final Double startX = ride.getLocations().get(0).getDeparture().getLongitude();
+
+        final Double dx = startX - driverX;
+        final Double dy = startY - driverY;
+
+        final Double velocity = 60 * 0.00003;
+        final Double dist = Math.sqrt((dx * dx) + (dy * dy));
+        final Double timeLeft = dist / velocity;
+
+        final Long timeLeftWhole = Math.round(timeLeft);
+
+//        Log.e("?", vehicleLocation.toString() + " " + ride.getLocations().get(0).toString());
+//        Log.e("?", dx + " " + dy);
+//        Log.e("?", dist + " " + velocity);
+
+        txtDriverArrival.setText(String.format("%ds", timeLeftWhole));
     }
 }
