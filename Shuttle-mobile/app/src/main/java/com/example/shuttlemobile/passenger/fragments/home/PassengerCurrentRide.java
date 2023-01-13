@@ -21,7 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 
@@ -43,6 +42,12 @@ import com.example.shuttlemobile.user.IUserService;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.mapbox.geojson.Point;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,7 +61,10 @@ public class PassengerCurrentRide extends Fragment {
     private TextView txtDriver;
     private Button btnNote;
     private Button btnPanic;
-    private Group layWhenStarted;
+    private Group grpWhenStarted;
+    private Group grpWhenPending;
+    private TextView txtScheduledFor;
+    private TextView txtDriverArrival;
 
     private TextView txtElapsedTime;
 
@@ -125,7 +133,10 @@ public class PassengerCurrentRide extends Fragment {
         txtDriver = view.findViewById(R.id.txt_p_cur_ride_driver);
         btnNote = view.findViewById(R.id.btn_p_cur_ride_note);
         btnPanic = view.findViewById(R.id.btn_p_cur_ride_panic);
-        layWhenStarted = (Group) view.findViewById(R.id.lay_p_cur_ride_when_started);
+        grpWhenStarted = view.findViewById(R.id.lay_p_cur_ride_when_started);
+        grpWhenPending = view.findViewById(R.id.lay_p_cur_ride_when_pending);
+        txtScheduledFor = view.findViewById(R.id.txt_p_cur_ride_scheduled_for);
+        txtDriverArrival = view.findViewById(R.id.txt_p_cur_ride_est_arrival);
 
         initDriverInfoClick();
         initNoteButtonClick();
@@ -287,6 +298,8 @@ public class PassengerCurrentRide extends Fragment {
 
         // If the currently cached ride is different from this one, redraw the route and focus on it.
 
+        Ride.Status dtoStatus = Ride.Status.valueOf(dto.getStatus());
+
         boolean isNewRide = false;
         if (ride == null || !ride.getId().equals(dto.getId())) {
             isNewRide = true;
@@ -294,7 +307,7 @@ public class PassengerCurrentRide extends Fragment {
 
         boolean shouldShowTimer = false;
         if (ride != null) {
-            Ride.Status dtoStatus = Ride.Status.valueOf(dto.getStatus());
+
             if (dtoStatus == Ride.Status.Accepted && dto.getStartTime() != null) {
                 shouldShowTimer = true;
             }
@@ -302,7 +315,6 @@ public class PassengerCurrentRide extends Fragment {
 
         boolean canPanicOrNote = false;
         if (dto != null) {
-            Ride.Status dtoStatus = Ride.Status.valueOf(dto.getStatus());
             if (dtoStatus == Ride.Status.Accepted || dtoStatus == Ride.Status.Started) {
                 canPanicOrNote = true;
             }
@@ -311,6 +323,7 @@ public class PassengerCurrentRide extends Fragment {
         // Update ride.
 
         ride = dto;
+        Ride.Status rideStatus = Ride.Status.valueOf(ride.getStatus());
         final LocationDTO A_loc = ride.getLocations().get(0).getDeparture();
         final LocationDTO B_loc = ride.getLocations().get(ride.getLocations().size() - 1).getDestination();
         A = Point.fromLngLat(A_loc.getLongitude(), A_loc.getLatitude());
@@ -321,6 +334,15 @@ public class PassengerCurrentRide extends Fragment {
             drawAndFocusCurrentRoute();
         }
 
+        if (rideStatus == Ride.Status.Pending) {
+            if (ride.getScheduledTime() == null) {
+                txtScheduledFor.setText("/");
+            } else {
+                LocalDateTime ldt = LocalDateTime.parse(ride.getScheduledTime(), DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.of("UTC")));
+                txtScheduledFor.setText(ldt.format(DateTimeFormatter.ofPattern("HH:mm")));
+            }
+        }
+
         if (shouldShowTimer) {
             if (!startedTimer)
                 startTimer();
@@ -329,9 +351,11 @@ public class PassengerCurrentRide extends Fragment {
         }
 
         if (canPanicOrNote) {
-            layWhenStarted.setVisibility(View.VISIBLE);
+            grpWhenStarted.setVisibility(View.VISIBLE);
+            grpWhenPending.setVisibility(View.GONE);
         } else {
-            layWhenStarted.setVisibility(View.GONE);
+            grpWhenStarted.setVisibility(View.GONE);
+            grpWhenPending.setVisibility(View.VISIBLE);
         }
     }
 

@@ -52,7 +52,7 @@ public class CurrentRideTimeService extends PullingService {
             } else {
                 result = String.format("%02d:%02d", minutes, seconds);
             }
-            
+
             sendResult(getResources().getString(R.string.elapsed_time) + result);
         }, 0, 1, TimeUnit.SECONDS);
     }

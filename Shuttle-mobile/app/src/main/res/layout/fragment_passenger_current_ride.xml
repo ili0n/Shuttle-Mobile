@@ -126,6 +126,7 @@
         android:id="@+id/divider5"
         android:layout_width="409dp"
         android:layout_height="1dp"
+        android:layout_marginTop="8dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -205,14 +206,72 @@
         android:id="@+id/lay_p_cur_ride_when_started"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
+        app:constraint_referenced_ids="lbl_p_cur_ride_timer, txt_p_cur_ride_timer, btn_p_cur_ride_note, btn_p_cur_ride_panic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_p_cur_ride_driver"
-        app:constraint_referenced_ids="lbl_p_cur_ride_timer, txt_p_cur_ride_timer, btn_p_cur_ride_note, btn_p_cur_ride_panic"
+        tools:visibility="gone"></androidx.constraintlayout.widget.Group>
+
+    <TextView
+        android:id="@+id/lbl_p_cur_ride_scheduled_for"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-light"
+        android:text="Scheduled for:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider5" />
+
+    <TextView
+        android:id="@+id/txt_p_cur_ride_scheduled_for"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lbl_p_cur_ride_scheduled_for"
+        app:layout_constraintStart_toEndOf="@+id/lbl_p_cur_ride_scheduled_for"
+        app:layout_constraintTop_toTopOf="@+id/lbl_p_cur_ride_scheduled_for"
+        tools:text="21:00" />
+
+    <TextView
+        android:id="@+id/lbl_p_cur_ride_est_arrival"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-light"
+        android:text="Driver arrival:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/lbl_p_cur_ride_scheduled_for"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_p_cur_ride_scheduled_for" />
+
+    <TextView
+        android:id="@+id/txt_p_cur_ride_est_arrival"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="30s"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lbl_p_cur_ride_est_arrival"
+        app:layout_constraintStart_toEndOf="@+id/lbl_p_cur_ride_est_arrival"
+        app:layout_constraintTop_toTopOf="@+id/lbl_p_cur_ride_est_arrival" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/lay_p_cur_ride_when_pending"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:visibility="gone"
-        tools:visibility="visible"
-        >
-    </androidx.constraintlayout.widget.Group>
+        app:constraint_referenced_ids="lbl_p_cur_ride_scheduled_for, txt_p_cur_ride_scheduled_for, lbl_p_cur_ride_est_arrival, txt_p_cur_ride_est_arrival"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_p_cur_ride_driver"
+        tools:visibility="visible"></androidx.constraintlayout.widget.Group>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
