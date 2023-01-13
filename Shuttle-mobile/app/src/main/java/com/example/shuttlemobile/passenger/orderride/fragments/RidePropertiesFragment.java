@@ -73,13 +73,13 @@ public class RidePropertiesFragment extends Fragment {
         list.add("LUXURY");
         return list;
     }
-    boolean isPetChecked(){
+    public boolean isPetChecked(){
         return petSwitch.isChecked();
     }
-    boolean isBabyChecked(){
+    public boolean isBabyChecked(){
         return babySwitch.isChecked();
     }
-    String vehicleType(){
+    public String getVehicleType(){
         return spinner.getSelectedItem().toString();
     }
 

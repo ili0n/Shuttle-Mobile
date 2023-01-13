@@ -20,9 +20,12 @@ import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.passenger.orderride.ICheckUsersService;
 import com.example.shuttlemobile.passenger.orderride.InvitesAdapter;
 import com.example.shuttlemobile.unregistered.LoginActivity;
+import com.example.shuttlemobile.user.JWT;
 import com.example.shuttlemobile.user.RidePassengerDTO;
+import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +39,7 @@ import retrofit2.Response;
 public class InviteFragment extends Fragment {
 
     private ArrayList<String> invites = new ArrayList<>();
-    private ArrayList<RidePassengerDTO> inviteUsers = new ArrayList<>();
+    public ArrayList<RidePassengerDTO> inviteUsers = new ArrayList<>();
     InvitesAdapter invitesAdapter;
 
 
@@ -116,5 +119,13 @@ public class InviteFragment extends Fragment {
 
 
         }
+    }
+    public List<RidePassengerDTO> getPassengers(){
+        final JWT jwt = SettingsUtil.getUserJWT();
+        RidePassengerDTO ridePassengerDTO = new RidePassengerDTO();
+        ridePassengerDTO.setEmail(jwt.getEmail());
+        ridePassengerDTO.setId(jwt.getId());
+        inviteUsers.add(ridePassengerDTO);
+        return inviteUsers;
     }
 }

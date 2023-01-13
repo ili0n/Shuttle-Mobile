@@ -12,7 +12,7 @@
 
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/confirm_button"
             android:layout_width="389dp"
             android:layout_height="52dp"
             android:text="Confirm ride"

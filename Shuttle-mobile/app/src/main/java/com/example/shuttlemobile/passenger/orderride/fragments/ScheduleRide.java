@@ -107,7 +107,7 @@ public class ScheduleRide extends Fragment {
         return hours;
     }
 
-    String getMinuteAdvance() {
+    public String getMinuteAdvance() {
         if (minuteSpinner.isEnabled()) {
             return minuteSpinner.getSelectedItem().toString();
         }
@@ -115,7 +115,7 @@ public class ScheduleRide extends Fragment {
     }
 
 
-    String getHourAdvance() {
+    public String getHourAdvance() {
         if (hourSpinner.isEnabled()) {
             return hourSpinner.getSelectedItem().toString();
         }

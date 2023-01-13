@@ -1,29 +1,35 @@
 package com.example.shuttlemobile.passenger.orderride;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.common.GenericUserActivity;
+import com.example.shuttlemobile.common.RouteDTO;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.passenger.orderride.fragments.ConfirmationFragment;
 import com.example.shuttlemobile.passenger.orderride.fragments.InviteFragment;
 import com.example.shuttlemobile.passenger.orderride.fragments.RidePropertiesFragment;
 import com.example.shuttlemobile.passenger.orderride.fragments.ScheduleRide;
+import com.example.shuttlemobile.ride.CreateRideDTO;
+import com.example.shuttlemobile.ride.RideDTO;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class OrderActivity extends AppCompatActivity {
     int step = 0;
@@ -48,6 +54,7 @@ public class OrderActivity extends AppCompatActivity {
         ));
 
         initializeFragmentMap();
+//        setVisibleFragment(getDefaultFragment());
     }
 
 
@@ -127,4 +134,25 @@ public class OrderActivity extends AppCompatActivity {
             setVisibleFragment(getDefaultFragment());
         }
     }
+
+    public CreateRideDTO getCreateRideDTO() {
+        RidePropertiesFragment properties = (RidePropertiesFragment) fragments.get(0);
+        InviteFragment invite = (InviteFragment) fragments.get(1);
+        ScheduleRide schedule = (ScheduleRide) fragments.get(2);
+        return generateDTO(properties, schedule, invite);
+    }
+
+    private CreateRideDTO generateDTO(RidePropertiesFragment properties, ScheduleRide schedule, InviteFragment invite) {
+        CreateRideDTO dto = new CreateRideDTO();
+        Bundle bundle = getIntent().getBundleExtra("routes");
+        dto.setLocations((List<RouteDTO>) bundle.getSerializable("routes"));
+        dto.setBabyTransport(properties.isBabyChecked());
+        dto.setPetTransport(properties.isPetChecked());
+        dto.setVehicleType(properties.getVehicleType());
+        dto.setMinute(schedule.getMinuteAdvance());
+        dto.setHour(schedule.getHourAdvance());
+        dto.setPassengers(invite.getPassengers());
+        return dto;
+    }
+
 }

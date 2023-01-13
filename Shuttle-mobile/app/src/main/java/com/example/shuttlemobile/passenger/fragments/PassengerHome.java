@@ -96,7 +96,7 @@ public class PassengerHome extends GenericUserMapFragment {
                 // Order route, create activity, send departure and destination through intent.
 
 
-                Intent i = new Intent(getActivity(), OrderActivity.class);
+                Intent i = new Intent(getContext(), OrderActivity.class);
                 setIntentValues(i);
                 startActivity(i);
                 Toast.makeText(PassengerHome.this.getActivity(), "Order", Toast.LENGTH_SHORT).show();

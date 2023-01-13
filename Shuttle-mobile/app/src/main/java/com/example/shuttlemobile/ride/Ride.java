@@ -15,7 +15,7 @@ public class Ride extends Entity {
     private LocalDateTime start;
     private LocalDateTime end;
     private double cost;
-    private State state;
+    private Status state;
     private Passenger passenger;
     private Driver driver;
 
@@ -23,13 +23,10 @@ public class Ride extends Entity {
         this.passenger = new Passenger();
     }
 
-    public enum State {
-        STATE_PENDING,
-        STATE_ACCEPTED,
-        STATE_REJECTED,
-        STATE_ACTIVE,
-        STATE_FINISHED
-    };
+    public enum Status {
+        Pending, Accepted, Rejected, Canceled, Finished, Started
+        // TODO: Started - why?! For now it's mock-added as a response.
+    }
 
     public Driver getDriver() { return driver; }
 
@@ -83,12 +80,12 @@ public class Ride extends Entity {
         this.cost = cost;
     }
 
-    public State getState() {
-        return state;
+    public void setState(Status state) {
+        this.state = state;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public Status getState() {
+        return state;
     }
 
     public Passenger getPassenger() {
