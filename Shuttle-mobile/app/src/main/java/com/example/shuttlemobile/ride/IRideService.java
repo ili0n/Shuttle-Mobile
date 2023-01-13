@@ -17,6 +17,9 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface IRideService {
+    @GET("/api/ride/{id}")
+    Call<RideDTO> getById(@Path("id") long rideId);
+
     @GET("/api/ride/driver/{driverId}/active")
     Call<RideDTO> getActiveRide(@Path("driverId") long driverId);
 

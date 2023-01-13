@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.example.shuttlemobile.driver.services.DriversLocationService;
 import com.example.shuttlemobile.passenger.fragments.home.PassengerCurrentRide;
 import com.example.shuttlemobile.passenger.fragments.home.PassengerSearchRoute;
 import com.example.shuttlemobile.passenger.services.PassengerRideService;
+import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.VehicleLocationDTO;
@@ -32,6 +34,10 @@ import com.example.shuttlemobile.route.LocationDTO;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PassengerHome extends GenericUserMapFragment {
     private boolean initiallyMovedToLocation = false;
@@ -144,24 +150,44 @@ public class PassengerHome extends GenericUserMapFragment {
 
     private void determineSubFragment(RideDTO dto) {
         if (dto == null) {
-            setSubFragmentIfDifferent(searchRouteFragment);
-
             if (ride != null) {
+                // Current active ride is null (there isn't any), but there is a 'ride' which
+                // means there's an old ride, to refresh it to get its final state.
+
+                IRideService.service.getById(ride.getId()).enqueue(new Callback<RideDTO>() {
+                    @Override
+                    public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
+                        Ride.Status status = Ride.Status.valueOf(response.body().getStatus());
+
+                        if (status == Ride.Status.Finished) {
+                            promptToRateRide(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<RideDTO> call, Throwable t) {
+
+                    }
+                });
+
                 ride = null;
                 removeRoute();
             }
+            setSubFragmentIfDifferent(searchRouteFragment);
             return;
         }
 
+        ride = dto;
         Ride.State state = Ride.State.valueOf(dto.getStatus().toUpperCase());
 
         switch (state) {
             case PENDING: case ACCEPTED: case STARTED:
                 setSubFragmentIfDifferent(currentRideFragment);
                 break;
-            case CANCELED: case FINISHED: case REJECTED:
+            case CANCELED: case REJECTED: case FINISHED:
+                // TODO: This is probably never gonna be called, instead use the if(dto==null) from
+                //  above.
                 setSubFragmentIfDifferent(searchRouteFragment);
-                removeRoute();
                 break;
             default:
                 throw new IllegalStateException("Unsupported state: " + state);
@@ -240,6 +266,10 @@ public class PassengerHome extends GenericUserMapFragment {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(DriversLocationService.RESULT);
         getActivity().registerReceiver(driversLocationReceiver, intentFilter);
+    }
+
+    private void promptToRateRide(RideDTO dto) {
+        Toast.makeText(getActivity().getApplicationContext(), "Rate the ride.", Toast.LENGTH_SHORT).show();
     }
 
 }
