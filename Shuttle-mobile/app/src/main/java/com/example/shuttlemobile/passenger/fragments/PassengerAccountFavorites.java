@@ -1,6 +1,7 @@
 package com.example.shuttlemobile.passenger.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -18,8 +19,10 @@ import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.passenger.dto.FavoriteRouteDTO;
+import com.example.shuttlemobile.passenger.orderride.OrderActivity;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.dto.RideDTO;
+import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.route.RouteDTO;
 
 import java.time.LocalDateTime;
@@ -146,9 +149,12 @@ public class PassengerAccountFavorites extends GenericUserFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage("Would you like to order ride like this?")
                 .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    createNewRide(favoriteRoute);
-//                    Intent intent = new Intent(requireContext(), DriverHome.class);
-//                    startActivity(intent);
+
+                    Intent intent = new Intent(requireContext(), OrderActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(OrderActivity.KEY_ROUTE, favoriteRoute.getLocations().get(0));
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 })
                 .setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
