@@ -21,7 +21,7 @@ public interface IDriverService {
 
     @PUT("/api/driver/{id}/vehicle")
     Call<VehicleDTO> updateVehicle(@Path("id") Long driverId, @Body VehicleDTO vehicleDTO);
-    @GET("/api/driver/{id}")
+    @PUT("/api/driver/{id}")
     Call<DriverDTO> updateDriver(@Path("id") Long driverId, @Body DriverDTO driverDTO);
 
     Retrofit retrofit = new Retrofit.Builder()

@@ -37,6 +37,10 @@ import retrofit2.Response;
  * Only certain fields are editable, while others must be changed in the web application.
  */
 public class DriverAccountInfo extends GenericUserFragment {
+
+    DriverDTO driverDTO;
+    VehicleDTO vehicleDTO;
+
     public static DriverAccountInfo newInstance(SessionContext session) {
         DriverAccountInfo fragment = new DriverAccountInfo();
         Bundle bundle = new Bundle();
@@ -95,7 +99,8 @@ public class DriverAccountInfo extends GenericUserFragment {
         // You have to use listeners for each edit text.
         boolean canSubmit = true;
         btnSubmit.setActivated(canSubmit);
-        btnSubmit.setOnClickListener(view1 -> pushChanges());
+        btnSubmit.setOnClickListener(view1 -> pushChanges(editName, editSurname, editAddress, editPhone,
+                editModel, editPlate, babySwitch, petSwitch, seatSpinner, typeSpinner, jwt));
     }
 
     private void setVehicleDataFields(EditText editModel, EditText editPlate, Switch babySwitch, Switch petSwitch, Spinner seatSpinner, Spinner typeSpinner, JWT jwt) {
@@ -103,7 +108,7 @@ public class DriverAccountInfo extends GenericUserFragment {
             @Override
             public void onResponse(Call<VehicleDTO> call, Response<VehicleDTO> response) {
                 if (response.code() == 200) {
-                    VehicleDTO vehicleDTO = response.body();
+                    vehicleDTO = response.body();
                     editModel.setText(vehicleDTO.getModel());
                     editPlate.setText(vehicleDTO.getLicenseNumber());
                     babySwitch.setChecked(vehicleDTO.getBabyTransport());
@@ -139,7 +144,7 @@ public class DriverAccountInfo extends GenericUserFragment {
             @Override
             public void onResponse(Call<DriverDTO> call, Response<DriverDTO> response) {
                 if (response.code() == 200) {
-                    DriverDTO driverDTO = response.body();
+                    driverDTO = response.body();
                     editAddress.setText(driverDTO.getAddress());
                     editName.setText(driverDTO.getName());
                     editSurname.setText(driverDTO.getSurname());
@@ -158,8 +163,105 @@ public class DriverAccountInfo extends GenericUserFragment {
         });
     }
 
-    private void pushChanges() {
+    private void pushChanges(EditText editName, EditText editSurname, EditText editAddress, EditText editPhone,
+                             EditText editModel, EditText editPlate, Switch babySwitch, Switch petSwitch, Spinner seatSpinner, Spinner typeSpinner, JWT jwt) {
 
+        boolean driverChanged = checkDriverDTO(editName, editSurname, editAddress, editPhone);
+        boolean vehicleChanged = checkVehicleDTO(editModel, editPlate, babySwitch, petSwitch, seatSpinner, typeSpinner);
+        if (!driverChanged && !vehicleChanged) {
+            Toast.makeText(getContext(), "You didnt make any changes", Toast.LENGTH_LONG).show();
+        } else if (driverChanged) {
+            updateDriver(editName, editSurname, editAddress, editPhone, jwt);
+        } else if (vehicleChanged) {
+            updateVehicle(editModel, editPlate, babySwitch, petSwitch, seatSpinner, typeSpinner, jwt);
+        }
+
+
+    }
+
+    private void updateVehicle(EditText editModel, EditText editPlate, Switch babySwitch, Switch petSwitch, Spinner seatSpinner, Spinner typeSpinner, JWT jwt) {
+        updateVehicleDTO(editModel, editPlate, babySwitch, petSwitch, seatSpinner, typeSpinner);
+
+        IDriverService.service.updateVehicle(jwt.getId(), vehicleDTO).enqueue(new Callback<VehicleDTO>() {
+            @Override
+            public void onResponse(Call<VehicleDTO> call, Response<VehicleDTO> response) {
+                if (response.code() == 200) {
+                    Toast.makeText(getContext(), "Vehicle changes posted waiting for admins approval", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VehicleDTO> call, Throwable t) {
+                Toast.makeText(getContext(), "Failed putting changes to server", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void updateVehicleDTO(EditText editModel, EditText editPlate, Switch babySwitch, Switch petSwitch, Spinner seatSpinner, Spinner typeSpinner) {
+        vehicleDTO.setBabyTransport(babySwitch.isChecked());
+        vehicleDTO.setPetTransport(petSwitch.isChecked());
+        vehicleDTO.setModel(editModel.getText().toString());
+        vehicleDTO.setLicenseNumber(editPlate.getText().toString());
+        vehicleDTO.setVehicleType(typeSpinner.getSelectedItem().toString());
+        vehicleDTO.setPassengerSeats(Long.parseLong(seatSpinner.getSelectedItem().toString()));
+    }
+
+    private void updateDriver(EditText editName, EditText editSurname, EditText editAddress, EditText editPhone, JWT jwt) {
+        updateDriverDTO(editName, editSurname, editAddress, editPhone);
+        IDriverService.service.updateDriver(jwt.getId(), driverDTO).enqueue(new Callback<DriverDTO>() {
+            @Override
+            public void onResponse(Call<DriverDTO> call, Response<DriverDTO> response) {
+                if (response.code() == 200) {
+                    Toast.makeText(getContext(), "Driver changes posted waiting for admins approval", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DriverDTO> call, Throwable t) {
+                Toast.makeText(getContext(), "Failed putting changes to server", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void updateDriverDTO(EditText editName, EditText editSurname, EditText editAddress, EditText editPhone) {
+        driverDTO.setName(editName.getText().toString());
+        driverDTO.setAddress(editAddress.getText().toString());
+        driverDTO.setSurname(editSurname.getText().toString());
+        driverDTO.setTelephoneNumber(editPhone.getText().toString());
+    }
+
+    private boolean checkVehicleDTO(EditText editModel, EditText editPlate, Switch babySwitch, Switch petSwitch, Spinner seatSpinner, Spinner typeSpinner) {
+        if (!editModel.getText().toString().equals(vehicleDTO.getModel()) && !editModel.getText().toString().isEmpty())
+            return true;
+        if (!editPlate.getText().toString().equals(vehicleDTO.getLicenseNumber()) && !editPlate.getText().toString().isEmpty())
+            return true;
+        if (vehicleDTO.getBabyTransport() != babySwitch.isChecked())
+            return true;
+        if (vehicleDTO.getPetTransport() != petSwitch.isChecked())
+            return true;
+        if (!vehicleDTO.getVehicleType().equals(typeSpinner.getSelectedItem().toString()))
+            return true;
+        if (!seatSpinner.getSelectedItem().toString().equals(vehicleDTO.getPassengerSeats().toString()))
+            return true;
+
+        return false;
+    }
+
+    private boolean checkDriverDTO(EditText editName, EditText editSurname, EditText editAddress, EditText editPhone) {
+        if (!driverDTO.getAddress().equals(editAddress.getText().toString()) && !editAddress.getText().toString().isEmpty())
+            return true;
+        if (!driverDTO.getName().equals(editName.getText().toString()) && !editName.getText().toString().isEmpty())
+            return true;
+        if (!driverDTO.getSurname().equals(editSurname.getText().toString()) && !editSurname.getText().toString().isEmpty())
+            return true;
+        if (!driverDTO.getTelephoneNumber().equals(editPhone.getText().toString()) && !editPhone.getText().toString().isEmpty())
+            return true;
+
+        return false;
     }
 
     private List<Integer> getVehicleSeats() {
