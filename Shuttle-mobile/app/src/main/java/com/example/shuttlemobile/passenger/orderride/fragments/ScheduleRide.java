@@ -21,22 +21,11 @@ import com.example.shuttlemobile.common.SessionContext;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ScheduleRide#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ScheduleRide extends Fragment {
     private static final int MAX_HOURS = 5;
     private static final int MAX_MINUTES = 60;
-    Spinner hourSpinner;
-    Spinner minuteSpinner;
-
-    public ScheduleRide() {
-        // Required empty public constructor
-    }
-
+    private Spinner hourSpinner;
+    private  Spinner minuteSpinner;
 
     public static ScheduleRide newInstance(SessionContext session) {
         ScheduleRide fragment = new ScheduleRide();
@@ -52,14 +41,8 @@ public class ScheduleRide extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_schedule_ride, container, false);
-
-
-
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_schedule_ride, container, false);
     }
 
     @Override

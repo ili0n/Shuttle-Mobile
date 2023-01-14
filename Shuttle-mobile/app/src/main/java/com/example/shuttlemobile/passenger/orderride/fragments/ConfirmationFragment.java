@@ -26,20 +26,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ConfirmationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ConfirmationFragment extends Fragment {
+    private Button confirm;
 
-    Button confirm;
-    public ConfirmationFragment() {
-        // Required empty public constructor
-    }
-
-
-    // TODO: Rename and change types and number of parameters
     public static ConfirmationFragment newInstance(SessionContext session) {
         ConfirmationFragment fragment = new ConfirmationFragment();
         Bundle bundle = new Bundle();
@@ -54,10 +43,8 @@ public class ConfirmationFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_confirmation, container, false);
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_confirmation, container, false);
     }
 
     @Override
@@ -72,7 +59,6 @@ public class ConfirmationFragment extends Fragment {
                 call.enqueue(new Callback<RideDTO>() {
                     @Override
                     public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
-                        Log.println(Log.ASSERT,"Reposnse is here",response.code() +"");
                         if(response.code() == 200)
                             Toast.makeText(getContext(), "Ride created", Toast.LENGTH_LONG).show();
                         else {
@@ -94,5 +80,4 @@ public class ConfirmationFragment extends Fragment {
     public Button getConfirmButton(){
         return confirm;
     }
-
 }

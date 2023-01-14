@@ -33,21 +33,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link InviteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class InviteFragment extends Fragment {
-
     private ArrayList<String> invites = new ArrayList<>();
-    public ArrayList<RidePassengerDTO> inviteUsers = new ArrayList<>();
-    InvitesAdapter invitesAdapter;
-
-
-    public InviteFragment() {
-        // Required empty public constructor
-    }
+    private ArrayList<RidePassengerDTO> inviteUsers = new ArrayList<>();
+    private InvitesAdapter invitesAdapter;
 
     public static InviteFragment newInstance(SessionContext session) {
         InviteFragment fragment = new InviteFragment();
@@ -126,7 +115,8 @@ public class InviteFragment extends Fragment {
 
         }
     }
-    public List<RidePassengerDTO> getPassengers(){
+
+    public List<RidePassengerDTO> getPassengers() {
         final JWT jwt = SettingsUtil.getUserJWT();
         RidePassengerDTO ridePassengerDTO = new RidePassengerDTO();
         ridePassengerDTO.setEmail(jwt.getEmail());

@@ -55,48 +55,42 @@ public class OrderActivity extends AppCompatActivity {
 
         initializeFragmentMap();
         changeStep();
-//        setVisibleFragment(getDefaultFragment());
     }
 
 
-    void previousStep() {
+    private void previousStep() {
         step--;
         if (step < 0) step = 0;
         changeStep();
     }
 
-    void nextStep() {
+    private void nextStep() {
         step++;
         if (step > 3) step = MAX_STEP;
         changeStep();
     }
 
-    protected void changeStep() {
-
+    private void changeStep() {
         Fragment f = fragments.get(this.step);
         if (f != null) {
             setVisibleFragment(f);
         }
     }
 
-
-    protected int getFragmentFrameId() {
+    private int getFragmentFrameId() {
         return R.id.order_fragment_view;
     }
 
-
-    protected void initializeFragmentMap() {
+    private void initializeFragmentMap() {
         fragments.put(0, RidePropertiesFragment.newInstance(session));
         fragments.put(1, InviteFragment.newInstance(session));
         fragments.put(2, ScheduleRide.newInstance(session));
         fragments.put(3, ConfirmationFragment.newInstance(session));
     }
 
-
-    protected Fragment getDefaultFragment() {
+    private Fragment getDefaultFragment() {
         return fragments.get(R.id.toolbar_home);
     }
-
 
     private void initViewElements(View view) {
         btnNext = view.findViewById(R.id.next_button);
@@ -111,7 +105,6 @@ public class OrderActivity extends AppCompatActivity {
         });
     }
 
-
     protected final void setVisibleFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager()
                 .beginTransaction()
@@ -122,7 +115,6 @@ public class OrderActivity extends AppCompatActivity {
         fragmentTransaction.commit();
         currentFragment = fragment;
     }
-
 
     @Override
     public void onBackPressed() {
@@ -146,7 +138,6 @@ public class OrderActivity extends AppCompatActivity {
     private CreateRideDTO generateDTO(RidePropertiesFragment properties, ScheduleRide schedule, InviteFragment invite) {
         CreateRideDTO dto = new CreateRideDTO();
 
-
         Bundle bundle = getIntent().getBundleExtra("routes");
         dto.setLocations((List<RouteDTO>) bundle.getSerializable("routes"));
         dto.setBabyTransport(properties.isBabyChecked());
@@ -155,6 +146,7 @@ public class OrderActivity extends AppCompatActivity {
         dto.setMinute(schedule.getMinuteAdvance());
         dto.setHour(schedule.getHourAdvance());
         dto.setPassengers(invite.getPassengers());
+
         Log.e("?", dto.toString());
         return dto;
     }

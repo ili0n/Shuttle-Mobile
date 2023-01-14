@@ -17,24 +17,15 @@ import android.widget.Switch;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.vehicle.Vehicle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RidePropertiesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RidePropertiesFragment extends Fragment {
-
-    Switch babySwitch;
-    Switch petSwitch;
-
-    Spinner spinner;
-    public RidePropertiesFragment() {
-        // Required empty public constructor
-    }
+    private Switch babySwitch;
+    private Switch petSwitch;
+    private Spinner spinner;
 
     public static RidePropertiesFragment newInstance(SessionContext session) {
         RidePropertiesFragment fragment = new RidePropertiesFragment();
@@ -45,18 +36,14 @@ public class RidePropertiesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ride_properties, container, false);
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_ride_properties, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setSpinnerItems(view);
-        Log.e("?", "AAAAAAAAAAAAAAAAAA");
         petSwitch = (Switch) view.findViewById(R.id.pet_switch);
         babySwitch = (Switch) view.findViewById(R.id.baby_switch);
     }
@@ -69,21 +56,23 @@ public class RidePropertiesFragment extends Fragment {
         spinner.setAdapter(adapter);
     }
 
-    List<String> getVehicleTypes() {
+    private List<String> getVehicleTypes() {
         List<String> list = new ArrayList<>();
         list.add("STANDARD");
         list.add("VAN");
         list.add("LUXURY");
         return list;
     }
+
     public boolean isPetChecked(){
         return petSwitch.isChecked();
     }
+
     public boolean isBabyChecked(){
         return babySwitch.isChecked();
     }
+
     public String getVehicleType(){
         return spinner.getSelectedItem().toString();
     }
-
 }
