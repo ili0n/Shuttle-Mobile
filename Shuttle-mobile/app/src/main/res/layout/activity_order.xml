@@ -25,10 +25,12 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/order_fragment_view"
         android:name="com.example.shuttlemobile.passenger.orderride.fragments.RidePropertiesFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="736dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/previous_button"
         tools:layout="@layout/fragment_ride_properties" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
