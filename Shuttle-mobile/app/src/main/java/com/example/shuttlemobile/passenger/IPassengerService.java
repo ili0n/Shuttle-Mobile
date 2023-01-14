@@ -1,7 +1,7 @@
 package com.example.shuttlemobile.passenger;
 
+import com.example.shuttlemobile.passenger.dto.PassengerDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
-import com.example.shuttlemobile.vehicle.VehicleDTO;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

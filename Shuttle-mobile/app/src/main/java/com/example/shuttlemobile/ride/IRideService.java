@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.ride;
 
+import com.example.shuttlemobile.passenger.dto.FavoriteRouteDTO;
 import com.example.shuttlemobile.ride.dto.PanicDTO;
 import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.dto.ReviewDTO;
@@ -8,9 +9,12 @@ import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 
 import com.example.shuttlemobile.util.Utils;
+
+import java.util.List;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -50,5 +54,14 @@ public interface IRideService {
     @POST("/api/review/{rideId}/driver")
     Call<ReviewDTO> leaveReviewDriver(@Path("rideId") Long rideId, @Body ReviewSendDTO review);
 
+    @GET("/api/ride/favorites/passenger/{id}")
+    Call<List<FavoriteRouteDTO>> getFavoriteRidesByPassenger(@Path("id") long passengerId);
+
     IRideService service = RetrofitUtils.retrofit.create(IRideService.class);
+
+    @POST("/api/ride/favorites")
+    Call<FavoriteRouteDTO> createFavoriteRoute(@Body FavoriteRouteDTO favoriteRoute);
+
+    @DELETE("/api/ride/favorites/{id}")
+    Call<Void> deleteFavoriteRoute(@Path("id") long id);
 }
