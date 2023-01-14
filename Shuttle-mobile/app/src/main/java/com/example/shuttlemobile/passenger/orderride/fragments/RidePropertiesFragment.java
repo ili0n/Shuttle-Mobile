@@ -29,9 +29,6 @@ public class RidePropertiesFragment extends Fragment {
 
     public static RidePropertiesFragment newInstance(SessionContext session) {
         RidePropertiesFragment fragment = new RidePropertiesFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
-        fragment.setArguments(bundle);
         return fragment;
     }
 

@@ -40,9 +40,6 @@ public class InviteFragment extends Fragment {
 
     public static InviteFragment newInstance(SessionContext session) {
         InviteFragment fragment = new InviteFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
-        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -52,11 +49,8 @@ public class InviteFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_invite, container, false);
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_invite, container, false);
     }
 
     @Override

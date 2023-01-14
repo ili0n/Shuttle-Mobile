@@ -48,11 +48,6 @@ public class OrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order);
         initViewElements(getWindow().getDecorView().getRootView());
 
-        session = new SessionContext();
-        session.setUser(new Passenger(
-                "", "", "", "", "", "", "", false, true
-        ));
-
         initializeFragmentMap();
         changeStep();
     }

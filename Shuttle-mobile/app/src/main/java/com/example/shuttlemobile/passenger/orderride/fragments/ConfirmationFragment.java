@@ -31,9 +31,6 @@ public class ConfirmationFragment extends Fragment {
 
     public static ConfirmationFragment newInstance(SessionContext session) {
         ConfirmationFragment fragment = new ConfirmationFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
-        fragment.setArguments(bundle);
         return fragment;
     }
 

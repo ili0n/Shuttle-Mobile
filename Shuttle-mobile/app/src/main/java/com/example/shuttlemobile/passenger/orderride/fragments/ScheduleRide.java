@@ -29,9 +29,6 @@ public class ScheduleRide extends Fragment {
 
     public static ScheduleRide newInstance(SessionContext session) {
         ScheduleRide fragment = new ScheduleRide();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
-        fragment.setArguments(bundle);
         return fragment;
     }
 
