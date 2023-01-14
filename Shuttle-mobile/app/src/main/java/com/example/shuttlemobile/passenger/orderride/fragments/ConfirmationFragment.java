@@ -97,7 +97,7 @@ public class ConfirmationFragment extends Fragment {
 
     private void initViews() {
         txtDeparture.setText(dto.getLocations().get(0).getDeparture().getAddress());
-        txtDeparture.setText(dto.getLocations().get(dto.getLocations().size() - 1).getDestination().getAddress());
+        txtDestination.setText(dto.getLocations().get(dto.getLocations().size() - 1).getDestination().getAddress());
         txtBabies.setText(dto.isBabyTransport() ? "Bringing a baby" : "No babies");
         txtPets.setText(dto.isPetTransport() ? "Bringing a pet" : "No pets");
         txtVehicleType.setText(dto.getVehicleType() + " vehicle");

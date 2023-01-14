@@ -149,6 +149,8 @@ public class OrderActivity extends AppCompatActivity {
     private CreateRideDTO generateDTO(RidePropertiesFragment properties, ScheduleRide schedule, InviteFragment invite) {
         CreateRideDTO dto = new CreateRideDTO();
 
+        Log.e("?", this.route.toString());
+
         dto.setLocations(Arrays.asList(this.route));
         dto.setBabyTransport(properties.isBabyChecked());
         dto.setPetTransport(properties.isPetChecked());
