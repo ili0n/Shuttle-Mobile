@@ -34,6 +34,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.message.Chat;
+import com.example.shuttlemobile.message.MessageDTO;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.user.User;
@@ -123,46 +124,46 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
     }
 
     private void initializeList() {
-        Chat c = new Chat();
-        List<Message> messages = new ArrayList<>();
-        User other = new Driver();
-        Ride r = new Ride();
-        messages.add(new Message(session.getUser(), other, "Hi", LocalDateTime.now(), r, Message.Type.RIDE));
-        messages.add(new Message(other, session.getUser(), "Hey.", LocalDateTime.now(), r, Message.Type.RIDE));
-        messages.add(new Message(session.getUser(), other, "Here's a longer message. The text bubble is larger now.", LocalDateTime.now(), r, Message.Type.RIDE));
-        messages.add(new Message(other, session.getUser(), "Ok.\n\nBottom text", LocalDateTime.now(), r, Message.Type.RIDE));
-        c.setMessages(messages);
-
-        Chat c2 = new Chat();
-        List<Message> messages2 = new ArrayList<>();
-        messages2.add(new Message(session.getUser(), other, "Hi", LocalDateTime.now(), r, Message.Type.RIDE));
-        c2.setMessages(messages2);
-
-        Chat c3 = new Chat();
-        List<Message> messages3 = new ArrayList<>();
-        messages3.add(new Message(new Admin(), session.getUser(), "I am the support.", LocalDateTime.now(), null, Message.Type.SUPPORT));
-        c3.setMessages(messages3);
-
-        chats = new ArrayList<>();
-        chats.add(c2);
-        chats.add(c2);
-        chats.add(c);
-        chats.add(c3);
-        chats.add(c);
-        chats.add(c2);
-
-        // Put support chat at top.
-
-        chats = chats.stream().sorted((chat1, chat2) -> {
-            User other1 = chat1.getLastMessage().getOther(session.getUser());
-            User other2 = chat2.getLastMessage().getOther(session.getUser());
-            if (other1 instanceof Admin) {
-                return -1;
-            } else if (other2 instanceof Admin) {
-                return 1;
-            }
-            return 0;
-        }).collect(Collectors.toList());
+//        Chat c = new Chat();
+//        List<Message> messages = new ArrayList<>();
+//        User other = new Driver();
+//        Ride r = new Ride();
+//        messages.add(new Message(session.getUser(), other, "Hi", LocalDateTime.now(), r, Message.Type.RIDE));
+//        messages.add(new Message(other, session.getUser(), "Hey.", LocalDateTime.now(), r, Message.Type.RIDE));
+//        messages.add(new Message(session.getUser(), other, "Here's a longer message. The text bubble is larger now.", LocalDateTime.now(), r, Message.Type.RIDE));
+//        messages.add(new Message(other, session.getUser(), "Ok.\n\nBottom text", LocalDateTime.now(), r, Message.Type.RIDE));
+//        c.setMessages(messages);
+//
+//        Chat c2 = new Chat();
+//        List<Message> messages2 = new ArrayList<>();
+//        messages2.add(new Message(session.getUser(), other, "Hi", LocalDateTime.now(), r, Message.Type.RIDE));
+//        c2.setMessages(messages2);
+//
+//        Chat c3 = new Chat();
+//        List<Message> messages3 = new ArrayList<>();
+//        messages3.add(new Message(new Admin(), session.getUser(), "I am the support.", LocalDateTime.now(), null, Message.Type.SUPPORT));
+//        c3.setMessages(messages3);
+//
+//        chats = new ArrayList<>();
+//        chats.add(c2);
+//        chats.add(c2);
+//        chats.add(c);
+//        chats.add(c3);
+//        chats.add(c);
+//        chats.add(c2);
+//
+//        // Put support chat at top.
+//
+//        chats = chats.stream().sorted((chat1, chat2) -> {
+//            User other1 = chat1.getLastMessage().getOther(session.getUser());
+//            User other2 = chat2.getLastMessage().getOther(session.getUser());
+//            if (other1 instanceof Admin) {
+//                return -1;
+//            } else if (other2 instanceof Admin) {
+//                return 1;
+//            }
+//            return 0;
+//        }).collect(Collectors.toList());
     }
 
     private void initListView() {
@@ -192,29 +193,29 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
                 TextView lastMsgTime = view.findViewById(R.id.txt_u_inbox_time);
                 TextView otherRoleBullet = view.findViewById(R.id.txt_u_inbox_role_bullet);
 
-                final Message lastMsgObj = obj.getLastMessage();
+                final MessageDTO lastMsgObj = obj.getLastMessage();
 
-                if (lastMsgObj != null) {
-                    User o = lastMsgObj.getOther(session.getUser());
-
-                    if (o instanceof Driver) {
-                        otherRoleBullet.setTextColor(Color.RED);
-                    } else if (o instanceof Passenger) {
-                        otherRoleBullet.setTextColor(Color.GREEN);
-                    } else if (o instanceof Admin) {
-                        otherRoleBullet.setTextColor(Color.BLUE);
-                    }
-
-                    String lastMsgPrefix = "";
-                    if (lastMsgObj.getSender() == session.getUser()) {
-                        lastMsgPrefix = "You: ";
-                    }
-
-                    otherName.setText(o.getName() + " " + o.getLastName());
-                    lastMsg.setText(lastMsgPrefix + lastMsgObj.getMessage());
-                    lastMsgDate.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("d/M/yy")));
-                    lastMsgTime.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("HH:mm")));
-                }
+//                if (lastMsgObj != null) {
+//                    User o = lastMsgObj.getOther(session.getUser());
+//
+//                    if (o instanceof Driver) {
+//                        otherRoleBullet.setTextColor(Color.RED);
+//                    } else if (o instanceof Passenger) {
+//                        otherRoleBullet.setTextColor(Color.GREEN);
+//                    } else if (o instanceof Admin) {
+//                        otherRoleBullet.setTextColor(Color.BLUE);
+//                    }
+//
+//                    String lastMsgPrefix = "";
+//                    if (lastMsgObj.getSender() == session.getUser()) {
+//                        lastMsgPrefix = "You: ";
+//                    }
+//
+//                    otherName.setText(o.getName() + " " + o.getLastName());
+//                    lastMsg.setText(lastMsgPrefix + lastMsgObj.getMessage());
+//                    lastMsgDate.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("d/M/yy")));
+//                    lastMsgTime.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("HH:mm")));
+//                }
             }
         });
 
@@ -228,28 +229,28 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
     }
 
     public void dummyFetchNewData() {
-        Message lastm = chats.get(1).getLastMessage();
-        Message newMessage = new Message(
-                lastm.getRecipient(),
-                lastm.getSender(),
-                "Hi " + LocalDateTime.now().getSecond(),
-                LocalDateTime.now(),
-                lastm.getRide(),
-                lastm.getType());
-        chats.get(1).getMessages().add(newMessage);
-
-        // Run UI update async.
-        // TODO: Is this worthless? UI can only be updated in the main thread.
-
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                activity.runOnUiThread(() -> {
-                    ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
-                });
-            }
-        });
+//        Message lastm = chats.get(1).getLastMessage();
+//        Message newMessage = new Message(
+//                lastm.getRecipient(),
+//                lastm.getSender(),
+//                "Hi " + LocalDateTime.now().getSecond(),
+//                LocalDateTime.now(),
+//                lastm.getRide(),
+//                lastm.getType());
+//        chats.get(1).getMessages().add(newMessage);
+//
+//        // Run UI update async.
+//        // TODO: Is this worthless? UI can only be updated in the main thread.
+//
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        executor.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                activity.runOnUiThread(() -> {
+//                    ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
+//                });
+//            }
+//        });
     }
 
     private void openChatActivity(Chat chat) {

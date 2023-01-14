@@ -1,5 +1,7 @@
 package com.example.shuttlemobile.message;
 
+import com.example.shuttlemobile.user.User;
+
 public class MessageDTO {
     private Long id;
     private String timeOfSending;
