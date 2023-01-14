@@ -420,8 +420,8 @@ public class PassengerCurrentRide extends Fragment {
     }
 
     private void stopTimer() {
-        Intent myService = new Intent(requireContext(), CurrentRideTimeService.class);
-        requireContext().stopService(myService);
+        Intent myService = new Intent(getActivity(), CurrentRideTimeService.class);
+        getActivity().stopService(myService);
     }
 
     private void drawAndFocusCurrentRoute() {

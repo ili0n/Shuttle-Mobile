@@ -86,11 +86,22 @@ public class UserChatActivity extends SimpleToolbarActivity {
             public void onReceive(Context context, Intent intent) {
                 ListDTO<MessageDTO> msgs = (ListDTO<MessageDTO>)intent.getSerializableExtra(UserMessageService.INTENT_MESSAGE_KEY);
                 messages = msgs.getResults().stream().filter(m -> m.getRideId().equals(rideId)).collect(Collectors.toList());
-                Log.e("", messages.toString());
                 ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
             }
         };
 
+        subscribeMessageReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(messageReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         subscribeMessageReceiver();
     }
 
