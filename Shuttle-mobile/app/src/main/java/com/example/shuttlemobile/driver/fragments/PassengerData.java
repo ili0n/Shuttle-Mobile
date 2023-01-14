@@ -158,7 +158,7 @@ public class PassengerData extends DialogFragment {
     private void openChat() {
         Intent intent = new Intent(getActivity(), UserChatActivity.class);
 
-        intent.putExtra(UserChatActivity.PARAM_OTHER_ID, ride.getDriver().getId());
+        intent.putExtra(UserChatActivity.PARAM_OTHER_ID, passengerId);
         intent.putExtra(UserChatActivity.PARAM_RIDE_ID, ride.getId());
         intent.putExtra(UserChatActivity.PARAM_MSG_TYPE, Message.Type.RIDE);
 

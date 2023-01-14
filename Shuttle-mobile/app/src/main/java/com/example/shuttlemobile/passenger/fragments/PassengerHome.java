@@ -89,7 +89,7 @@ public class PassengerHome extends GenericUserMapFragment {
 
     @Override
     public String getPublicMapApiToken() {
-        return getResources().getString(R.string.mapbox_access_token);
+        return getActivity().getResources().getString(R.string.mapbox_access_token);
     }
 
     @Override

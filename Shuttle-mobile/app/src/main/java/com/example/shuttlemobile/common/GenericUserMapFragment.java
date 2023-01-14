@@ -302,6 +302,10 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
     }
 
     public final void drawRoute(Point A, Point B, String hexColor) {
+        if (getActivity() == null) {
+            return;
+        }
+
         final List<Point> points = Arrays.asList(A, B);
 
         final MapboxDirections client = MapboxDirections.builder()
