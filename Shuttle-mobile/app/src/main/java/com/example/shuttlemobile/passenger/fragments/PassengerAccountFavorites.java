@@ -1,14 +1,18 @@
 package com.example.shuttlemobile.passenger.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
@@ -18,7 +22,9 @@ import com.example.shuttlemobile.passenger.dto.FavoriteRouteDTO;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.route.RouteDTO;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,6 +33,7 @@ import retrofit2.Response;
 public class PassengerAccountFavorites extends GenericUserFragment {
     private ListView lvFavorites;
     private final long passengerId = 2;
+    private List<Long> ids = new ArrayList<>();
 
 
     public static PassengerAccountFavorites newInstance(SessionContext session) {
@@ -67,10 +74,14 @@ public class PassengerAccountFavorites extends GenericUserFragment {
     }
 
     private void setFavoriteRoutes(List<FavoriteRouteDTO> favorites) {
-        lvFavorites.setAdapter(new EasyListAdapter<FavoriteRouteDTO>() {
+        List<FavoriteRouteModel> favoritesModel = favorites
+                .stream()
+                .map(route -> new FavoriteRouteModel(route, true))
+                .collect(Collectors.toList());
+        lvFavorites.setAdapter(new EasyListAdapter<FavoriteRouteModel>() {
             @Override
-            public List<FavoriteRouteDTO> getList() {
-                return favorites;
+            public List<FavoriteRouteModel> getList() {
+                return favoritesModel;
             }
 
             @Override
@@ -79,21 +90,44 @@ public class PassengerAccountFavorites extends GenericUserFragment {
             }
 
             @Override
-            public void applyToView(View view, FavoriteRouteDTO favoriteRoute) {
-                TextView tvName = view.findViewById(R.id.tv_p_fav_name);
-                TextView tvRouteA = view.findViewById(R.id.list_p_favorites_route_A);
-                TextView tvRouteB = view.findViewById(R.id.list_p_favorites_route_B);
-
-                tvName.setText(favoriteRoute.getFavoriteName());
-                List<RouteDTO> locations = favoriteRoute.getLocations();
-                tvRouteA.setText(locations.get(0).getDeparture().getAddress());
-                tvRouteB.setText(locations.get(locations.size() - 1).getDestination().getAddress());
+            public void applyToView(View view, FavoriteRouteModel obj) {
 
             }
 
             @Override
-            public long getItemId(int i) {
-                return getList().get(i).getId();
+            public View getView(int i, View view, ViewGroup viewGroup) {
+                ViewHolder  holder;
+                if (view == null) {
+                    LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+                    view = inflater.inflate(R.layout.list_p_favorites, viewGroup, false);
+                    holder = new ViewHolder(view);
+                    view.setTag(holder);
+                } else {
+                    holder = (ViewHolder) view.getTag();
+                }
+
+                FavoriteRouteModel model = getList().get(i);
+
+                holder.tvName.setText(model.favoriteRoute.getFavoriteName());
+                List<RouteDTO> locations = model.favoriteRoute.getLocations();
+
+                holder.tvRouteA.setText(locations.get(0).getDeparture().getAddress());
+                holder.tvRouteB.setText(locations.get(locations.size() - 1).getDestination().getAddress());
+
+//                must set listener to override previous, otherwise previous will trigger too
+                holder.cbStar.setOnCheckedChangeListener(null);
+//                each time set checkbox according to model
+                holder.cbStar.setChecked(model.isSet());
+                holder.cbStar.setOnCheckedChangeListener((compoundButton, b) -> {
+                    model.setSet(!model.isSet());
+                    if (!model.isSet()) {
+                        ids.add(model.favoriteRoute.getId());
+                    } else {
+                        ids.remove(model.favoriteRoute.getId());
+                    }
+                    notifyDataSetChanged();
+                });
+                return view;
             }
 
             @Override
@@ -102,27 +136,63 @@ public class PassengerAccountFavorites extends GenericUserFragment {
             }
         });
     }
+    public class FavoriteRouteModel{
+        private FavoriteRouteDTO favoriteRoute;
+        private boolean isSet;
+
+        public FavoriteRouteModel(FavoriteRouteDTO favoriteRoute, boolean isSet) {
+            this.favoriteRoute = favoriteRoute;
+            this.isSet = isSet;
+        }
+
+        public FavoriteRouteDTO getFavoriteRoute() {
+            return favoriteRoute;
+        }
+
+        public void setFavoriteRoute(FavoriteRouteDTO favoriteRoute) {
+            this.favoriteRoute = favoriteRoute;
+        }
+
+        public boolean isSet() {
+            return isSet;
+        }
+
+        public void setSet(boolean set) {
+            isSet = set;
+        }
+    }
+
+    public class ViewHolder {
+        TextView tvName;
+        TextView tvRouteA;
+        TextView tvRouteB;
+        CheckBox cbStar;
+
+        public ViewHolder(View view) {
+            tvName = view.findViewById(R.id.tv_p_fav_name);
+            tvRouteA = view.findViewById(R.id.list_p_favorites_route_A);
+            tvRouteB = view.findViewById(R.id.list_p_favorites_route_B);
+            cbStar = view.findViewById(R.id.cb_p_fav_star);
+        }
+
+    }
 
     @Override
     public void onStop() {
         super.onStop();
-        deleteMarkedFavorites();
+        deleteFavorites();
+        ids.clear();
 
     }
 
-    private void deleteMarkedFavorites() {
-        for(int  i = 0; i < lvFavorites.getAdapter().getCount() - 1; ++i){
-            View v = lvFavorites.getChildAt(i);
-            CheckBox cb = v.findViewById(R.id.cb_p_fav_star);
-            if(!cb.isChecked()){
-                FavoriteRouteDTO routeToDelete = (FavoriteRouteDTO) lvFavorites.getAdapter().getItem(i);
-                deleteFavorite(routeToDelete);
-            }
+    private void deleteFavorites() {
+        for(Long id: ids){
+            deleteFavorite(id);
         }
     }
 
-    private void deleteFavorite(FavoriteRouteDTO favoriteRoute) {
-        Call<Void> call = IRideService.service.deleteFavoriteRoute(favoriteRoute.getId());
+    private void deleteFavorite(Long id) {
+        Call<Void> call = IRideService.service.deleteFavoriteRoute(id);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

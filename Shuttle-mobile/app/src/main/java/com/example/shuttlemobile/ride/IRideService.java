@@ -57,11 +57,8 @@ public interface IRideService {
     @GET("/api/ride/favorites/passenger/{id}")
     Call<List<FavoriteRouteDTO>> getFavoriteRidesByPassenger(@Path("id") long passengerId);
 
-    IRideService service = RetrofitUtils.retrofit.create(IRideService.class);
-
-    @POST("/api/ride/favorites")
-    Call<FavoriteRouteDTO> createFavoriteRoute(@Body FavoriteRouteDTO favoriteRoute);
-
     @DELETE("/api/ride/favorites/{id}")
     Call<Void> deleteFavoriteRoute(@Path("id") long id);
+
+    IRideService service = RetrofitUtils.retrofit.create(IRideService.class);
 }
