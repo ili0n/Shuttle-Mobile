@@ -2,6 +2,8 @@ package com.example.shuttlemobile.passenger.orderride.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,6 +67,12 @@ public class InviteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invite, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setRecyclerView(view);
         EditText inviteField = (EditText) view.findViewById(R.id.edit_u_invite);
         ((Button) view.findViewById(R.id.btn_u_invite)).setOnClickListener(new View.OnClickListener() {
@@ -74,8 +82,6 @@ public class InviteFragment extends Fragment {
                 Log.println(Log.ASSERT, "TextField", invitesAdapter.getItemCount() + "");
             }
         });
-
-        return view;
     }
 
     private void setRecyclerView(View view) {

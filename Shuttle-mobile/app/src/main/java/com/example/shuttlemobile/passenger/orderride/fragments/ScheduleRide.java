@@ -2,6 +2,8 @@ package com.example.shuttlemobile.passenger.orderride.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -54,14 +56,20 @@ public class ScheduleRide extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_schedule_ride, container, false);
+
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         hourSpinner = (Spinner) view.findViewById(R.id.hour_spinner);
         minuteSpinner = (Spinner) view.findViewById(R.id.minute_spinner);
         setHourSpinnerItems(hourSpinner);
         setMinuteSpinnerItems(minuteSpinner);
         setSwitchListener(view, hourSpinner, minuteSpinner);
-
-
-        return view;
     }
 
     private void setSwitchListener(View view, Spinner hourSpinner, Spinner minuteSpinner) {

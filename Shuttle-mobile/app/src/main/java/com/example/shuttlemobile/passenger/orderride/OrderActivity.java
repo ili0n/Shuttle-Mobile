@@ -54,6 +54,7 @@ public class OrderActivity extends AppCompatActivity {
         ));
 
         initializeFragmentMap();
+        changeStep();
 //        setVisibleFragment(getDefaultFragment());
     }
 
@@ -144,6 +145,8 @@ public class OrderActivity extends AppCompatActivity {
 
     private CreateRideDTO generateDTO(RidePropertiesFragment properties, ScheduleRide schedule, InviteFragment invite) {
         CreateRideDTO dto = new CreateRideDTO();
+
+
         Bundle bundle = getIntent().getBundleExtra("routes");
         dto.setLocations((List<RouteDTO>) bundle.getSerializable("routes"));
         dto.setBabyTransport(properties.isBabyChecked());
@@ -152,6 +155,7 @@ public class OrderActivity extends AppCompatActivity {
         dto.setMinute(schedule.getMinuteAdvance());
         dto.setHour(schedule.getHourAdvance());
         dto.setPassengers(invite.getPassengers());
+        Log.e("?", dto.toString());
         return dto;
     }
 

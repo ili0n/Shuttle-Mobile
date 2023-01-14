@@ -70,4 +70,16 @@ public class CreateRideDTO {
         return minute;
     }
 
+    @Override
+    public String toString() {
+        return "CreateRideDTO{" +
+                "passengers=" + passengers +
+                ", locations=" + locations +
+                ", vehicleType='" + vehicleType + '\'' +
+                ", babyTransport=" + babyTransport +
+                ", petTransport=" + petTransport +
+                ", hour='" + hour + '\'' +
+                ", minute='" + minute + '\'' +
+                '}';
+    }
 }
