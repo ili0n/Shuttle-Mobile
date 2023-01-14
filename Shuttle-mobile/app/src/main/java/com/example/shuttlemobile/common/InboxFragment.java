@@ -5,18 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-
-import com.example.shuttlemobile.admin.Admin;
-import com.example.shuttlemobile.common.receiver.InboxFragmentMessageReceiver;
-import com.example.shuttlemobile.driver.Driver;
-import com.example.shuttlemobile.message.Message;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +20,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
+import com.example.shuttlemobile.common.receiver.InboxFragmentMessageReceiver;
+import com.example.shuttlemobile.driver.IDriverService;
 import com.example.shuttlemobile.message.Chat;
+import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.message.MessageDTO;
-import com.example.shuttlemobile.passenger.Passenger;
-import com.example.shuttlemobile.ride.Ride;
-import com.example.shuttlemobile.user.User;
+import com.example.shuttlemobile.passenger.IPassengerService;
+import com.example.shuttlemobile.passenger.PassengerDTO;
 import com.example.shuttlemobile.user.services.UserMessageService;
 import com.example.shuttlemobile.util.ListDTO;
 import com.example.shuttlemobile.util.NotificationUtil;
@@ -46,11 +38,14 @@ import com.example.shuttlemobile.util.ShakePack;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Inbox fragment is shared between all users.
@@ -145,7 +140,16 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
                 }
             ).get()));
 
-        lastChats = messageGroupsLastMsgOnly.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
+        lastChats = messageGroupsLastMsgOnly.entrySet().stream().map(e -> e.getValue())
+                .sorted(
+                        (msg1, msg2) -> {
+                            LocalDateTime ldt1 = LocalDateTime.parse(msg1.getTimeOfSending(), DateTimeFormatter.ISO_DATE_TIME);
+                            LocalDateTime ldt2 = LocalDateTime.parse(msg2.getTimeOfSending(), DateTimeFormatter.ISO_DATE_TIME);
+                            return ldt2.compareTo(ldt1);
+                        }
+                ).collect(Collectors.toList());
+
+        // TODO: Pin support.
 
         ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
     }
@@ -213,41 +217,18 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
                 TextView otherRoleBullet = view.findViewById(R.id.txt_u_inbox_role_bullet);
 
                 Long myId = SettingsUtil.getUserJWT().getId();
+                Long otherId = obj.getSenderId().equals(myId) ? obj.getReceiverId() : obj.getSenderId();
 
                 String lastMsgPrefix = "";
-                if (obj.getSenderId().equals(myId )) {
+                if (obj.getSenderId().equals(myId)) {
                     lastMsgPrefix = "You: ";
                 }
-
-                //otherName.setText(o.getName() + " " + o.getLastName());
                 lastMsg.setText(lastMsgPrefix + obj.getMessage());
-                //lastMsgDate.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("d/M/yy")));
-                //lastMsgTime.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("HH:mm")));
 
-//
-//                final MessageDTO lastMsgObj = obj.getLastMessage();
-
-//                if (lastMsgObj != null) {
-//                    User o = lastMsgObj.getOther(session.getUser());
-//
-//                    if (o instanceof Driver) {
-//                        otherRoleBullet.setTextColor(Color.RED);
-//                    } else if (o instanceof Passenger) {
-//                        otherRoleBullet.setTextColor(Color.GREEN);
-//                    } else if (o instanceof Admin) {
-//                        otherRoleBullet.setTextColor(Color.BLUE);
-//                    }
-//
-//                    String lastMsgPrefix = "";
-//                    if (lastMsgObj.getSender() == session.getUser()) {
-//                        lastMsgPrefix = "You: ";
-//                    }
-//
-//                    otherName.setText(o.getName() + " " + o.getLastName());
-//                    lastMsg.setText(lastMsgPrefix + lastMsgObj.getMessage());
-//                    lastMsgDate.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("d/M/yy")));
-//                    lastMsgTime.setText(lastMsgObj.getDate().format(DateTimeFormatter.ofPattern("HH:mm")));
-//                }
+                LocalDateTime ldt = LocalDateTime.parse(obj.getTimeOfSending());
+                lastMsgDate.setText(ldt.format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
+                lastMsgTime.setText(ldt.format(DateTimeFormatter.ofPattern("HH:mm")));
+                otherName.setText("Name Surname");
             }
         });
 
@@ -288,6 +269,7 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
     public void onAccuracyChanged(Sensor sensor, int i) {}
 
     private void onShake() {
+        Collections.reverse(lastChats);
         Toast.makeText(getActivity(), "Shaking detected.", Toast.LENGTH_SHORT).show();
     }
 }
