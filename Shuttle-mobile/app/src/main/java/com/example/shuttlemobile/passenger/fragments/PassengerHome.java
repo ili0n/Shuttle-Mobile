@@ -1,48 +1,60 @@
 package com.example.shuttlemobile.passenger.fragments;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
-import android.location.Address;
-import android.location.Geocoder;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.shuttlemobile.BlankFragment;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.driver.services.DriversLocationService;
+import com.example.shuttlemobile.passenger.fragments.home.PassengerCurrentRide;
+import com.example.shuttlemobile.passenger.fragments.home.PassengerSearchRoute;
+import com.example.shuttlemobile.passenger.services.PassengerRideService;
+import com.example.shuttlemobile.passenger.subactivities.PassengerRateRidePromptActivity;
+import com.example.shuttlemobile.ride.IRideService;
+import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.ride.dto.RideDTO;
+import com.example.shuttlemobile.ride.dto.VehicleLocationDTO;
+import com.example.shuttlemobile.route.LocationDTO;
+import com.example.shuttlemobile.util.NotificationUtil;
 import com.mapbox.geojson.Point;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class PassengerHome extends GenericUserMapFragment {
-    private Button fitCamera, moveCamera; // Helper buttons for navigation.d
-    private EditText txtDeparture, txtDestination;
-    private Button btnCreateRoute;
-    private Button btnOrderRoute;
     private boolean initiallyMovedToLocation = false;
 
-    /**
-     * Departure point.
-     */
-    private Point A = null;
+    private FragmentContainerView fragmentContainerView;
+    private BlankFragment blankFragment;
+    private PassengerCurrentRide currentRideFragment;
+    private PassengerSearchRoute searchRouteFragment;
+    private Fragment currentFragment = null;
 
-    /**
-     * Destination point.
-     */
+    private BroadcastReceiver rideReceiver;
+    private BroadcastReceiver driversLocationReceiver;
+
+    private RideDTO ride = null;
+    private Point A = null;
     private Point B = null;
 
     public static PassengerHome newInstance(SessionContext session) {
@@ -53,136 +65,18 @@ public class PassengerHome extends GenericUserMapFragment {
         return fragment;
     }
 
-    private void initViewElements(@NonNull View view) {
-        txtDeparture = view.findViewById(R.id.txt_p_home_departure);
-        txtDestination = view.findViewById(R.id.txt_p_home_destination);
-        btnCreateRoute = view.findViewById(R.id.btn_p_home_makeRoute);
-        btnOrderRoute = view.findViewById(R.id.btn_p_home_order);
-        fitCamera = view.findViewById(R.id.btnFitCam);
-        moveCamera = view.findViewById(R.id.btnMoveCam);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initFragments();
 
-        txtDeparture.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus) {
-                    makeRouteFromInput();
-                    btnOrderRoute.setEnabled(hasRoute());
-                }
-            }
-        });
-        txtDestination.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus) {
-                    makeRouteFromInput();
-                    btnOrderRoute.setEnabled(hasRoute());
-                }
-            }
-        });
+        initViewElements(view);
+        initRideReceiver();
+        initDriversLocationReceiver();
 
-        btnCreateRoute.setOnClickListener(view1 -> {
-            hideKeyboard();
-            makeRouteFromInput();
-            btnOrderRoute.setEnabled(hasRoute());
-        });
+        startDriversLocationService();
 
-        btnOrderRoute.setEnabled(hasRoute());
-        btnOrderRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Order route, create activity, send departure and destination through intent.
-                Toast.makeText(PassengerHome.this.getActivity(), "Order", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        fitCamera.setOnClickListener(view12 -> fitCameraToRoute());
-        moveCamera.setOnClickListener(view13 -> focusOnPointA());
-    }
-
-    private void hideKeyboard() {
-        try {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(btnCreateRoute.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
-        } catch (Exception e) {
-        }
-    }
-
-    /**
-     * Given the text values for departure and destination, try to construct a route and move the
-     * screen to focus on the route.
-     */
-    private void makeRouteFromInput() {
-        final String dep = txtDeparture.getText().toString();
-        final String dest = txtDestination.getText().toString();
-
-        final Geocoder geocoder = new Geocoder(getContext());
-
-        List<Address> addressesDep;
-        List<Address> addressesDest;
-
-        try {
-            addressesDep = geocoder.getFromLocationName(dep, 1);
-            addressesDest = geocoder.getFromLocationName(dest, 1);
-
-            if (addressesDep.size() == 0) {
-                Log.e("E", "Could not find departure");
-                A = null;
-                return;
-            }
-            if (addressesDest.size() == 0) {
-                Log.e("E", "Could not find destination");
-                B = null;
-                return;
-            }
-        } catch (IOException e) {
-            A = null;
-            B = null;
-            e.printStackTrace();
-            return;
-        }
-
-        final Address adrA = addressesDep.get(0);
-        final Address adrB = addressesDest.get(0);
-
-        A = Point.fromLngLat(adrA.getLongitude(), adrA.getLatitude());
-        B = Point.fromLngLat(adrB.getLongitude(), adrB.getLatitude());
-
-        drawRouteAndPoints();
-        fitCameraToRoute();
-    }
-
-    /**
-     * Draw the route from points A and B, including said points.
-     * If either A or B are null, nothing happens.
-     */
-    private void drawRouteAndPoints() {
-        if (A != null && B != null) {
-            drawRoute(A, B, "#2369ED");
-        }
-    }
-
-    /**
-     * Move and zoom the screen to fit the route between A and B.
-     * If either A or B are null, nothing happens.
-     */
-    private void fitCameraToRoute() {
-        if (A != null && B != null) {
-            fitViewport(A, B, 3000);
-        }
-    }
-
-    /**
-     * Move and zoom the screen to focus on A.
-     * If A is null, nothing happens.
-     */
-    private void focusOnPointA() {
-        if (A != null) {
-            lookAtPoint(A, 15, 3000);
-        }
-    }
-
-    private boolean hasRoute() {
-        return A != null && B != null;
+        determineSubFragment(null);
     }
 
     @Override
@@ -192,12 +86,6 @@ public class PassengerHome extends GenericUserMapFragment {
             lookAtPoint(Point.fromLngLat(location.getLongitude(), location.getLatitude()), 15, 4000);
             initiallyMovedToLocation = true;
         }
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initViewElements(view);
     }
 
     @Override
@@ -216,6 +104,183 @@ public class PassengerHome extends GenericUserMapFragment {
 
     @Override
     public int getMapViewID() {
-        return R.id.mapView;
+        return R.id.map_passenger_home;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getActivity().unregisterReceiver(rideReceiver);
+        getActivity().unregisterReceiver(driversLocationReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        subscribeToRideReceiver();
+        subscribeToDriversLocationReceiver();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void startDriversLocationService() {
+        Intent intent = new Intent(getActivity(), DriversLocationService.class);
+        requireActivity().startService(intent);
+    }
+
+    private void initFragments() {
+        blankFragment = BlankFragment.newInstance();
+        currentRideFragment = PassengerCurrentRide.newInstance();
+        searchRouteFragment = PassengerSearchRoute.newInstance();
+    }
+
+    private void initViewElements(View view) {
+        this.fragmentContainerView = view.findViewById(R.id.passenger_home_fragment_frame_home);
+    }
+
+    public void makeRoute(Point A_, Point B_) {
+        A = A_;
+        B = B_;
+        if (A != null && B != null) {
+            drawRoute(A, B, "#2369ED");
+            fitViewport(A, B, 3000);
+        }
+    }
+
+    private void determineSubFragment(RideDTO dto) {
+        if (dto == null) {
+            if (ride != null) {
+                // Current active ride is null (there isn't any), but there is a 'ride' which
+                // means there's an old ride, to refresh it to get its final state.
+
+                IRideService.service.getById(ride.getId()).enqueue(new Callback<RideDTO>() {
+                    @Override
+                    public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
+                        Ride.Status status = Ride.Status.valueOf(response.body().getStatus());
+
+                        if (status == Ride.Status.Finished) {
+                            NotificationUtil.sendNotification(
+                                    getActivity().getApplicationContext(),
+                                    NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID,
+                                    "Ride finished",
+                                    "You can order new rides now.",
+                                    R.drawable.car_green,
+                                    1110101110);
+                            promptToRateRide(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<RideDTO> call, Throwable t) {
+
+                    }
+                });
+
+                ride = null;
+                removeRoute();
+            }
+            setSubFragmentIfDifferent(searchRouteFragment);
+            return;
+        }
+
+        ride = dto;
+        Ride.State state = Ride.State.valueOf(dto.getStatus().toUpperCase());
+
+        switch (state) {
+            case PENDING: case ACCEPTED: case STARTED:
+                setSubFragmentIfDifferent(currentRideFragment);
+                break;
+            case CANCELED: case REJECTED: case FINISHED:
+                // TODO: This is probably never gonna be called, instead use the if(dto==null) from
+                //  above.
+                setSubFragmentIfDifferent(searchRouteFragment);
+                break;
+            default:
+                throw new IllegalStateException("Unsupported state: " + state);
+        }
+    }
+
+    private void setSubFragmentIfDifferent(Fragment fragment) {
+        if (currentFragment != fragment) {
+            setSubFragment(fragment);
+        }
+    }
+
+    private void setSubFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_bottom)
+                .setReorderingAllowed(true)
+                .replace(R.id.passenger_home_fragment_frame_home, fragment);
+        fragmentTransaction.addToBackStack("PassengerHome");
+        fragmentTransaction.commit();
+        currentFragment = fragment;
+    }
+
+    private void onGetRide(RideDTO dto) {
+        determineSubFragment(dto);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void initDriversLocationReceiver() {
+        Handler handler = new Handler();
+        driversLocationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                List<VehicleLocationDTO> locations = (List<VehicleLocationDTO>) intent.getSerializableExtra(DriversLocationService.NEW_VEHICLES_LOCATIONS);
+                deleteAllPoints();
+                for (VehicleLocationDTO dto : locations) {
+                    LocationDTO location = dto.getLocation();
+                    Point driverLocation = Point.fromLngLat(location.getLongitude(), location.getLatitude());
+                    handler.post(() -> drawCar(driverLocation, dto.getAvailable()));
+                }
+            }
+        };
+
+        subscribeToDriversLocationReceiver();
+    }
+
+    private void initRideReceiver() {
+        rideReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                RideDTO rideDTO = (RideDTO)intent.getSerializableExtra(PassengerRideService.INTENT_RIDE_KEY);
+                onGetRide(rideDTO);
+            }
+        };
+
+        subscribeToRideReceiver();
+    }
+
+    private void subscribeToRideReceiver() {
+        if (rideReceiver == null) {
+            return;
+        }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(PassengerRideService.BROADCAST_CHANNEL);
+        getActivity().registerReceiver(rideReceiver, intentFilter);
+    }
+
+    private void subscribeToDriversLocationReceiver() {
+        if (driversLocationReceiver == null) {
+            return;
+        }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DriversLocationService.RESULT);
+        getActivity().registerReceiver(driversLocationReceiver, intentFilter);
+    }
+
+    private void promptToRateRide(RideDTO dto) {
+        Toast.makeText(getActivity().getApplicationContext(), "Rate the ride.", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), PassengerRateRidePromptActivity.class);
+        intent.putExtra(PassengerRateRidePromptActivity.KEY_RIDE, dto);
+        startActivity(intent);
+    }
+
 }

@@ -93,9 +93,9 @@ public class UserChatActivity extends SimpleToolbarActivity {
         session = (SessionContext)getIntent().getSerializableExtra(PARAM_SESSION);
         chat = (Chat)getIntent().getSerializableExtra(PARAM_CHAT);
 
-        if (session == null) {
-            throw new NullPointerException("Missing intent parameter " + PARAM_SESSION);
-        }
+//        if (session == null) {
+//            throw new NullPointerException("Missing intent parameter " + PARAM_SESSION);
+//        }
         if (chat == null) {
             throw new NullPointerException("Missing intent parameter " + PARAM_CHAT);
         }

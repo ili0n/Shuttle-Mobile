@@ -10,6 +10,7 @@ public class RideDTO implements Serializable {
     private Long id;
     private String startTime;
     private String endTime;
+    private String scheduledTime;
     private Double totalCost;
     private UserEmailDTO driver;
     private List<UserEmailDTO> passengers;
@@ -24,10 +25,11 @@ public class RideDTO implements Serializable {
     public RideDTO() {
     }
 
-    public RideDTO(Long id, String startTime, String endTime, Double totalCost, UserEmailDTO driver, List<UserEmailDTO> passengers, Long estimatedTimeInMinutes, String vehicleType, Boolean babyTransport, Boolean petTransport, RejectionDTO rejection, List<com.example.shuttlemobile.route.RouteDTO> locations, String status) {
+    public RideDTO(Long id, String startTime, String endTime, String scheduledTime, Double totalCost, UserEmailDTO driver, List<UserEmailDTO> passengers, Long estimatedTimeInMinutes, String vehicleType, Boolean babyTransport, Boolean petTransport, RejectionDTO rejection, List<RouteDTO> locations, String status) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.scheduledTime = scheduledTime;
         this.totalCost = totalCost;
         this.driver = driver;
         this.passengers = passengers;
@@ -144,12 +146,21 @@ public class RideDTO implements Serializable {
         this.status = status;
     }
 
+    public String getScheduledTime() {
+        return scheduledTime;
+    }
+
+    public void setScheduledTime(String scheduledTime) {
+        this.scheduledTime = scheduledTime;
+    }
+
     @Override
     public String toString() {
         return "RideDTO{" +
                 "id=" + id +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
+                ", scheduledTime='" + scheduledTime + '\'' +
                 ", totalCost=" + totalCost +
                 ", driver=" + driver +
                 ", passengers=" + passengers +

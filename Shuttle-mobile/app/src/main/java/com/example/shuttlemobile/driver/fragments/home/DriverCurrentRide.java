@@ -88,6 +88,8 @@ public class DriverCurrentRide extends Fragment {
         initTimeReceiver();
         initRideReceiver();
         initViewElements(view);
+
+        this.currentRide = null;
     }
 
 

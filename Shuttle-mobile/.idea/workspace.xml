@@ -61,12 +61,12 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="layoutResourceFile" />
         <option value="valueResourceFile" />
         <option value="CMakeLists.txt" />
         <option value="Interface" />
         <option value="layoutResourceFile" />
         <option value="resourceFile" />
+        <option value="layoutResourceFile" />
         <option value="Interface" />
         <option value="Class" />
       </list>
@@ -109,6 +109,11 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RecentsManager">
+    <key name="android.template.-482105806">
+      <recent name="com.example.shuttlemobile.passenger.subactivities" />
+    </key>
   </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
