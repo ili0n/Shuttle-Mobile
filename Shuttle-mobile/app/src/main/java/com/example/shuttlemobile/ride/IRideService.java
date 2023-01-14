@@ -61,4 +61,7 @@ public interface IRideService {
     Call<Void> deleteFavoriteRoute(@Path("id") long id);
 
     IRideService service = RetrofitUtils.retrofit.create(IRideService.class);
+
+    @POST("/api/ride")
+    Call<RideDTO> createRide(@Body FavoriteRouteDTO favoriteRoute);
 }

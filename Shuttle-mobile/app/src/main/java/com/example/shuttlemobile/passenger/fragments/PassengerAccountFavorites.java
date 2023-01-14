@@ -1,18 +1,17 @@
 package com.example.shuttlemobile.passenger.fragments;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.AlertDialog;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
@@ -20,8 +19,11 @@ import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.passenger.dto.FavoriteRouteDTO;
 import com.example.shuttlemobile.ride.IRideService;
+import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.RouteDTO;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -94,6 +96,7 @@ public class PassengerAccountFavorites extends GenericUserFragment {
 
             }
 
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public View getView(int i, View view, ViewGroup viewGroup) {
                 ViewHolder  holder;
@@ -109,8 +112,10 @@ public class PassengerAccountFavorites extends GenericUserFragment {
                 FavoriteRouteModel model = getList().get(i);
 
                 holder.tvName.setText(model.favoriteRoute.getFavoriteName());
-                List<RouteDTO> locations = model.favoriteRoute.getLocations();
+                holder.tvName.setOnClickListener(null);
+                holder.tvName.setOnClickListener(view1 -> openDialog(model.favoriteRoute));
 
+                List<RouteDTO> locations = model.favoriteRoute.getLocations();
                 holder.tvRouteA.setText(locations.get(0).getDeparture().getAddress());
                 holder.tvRouteB.setText(locations.get(locations.size() - 1).getDestination().getAddress());
 
@@ -136,6 +141,40 @@ public class PassengerAccountFavorites extends GenericUserFragment {
             }
         });
     }
+
+    private void openDialog(FavoriteRouteDTO favoriteRoute) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setMessage("Would you like to order ride like this?")
+                .setPositiveButton(R.string.yes, (dialog, id) -> {
+                    createNewRide(favoriteRoute);
+//                    Intent intent = new Intent(requireContext(), DriverHome.class);
+//                    startActivity(intent);
+                })
+                .setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void createNewRide(FavoriteRouteDTO favoriteRoute) {
+        favoriteRoute.setScheduledTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        Call<RideDTO> call = IRideService.service.createRide(favoriteRoute);
+        call.enqueue(new Callback<RideDTO>() {
+            @Override
+            public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
+                if(response.isSuccessful()){
+                    Toast.makeText(requireContext(), "Sucess", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(requireContext(), "Failed", Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<RideDTO> call, Throwable t) {
+                Toast.makeText(requireContext(), "Failed", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public class FavoriteRouteModel{
         private FavoriteRouteDTO favoriteRoute;
         private boolean isSet;
@@ -186,9 +225,7 @@ public class PassengerAccountFavorites extends GenericUserFragment {
     }
 
     private void deleteFavorites() {
-        for(Long id: ids){
-            deleteFavorite(id);
-        }
+        ids.parallelStream().forEach(this::deleteFavorite);
     }
 
     private void deleteFavorite(Long id) {
