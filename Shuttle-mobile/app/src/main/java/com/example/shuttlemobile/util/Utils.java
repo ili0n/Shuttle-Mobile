@@ -10,7 +10,7 @@ import android.util.TypedValue;
 import androidx.core.content.ContextCompat;
 
 public class Utils {
-    public static final String ServerOrigin = "http://192.168.0.8:8080/";
+    public static final String ServerOrigin = "http://192.168.1.30:8080/";
 
     private Utils() {}
 

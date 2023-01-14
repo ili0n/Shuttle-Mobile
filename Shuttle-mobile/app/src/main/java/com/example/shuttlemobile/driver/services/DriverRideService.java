@@ -36,7 +36,7 @@ public class DriverRideService extends Service {
     public void onCreate() {
         final ExecutorService executorService = Executors.newSingleThreadExecutor();
         final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 1000;
+        final int delay = 500;
 
         executorService.execute(new Runnable() {
                 @Override
