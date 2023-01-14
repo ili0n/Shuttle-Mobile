@@ -7,8 +7,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.SessionContext;
@@ -29,13 +32,14 @@ public class OrderActivity extends AppCompatActivity {
 
     private int step = 0;
     private int MAX_STEP = 3;
-    private Button btnNext;
-    private Button btnPrevious;
+    private ImageButton btnNext;
+    private ImageButton btnPrevious;
     private final String STACK_FRAGMENTS = "UserActivityFragment";
     private Map<Integer, Fragment> fragments = new HashMap<>();
     private Fragment currentFragment;
     private SessionContext session;
     private RouteDTO route;
+    private SeekBar seekbarProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,13 @@ public class OrderActivity extends AppCompatActivity {
         if (f != null) {
             setVisibleFragment(f);
         }
+
+        seekbarProgress.setProgress(step);
+        seekbarProgress.setMax(fragments.size() - 1);
+        seekbarProgress.setProgress(step);
+
+        btnPrevious.setVisibility(step == 0 ? View.INVISIBLE : View.VISIBLE);
+        btnNext.setVisibility(step == fragments.size() - 1 ? View.INVISIBLE : View.VISIBLE);
     }
 
     private int getFragmentFrameId() {
@@ -88,6 +99,7 @@ public class OrderActivity extends AppCompatActivity {
     private void initViewElements(View view) {
         btnNext = view.findViewById(R.id.next_button);
         btnPrevious = view.findViewById(R.id.previous_button);
+        seekbarProgress = view.findViewById(R.id.seekbar_progress);
 
         btnNext.setOnClickListener(view1 -> {
             nextStep();
@@ -96,6 +108,8 @@ public class OrderActivity extends AppCompatActivity {
         btnPrevious.setOnClickListener(view12 -> {
             previousStep();
         });
+
+        seekbarProgress.setOnTouchListener((View.OnTouchListener) (v, event) -> true);
     }
 
     protected final void setVisibleFragment(Fragment fragment) {
