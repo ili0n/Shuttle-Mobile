@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
-import com.example.shuttlemobile.driver.fragments.DriverHistory;
 import com.example.shuttlemobile.passenger.orderride.ICreateRideService;
 import com.example.shuttlemobile.passenger.orderride.OrderActivity;
-import com.example.shuttlemobile.ride.CreateRideDTO;
-import com.example.shuttlemobile.ride.RideDTO;
+import com.example.shuttlemobile.ride.dto.CreateRideDTO;
+import com.example.shuttlemobile.ride.dto.RideDTO;
 
 import retrofit2.Call;
 import retrofit2.Callback;

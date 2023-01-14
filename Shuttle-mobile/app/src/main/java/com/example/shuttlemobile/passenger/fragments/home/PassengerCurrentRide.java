@@ -328,7 +328,7 @@ public class PassengerCurrentRide extends Fragment {
             return;
         }
 
-        Ride.Status dtoStatus = Ride.Status.valueOf(dto.getStatus());
+        Ride.State dtoStatus = Ride.State.valueOf(dto.getStatus().toUpperCase());
 
         // If the currently cached ride is different from this one, redraw the route and focus on it.
 
@@ -341,7 +341,7 @@ public class PassengerCurrentRide extends Fragment {
 
         boolean shouldShowTimer = false;
         if (ride != null) {
-            if (dtoStatus == Ride.Status.Accepted && dto.getStartTime() != null) {
+            if (dtoStatus == Ride.State.ACCEPTED && dto.getStartTime() != null) {
                 shouldShowTimer = true;
             }
         }
@@ -350,7 +350,7 @@ public class PassengerCurrentRide extends Fragment {
 
         boolean canPanicOrNote = false;
         if (dto != null) {
-            if (dtoStatus == Ride.Status.Accepted || dtoStatus == Ride.Status.Started) {
+            if (dtoStatus == Ride.State.ACCEPTED || dtoStatus == Ride.State.STARTED) {
                 canPanicOrNote = true;
             }
         }
@@ -358,7 +358,7 @@ public class PassengerCurrentRide extends Fragment {
         // Update ride.
 
         ride = dto;
-        Ride.Status rideStatus = Ride.Status.valueOf(ride.getStatus());
+        Ride.State rideStatus = Ride.State.valueOf(ride.getStatus().toUpperCase());
         final LocationDTO A_loc = ride.getLocations().get(0).getDeparture();
         final LocationDTO B_loc = ride.getLocations().get(ride.getLocations().size() - 1).getDestination();
         A = Point.fromLngLat(A_loc.getLongitude(), A_loc.getLatitude());
@@ -383,7 +383,7 @@ public class PassengerCurrentRide extends Fragment {
             drawAndFocusCurrentRoute();
         }
 
-        if (rideStatus == Ride.Status.Pending) {
+        if (rideStatus == Ride.State.PENDING) {
             if (ride.getScheduledTime() == null) {
                 txtScheduledFor.setText("/");
             } else {

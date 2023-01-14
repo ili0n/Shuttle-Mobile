@@ -1,12 +1,5 @@
 package com.example.shuttlemobile.passenger.fragments;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
-import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.os.Bundle;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +7,6 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -28,15 +20,7 @@ import com.example.shuttlemobile.BlankFragment;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
-import com.example.shuttlemobile.common.LocationDTO;
-import com.example.shuttlemobile.common.RouteDTO;
 import com.example.shuttlemobile.common.SessionContext;
-import com.example.shuttlemobile.passenger.orderride.OrderActivity;
-import com.mapbox.geojson.Point;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
 import com.example.shuttlemobile.driver.services.DriversLocationService;
 import com.example.shuttlemobile.passenger.fragments.home.PassengerCurrentRide;
 import com.example.shuttlemobile.passenger.fragments.home.PassengerSearchRoute;
@@ -173,9 +157,9 @@ public class PassengerHome extends GenericUserMapFragment {
                 IRideService.service.getById(ride.getId()).enqueue(new Callback<RideDTO>() {
                     @Override
                     public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
-                        Ride.Status status = Ride.Status.valueOf(response.body().getStatus());
+                        Ride.State status = Ride.State.valueOf(response.body().getStatus().toUpperCase());
 
-                        if (status == Ride.Status.Finished) {
+                        if (status == Ride.State.FINISHED) {
                             NotificationUtil.sendNotification(
                                     getActivity().getApplicationContext(),
                                     NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID,

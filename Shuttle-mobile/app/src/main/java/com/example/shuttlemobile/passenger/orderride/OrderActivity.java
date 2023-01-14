@@ -9,42 +9,40 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.common.RouteDTO;
 import com.example.shuttlemobile.common.SessionContext;
-import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.passenger.orderride.fragments.ConfirmationFragment;
 import com.example.shuttlemobile.passenger.orderride.fragments.InviteFragment;
 import com.example.shuttlemobile.passenger.orderride.fragments.RidePropertiesFragment;
 import com.example.shuttlemobile.passenger.orderride.fragments.ScheduleRide;
-import com.example.shuttlemobile.ride.CreateRideDTO;
-import com.example.shuttlemobile.ride.RideDTO;
+import com.example.shuttlemobile.ride.dto.CreateRideDTO;
+import com.example.shuttlemobile.route.RouteDTO;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class OrderActivity extends AppCompatActivity {
-    int step = 0;
-    int MAX_STEP = 3;
+    public static final String KEY_ROUTE = "route";
+
+    private int step = 0;
+    private int MAX_STEP = 3;
     private Button btnNext;
     private Button btnPrevious;
     private final String STACK_FRAGMENTS = "UserActivityFragment";
-    protected Map<Integer, Fragment> fragments = new HashMap<>();
+    private Map<Integer, Fragment> fragments = new HashMap<>();
     private Fragment currentFragment;
-    protected SessionContext session;
-
+    private SessionContext session;
+    private RouteDTO route;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.route = (RouteDTO) getIntent().getSerializableExtra(KEY_ROUTE);
+
         setContentView(R.layout.activity_order);
         initViewElements(getWindow().getDecorView().getRootView());
 
@@ -133,8 +131,7 @@ public class OrderActivity extends AppCompatActivity {
     private CreateRideDTO generateDTO(RidePropertiesFragment properties, ScheduleRide schedule, InviteFragment invite) {
         CreateRideDTO dto = new CreateRideDTO();
 
-        Bundle bundle = getIntent().getBundleExtra("routes");
-        dto.setLocations((List<RouteDTO>) bundle.getSerializable("routes"));
+        dto.setLocations(Arrays.asList(this.route));
         dto.setBabyTransport(properties.isBabyChecked());
         dto.setPetTransport(properties.isPetChecked());
         dto.setVehicleType(properties.getVehicleType());

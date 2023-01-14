@@ -1,6 +1,6 @@
-package com.example.shuttlemobile.ride;
+package com.example.shuttlemobile.ride.dto;
 
-import com.example.shuttlemobile.common.RouteDTO;
+import com.example.shuttlemobile.route.RouteDTO;
 import com.example.shuttlemobile.user.RidePassengerDTO;
 
 import java.util.List;

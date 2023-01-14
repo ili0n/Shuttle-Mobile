@@ -35,10 +35,6 @@ public class Ride extends Entity {
         STARTED,
     };
 
-    public enum Status {
-        Pending, Accepted, Rejected, Canceled, Finished, Started
-    }
-
     public Driver getDriver() { return driver; }
 
     public void setDriver(Driver d) { this.driver = d; }
@@ -91,11 +87,11 @@ public class Ride extends Entity {
         this.cost = cost;
     }
 
-    public void setState(Status state) {
+    public void setState(State state) {
         this.state = state;
     }
 
-    public Status getState() {
+    public State getState() {
         return state;
     }
 
