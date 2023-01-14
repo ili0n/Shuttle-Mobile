@@ -41,6 +41,10 @@ public class OrderActivity extends AppCompatActivity {
     private RouteDTO route;
     private SeekBar seekbarProgress;
 
+    public RouteDTO getRoute() {
+        return route;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,7 +156,6 @@ public class OrderActivity extends AppCompatActivity {
         dto.setScheduledTime(schedule.getFutureTime());
         dto.setPassengers(invite.getPassengers());
 
-        Log.e("?", dto.toString());
         return dto;
     }
 

@@ -9,32 +9,43 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/invites_recycler"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/edit_u_invite"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.953" />
+            app:layout_constraintTop_toBottomOf="@+id/lbl_order_stepper_2" />
 
         <EditText
             android:id="@+id/edit_u_invite"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="Enter email..."
-            android:inputType="textPersonName"
+            android:inputType="textEmailAddress"
             android:singleLine="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_u_invite"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/btn_order_stepper_add_p"
+            app:layout_constraintEnd_toStartOf="@+id/btn_order_stepper_add_p"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_order_stepper_add_p" />
 
-        <Button
-            android:id="@+id/btn_u_invite"
+        <TextView
+            android:id="@+id/lbl_order_stepper_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="Invite"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="32dp"
+            android:text="Invite a friend or five"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edit_u_invite" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btn_order_stepper_add_p"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#689F38"
+            android:src="@drawable/ic_baseline_add_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/invites_recycler" />
 </androidx.constraintlayout.widget.ConstraintLayout>

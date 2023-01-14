@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Switch;
 
@@ -23,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RidePropertiesFragment extends Fragment {
-    private Switch babySwitch;
-    private Switch petSwitch;
+    private CheckBox cbBaby;
+    private CheckBox cbPet;
     private Spinner spinner;
 
     public static RidePropertiesFragment newInstance(SessionContext session) {
@@ -41,8 +42,8 @@ public class RidePropertiesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setSpinnerItems(view);
-        petSwitch = (Switch) view.findViewById(R.id.pet_switch);
-        babySwitch = (Switch) view.findViewById(R.id.baby_switch);
+        cbBaby = view.findViewById(R.id.cb_order_stepper_baby);
+        cbPet = view.findViewById(R.id.cb_order_stepper_pet);
     }
 
     private void setSpinnerItems(View view) {
@@ -62,11 +63,11 @@ public class RidePropertiesFragment extends Fragment {
     }
 
     public boolean isPetChecked(){
-        return petSwitch.isChecked();
+        return cbPet.isChecked();
     }
 
     public boolean isBabyChecked(){
-        return babySwitch.isChecked();
+        return cbBaby.isChecked();
     }
 
     public String getVehicleType(){

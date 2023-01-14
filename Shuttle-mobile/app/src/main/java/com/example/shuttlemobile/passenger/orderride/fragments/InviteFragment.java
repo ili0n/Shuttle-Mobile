@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
@@ -28,6 +29,7 @@ import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +39,8 @@ public class InviteFragment extends Fragment {
     private ArrayList<String> invites = new ArrayList<>();
     private ArrayList<RidePassengerDTO> inviteUsers = new ArrayList<>();
     private InvitesAdapter invitesAdapter;
+    private ImageButton btn;
+    private EditText txtInvite;
 
     public static InviteFragment newInstance(SessionContext session) {
         InviteFragment fragment = new InviteFragment();
@@ -57,12 +61,13 @@ public class InviteFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setRecyclerView(view);
-        EditText inviteField = (EditText) view.findViewById(R.id.edit_u_invite);
-        ((Button) view.findViewById(R.id.btn_u_invite)).setOnClickListener(new View.OnClickListener() {
+        txtInvite = view.findViewById(R.id.edit_u_invite);
+        btn = view.findViewById(R.id.btn_order_stepper_add_p);
+
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addItem(inviteField.getText().toString().trim());
-                Log.println(Log.ASSERT, "TextField", invitesAdapter.getItemCount() + "");
+                addItem(txtInvite.getText().toString().trim());
             }
         });
     }
@@ -96,6 +101,7 @@ public class InviteFragment extends Fragment {
                         inviteUsers.add(response.body());
                         invites.add(item);
                         invitesAdapter.notifyDataSetChanged();
+                        txtInvite.setText("");
                     } else
                         Toast.makeText(getContext(), "User doesn't exist", Toast.LENGTH_LONG).show();
                 }
@@ -115,7 +121,9 @@ public class InviteFragment extends Fragment {
         RidePassengerDTO ridePassengerDTO = new RidePassengerDTO();
         ridePassengerDTO.setEmail(jwt.getEmail());
         ridePassengerDTO.setId(jwt.getId());
-        inviteUsers.add(ridePassengerDTO);
-        return inviteUsers;
+
+        List<RidePassengerDTO> res = inviteUsers.stream().map(p -> p).collect(Collectors.toList());
+        res.add(ridePassengerDTO);
+        return res;
     }
 }
