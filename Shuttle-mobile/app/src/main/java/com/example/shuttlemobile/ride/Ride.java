@@ -1,5 +1,7 @@
 package com.example.shuttlemobile.ride;
 
+import android.location.Location;
+
 import com.example.shuttlemobile.common.Entity;
 import com.example.shuttlemobile.driver.Driver;
 import com.example.shuttlemobile.passenger.Passenger;
@@ -7,6 +9,8 @@ import com.example.shuttlemobile.vehicle.Vehicle;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ride extends Entity {
     private boolean hasBaby;
@@ -15,17 +19,24 @@ public class Ride extends Entity {
     private LocalDateTime start;
     private LocalDateTime end;
     private double cost;
-    private Status state;
-    private Passenger passenger;
+    private State state;
+    private List<Passenger> passengers = new ArrayList<>();
     private Driver driver;
 
     public Ride() {
-        this.passenger = new Passenger();
     }
+
+    public enum State {
+        PENDING,
+        ACCEPTED,
+        REJECTED,
+        CANCELED,
+        FINISHED,
+        STARTED,
+    };
 
     public enum Status {
         Pending, Accepted, Rejected, Canceled, Finished, Started
-        // TODO: Started - why?! For now it's mock-added as a response.
     }
 
     public Driver getDriver() { return driver; }
@@ -88,11 +99,11 @@ public class Ride extends Entity {
         return state;
     }
 
-    public Passenger getPassenger() {
-        return passenger;
+    public List<Passenger> getPassengers() {
+        return passengers;
     }
 
-    public void setPassenger(Passenger passenger) {
-        this.passenger = passenger;
+    public void setPassengers(List<Passenger> passengers) {
+        this.passengers = passengers;
     }
 }

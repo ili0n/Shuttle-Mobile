@@ -11,7 +11,7 @@
         layout="@layout/toolbar" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/driver_fragment_frame"
+        android:id="@+id/driver_home_fragment_frame"
         android:name="com.example.shuttlemobile.BlankFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"

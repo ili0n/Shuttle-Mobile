@@ -27,6 +27,8 @@ public class SettingsUtil {
     public static final String VAL_USER_ROLE_DRIVER = "driver";
     public static final String KEY_ACCESS_TOKEN = "access_token";
 
+    public static final String KEY_CURRENT_RIDE_ID = "current_ride_id";
+
     private static SharedPreferences prefs = null;
 
     public static void init(SharedPreferences prefs) {

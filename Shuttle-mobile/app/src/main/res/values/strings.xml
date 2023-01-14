@@ -23,4 +23,18 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="elapsed_time">Elapsed time: </string>
+    <string name="reason">Reason</string>
+    <string name="panic_header">Specify a reason</string>
+    <string name="reject">Reject</string>
+    <string name="cancel">Cancel</string>
+    <string name="panic">Panic</string>
+    <string name="passenger_profile_picture">Passenger profile picture</string>
+    <string name="passenger_name">Name</string>
+    <string name="passenger_surname">Surname</string>
+    <string name="phone_number">Phone number</string>
+    <string name="email">email</string>
+    <string name="address">address</string>
+    <string name="call">Call</string>
+    <string name="chat">Chat</string>
 </resources>

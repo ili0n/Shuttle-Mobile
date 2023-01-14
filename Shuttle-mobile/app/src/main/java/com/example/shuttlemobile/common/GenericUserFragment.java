@@ -26,8 +26,8 @@ public abstract class GenericUserFragment extends Fragment {
             session = (SessionContext)getArguments().getSerializable(KEY_SESSION);
         }
 
-        if (session == null) {
-            throw new RuntimeException("Missing bundle argument: " + KEY_SESSION);
-        }
+//        if (session == null) {
+//            throw new RuntimeException("Missing bundle argument: " + KEY_SESSION);
+//        }
     }
 }
