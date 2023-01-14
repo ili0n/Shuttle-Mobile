@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -158,9 +157,9 @@ public class PassengerHome extends GenericUserMapFragment {
                 IRideService.service.getById(ride.getId()).enqueue(new Callback<RideDTO>() {
                     @Override
                     public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
-                        Ride.Status status = Ride.Status.valueOf(response.body().getStatus());
+                        Ride.State status = Ride.State.valueOf(response.body().getStatus().toUpperCase());
 
-                        if (status == Ride.Status.Finished) {
+                        if (status == Ride.State.FINISHED) {
                             NotificationUtil.sendNotification(
                                     getActivity().getApplicationContext(),
                                     NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID,
