@@ -18,6 +18,7 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class ScheduleRide extends Fragment {
     private static final int MAX_HOURS = 5;
     private static final int MAX_MINUTES = 60;
     private Spinner hourSpinner;
-    private  Spinner minuteSpinner;
+    private Spinner minuteSpinner;
+    private Switch scheduledSwitch;
 
     public static ScheduleRide newInstance(SessionContext session) {
         ScheduleRide fragment = new ScheduleRide();
@@ -45,16 +47,16 @@ public class ScheduleRide extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        hourSpinner = (Spinner) view.findViewById(R.id.hour_spinner);
-        minuteSpinner = (Spinner) view.findViewById(R.id.minute_spinner);
+        hourSpinner = view.findViewById(R.id.hour_spinner);
+        minuteSpinner = view.findViewById(R.id.minute_spinner);
+        scheduledSwitch = view.findViewById(R.id.schedule_switch);
         setHourSpinnerItems(hourSpinner);
         setMinuteSpinnerItems(minuteSpinner);
         setSwitchListener(view, hourSpinner, minuteSpinner);
     }
 
     private void setSwitchListener(View view, Spinner hourSpinner, Spinner minuteSpinner) {
-        Switch schedule = (Switch) view.findViewById(R.id.schedule_switch);
-        schedule.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        scheduledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 hourSpinner.setEnabled(isChecked);
                 minuteSpinner.setEnabled(isChecked);
@@ -106,6 +108,17 @@ public class ScheduleRide extends Fragment {
     public String getHourAdvance() {
         if (hourSpinner.isEnabled()) {
             return hourSpinner.getSelectedItem().toString();
+        }
+        return null;
+    }
+
+    public String getFutureTime() {
+        if (scheduledSwitch.isChecked()) {
+            String hDelta = getHourAdvance();
+            String mDelta = getMinuteAdvance();
+
+            LocalDateTime time = LocalDateTime.now().plusHours(Long.valueOf(hDelta)).plusMinutes(Long.valueOf(mDelta));
+            return time.toString();
         }
         return null;
     }

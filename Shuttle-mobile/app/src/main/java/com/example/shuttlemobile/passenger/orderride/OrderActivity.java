@@ -138,8 +138,7 @@ public class OrderActivity extends AppCompatActivity {
         dto.setBabyTransport(properties.isBabyChecked());
         dto.setPetTransport(properties.isPetChecked());
         dto.setVehicleType(properties.getVehicleType());
-        dto.setMinute(schedule.getMinuteAdvance());
-        dto.setHour(schedule.getHourAdvance());
+        dto.setScheduledTime(schedule.getFutureTime());
         dto.setPassengers(invite.getPassengers());
 
         Log.e("?", dto.toString());
