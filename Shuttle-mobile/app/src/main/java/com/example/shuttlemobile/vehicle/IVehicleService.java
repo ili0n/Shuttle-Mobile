@@ -13,7 +13,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface IVehicleService {
-    @GET("/api/vehicle/active")
+    @GET("/api/vehicle/android/active")
     Call<List<VehicleLocationDTO>> getDriversLocation();
     IVehicleService service = RetrofitUtils.retrofit.create(IVehicleService.class);
 }

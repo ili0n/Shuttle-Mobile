@@ -29,4 +29,12 @@
     <string name="reject">Reject</string>
     <string name="cancel">Cancel</string>
     <string name="panic">Panic</string>
+    <string name="passenger_profile_picture">Passenger profile picture</string>
+    <string name="passenger_name">Name</string>
+    <string name="passenger_surname">Surname</string>
+    <string name="phone_number">Phone number</string>
+    <string name="email">email</string>
+    <string name="address">address</string>
+    <string name="call">Call</string>
+    <string name="chat">Chat</string>
 </resources>
