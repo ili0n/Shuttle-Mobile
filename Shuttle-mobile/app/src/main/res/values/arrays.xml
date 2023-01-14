@@ -23,4 +23,12 @@
         <item>Every 15 minutes</item>
         <item>Every 30 minutes</item>
     </string-array>
+
+    <array name="order_steps">
+        <item>Route</item>
+        <item>Properties</item>
+        <item>Invites</item>
+        <item>Scheduling</item>
+        <item>Confirmation</item>
+    </array>
 </resources>

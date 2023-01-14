@@ -1,5 +1,7 @@
-package com.example.shuttlemobile.unregistered.login;
+package com.example.shuttlemobile.passenger.orderride;
 
+import com.example.shuttlemobile.ride.dto.CreateRideDTO;
+import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
 
@@ -9,14 +11,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
-public interface ILoginService {
-    @POST("/api/user/login")
-    Call<TokenDTO> getUser(@Body LoginDTO loginDTO);
+public interface ICreateRideService {
+
+    @POST("/api/ride")
+    Call<RideDTO> postRide(@Body CreateRideDTO createRideDTO);
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Utils.ServerOrigin)
             .addConverterFactory(GsonConverterFactory.create())
             .client(RetrofitUtils.basicJsonJwtClient())
             .build();
-    ILoginService service = retrofit.create(ILoginService.class);
+    ICreateRideService service = retrofit.create(ICreateRideService.class);
 }

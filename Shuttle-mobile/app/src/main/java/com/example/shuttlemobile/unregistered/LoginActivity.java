@@ -12,14 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.DriverActivity;
 import com.example.shuttlemobile.passenger.PassengerActivity;
-import com.example.shuttlemobile.unregistered.login.ILoginService;
 import com.example.shuttlemobile.unregistered.login.LoginDTO;
 import com.example.shuttlemobile.unregistered.login.TokenDTO;
 import com.example.shuttlemobile.user.JWT;
 import com.example.shuttlemobile.user.User;
-import com.example.shuttlemobile.util.JWTDecoder;
 import com.example.shuttlemobile.util.SettingsUtil;
-import com.google.android.material.snackbar.Snackbar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,9 +35,11 @@ public class LoginActivity extends AppCompatActivity {
     private void initButtonCallbacks() {
         Button btnLogin = findViewById(R.id.btn_un_login);
         Button btnRegister = findViewById(R.id.btn_un_register);
+        Button btnForgot = findViewById(R.id.btn_un_forgot);
 
         btnLogin.setOnClickListener(view -> login());
         btnRegister.setOnClickListener(view -> openRegistrationActivity());
+        btnForgot.setOnClickListener(view -> openForgotPasswordActivity());
     }
 
     private void login() {
@@ -85,5 +84,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void openRegistrationActivity() {
         startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+    }
+
+    private void openForgotPasswordActivity() {
+        startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
     }
 }

@@ -2,6 +2,7 @@ package com.example.shuttlemobile.passenger.fragments.home;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -24,9 +25,14 @@ import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.passenger.fragments.PassengerHome;
+import com.example.shuttlemobile.passenger.orderride.OrderActivity;
+import com.example.shuttlemobile.route.LocationDTO;
+import com.example.shuttlemobile.route.RouteDTO;
 import com.mapbox.geojson.Point;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PassengerSearchRoute extends Fragment {
@@ -104,7 +110,14 @@ public class PassengerSearchRoute extends Fragment {
         btnOrderRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: CREATE ACTIVITY HERE.
+                Intent intent = new Intent(getActivity(), OrderActivity.class);
+
+                LocationDTO departure = new LocationDTO(txtDeparture.getText().toString(), A.latitude(), A.longitude());
+                LocationDTO destination = new LocationDTO(txtDestination.getText().toString(), B.latitude(), B.longitude());
+                RouteDTO routeDTO = new RouteDTO(departure, destination);
+                intent.putExtra(OrderActivity.KEY_ROUTE, routeDTO);
+
+                startActivity(intent);
             }
         });
     }
