@@ -1,5 +1,9 @@
 package com.example.shuttlemobile.common;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,14 +16,18 @@ import android.widget.TextView;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.Driver;
+import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.message.MessageDTO;
 import com.example.shuttlemobile.message.SendMessageDTO;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.user.IUserService;
 import com.example.shuttlemobile.user.User;
+import com.example.shuttlemobile.user.services.UserMessageService;
+import com.example.shuttlemobile.util.ListDTO;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.Utils;
 
@@ -41,7 +49,7 @@ public class UserChatActivity extends SimpleToolbarActivity {
     public static final String PARAM_SESSION = "session";
     public static final String PARAM_CHAT = "chat";
 
-    List<MessageDTO> messages = new ArrayList<>();
+    ListDTO<MessageDTO> messages = new ListDTO<>();
     ListView listView;
 
     public static final String PARAM_OTHER_ID = "other_id";
@@ -50,6 +58,8 @@ public class UserChatActivity extends SimpleToolbarActivity {
     private Long otherId;
     private Long rideId; // Can be null.
     private Message.Type type;
+
+    private BroadcastReceiver messageReceiver;
 
     private TextView txtMyMessage;
 
@@ -65,6 +75,28 @@ public class UserChatActivity extends SimpleToolbarActivity {
 
         initButtonSend();
         initializeList();
+
+        initMessageReceiver();
+    }
+
+    private void initMessageReceiver() {
+        messageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ListDTO<MessageDTO> msgs = (ListDTO<MessageDTO>)intent.getSerializableExtra(UserMessageService.INTENT_MESSAGE_KEY);
+                messages = msgs;
+                Log.e("", messages.toString());
+                ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
+            }
+        };
+
+        subscribeMessageReceiver();
+    }
+
+    private void subscribeMessageReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UserMessageService.BROADCAST_CHANNEL);
+        registerReceiver(messageReceiver, intentFilter);
     }
 
     private void initButtonSend() {
@@ -78,9 +110,11 @@ public class UserChatActivity extends SimpleToolbarActivity {
     }
 
     private void addMessageToScreen(MessageDTO message) {
-        messages.add(message);
+        messages.getResults().add(message);
         ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
         txtMyMessage.setText("");
+
+        listView.post(() -> listView.setSelection(listView.getCount() - 1));
     }
 
     private void sendMessage() {
@@ -91,8 +125,6 @@ public class UserChatActivity extends SimpleToolbarActivity {
                 type.toString(),
                 rideId
         );
-        Log.e("?send", sendDto.toString());
-
 
         IUserService.service.sendMessage(otherId, sendDto).enqueue(new Callback<MessageDTO>() {
             @Override
@@ -116,12 +148,12 @@ public class UserChatActivity extends SimpleToolbarActivity {
         listView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return messages.size();
+                return messages.getTotalCount().intValue();
             }
 
             @Override
             public Object getItem(int i) {
-                return messages.get(i);
+                return messages.getResults().get(i);
             }
 
             @Override

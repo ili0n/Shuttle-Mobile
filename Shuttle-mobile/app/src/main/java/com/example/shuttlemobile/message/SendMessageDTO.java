@@ -1,6 +1,8 @@
 package com.example.shuttlemobile.message;
 
-public class SendMessageDTO {
+import java.io.Serializable;
+
+public class SendMessageDTO implements Serializable {
     private String message;
     private String type;
     private Long rideId;
