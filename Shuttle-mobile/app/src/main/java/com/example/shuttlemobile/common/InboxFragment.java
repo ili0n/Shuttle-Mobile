@@ -38,6 +38,8 @@ import com.example.shuttlemobile.message.MessageDTO;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.user.User;
+import com.example.shuttlemobile.user.services.UserMessageService;
+import com.example.shuttlemobile.util.ListDTO;
 import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.ShakePack;
 
@@ -61,6 +63,7 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
     private Activity activity;
 
     private BroadcastReceiver gotNewMessageReceiver;
+    private BroadcastReceiver messageReceiver;
 
     public static InboxFragment newInstance(SessionContext session) {
         InboxFragment fragment = new InboxFragment();
@@ -82,6 +85,7 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
         initListView();
         initReceiver();
         initSensorManager();
+        initMessageReceiver();
     }
 
     private void initSensorManager() {
@@ -90,6 +94,33 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
 
     private void initReceiver() {
         gotNewMessageReceiver = new InboxFragmentMessageReceiver(session, this);
+    }
+
+    private void initMessageReceiver() {
+        messageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ListDTO<MessageDTO> msgs = (ListDTO<MessageDTO>)intent.getSerializableExtra(UserMessageService.INTENT_MESSAGE_KEY);
+                onFetchMessages(msgs);
+            }
+        };
+
+        subscribeMessageReceiver();
+    }
+
+    private void subscribeMessageReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UserMessageService.BROADCAST_CHANNEL);
+        getActivity().registerReceiver(messageReceiver, intentFilter);
+    }
+
+    private void onFetchMessages(ListDTO<MessageDTO> messages) {
+        chats = new ArrayList<>();
+        List<MessageDTO> messageList = messages.getResults();
+
+        messageList.stream().map(m -> m.get)
+
+        ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
     }
 
     @Override

@@ -35,6 +35,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +50,7 @@ public class UserChatActivity extends SimpleToolbarActivity {
     public static final String PARAM_SESSION = "session";
     public static final String PARAM_CHAT = "chat";
 
-    ListDTO<MessageDTO> messages = new ListDTO<>();
+    List<MessageDTO> messages = new ArrayList<>();
     ListView listView;
 
     public static final String PARAM_OTHER_ID = "other_id";
@@ -84,7 +85,7 @@ public class UserChatActivity extends SimpleToolbarActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 ListDTO<MessageDTO> msgs = (ListDTO<MessageDTO>)intent.getSerializableExtra(UserMessageService.INTENT_MESSAGE_KEY);
-                messages = msgs;
+                messages = msgs.getResults().stream().filter(m -> m.getRideId().equals(rideId)).collect(Collectors.toList());
                 Log.e("", messages.toString());
                 ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
             }
@@ -110,7 +111,7 @@ public class UserChatActivity extends SimpleToolbarActivity {
     }
 
     private void addMessageToScreen(MessageDTO message) {
-        messages.getResults().add(message);
+        messages/*.getResults()*/.add(message);
         ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
         txtMyMessage.setText("");
 
@@ -148,12 +149,12 @@ public class UserChatActivity extends SimpleToolbarActivity {
         listView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return messages.getTotalCount().intValue();
+                return messages/*.getTotalCount().intValue()*/.size();
             }
 
             @Override
             public Object getItem(int i) {
-                return messages.getResults().get(i);
+                return messages/*.getResults()*/.get(i);
             }
 
             @Override
