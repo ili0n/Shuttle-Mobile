@@ -23,12 +23,9 @@ import android.widget.Toast;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.common.receiver.InboxFragmentMessageReceiver;
-import com.example.shuttlemobile.driver.IDriverService;
 import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.message.MessageDTO;
-import com.example.shuttlemobile.passenger.IPassengerService;
-import com.example.shuttlemobile.passenger.PassengerDTO;
 import com.example.shuttlemobile.user.services.UserMessageService;
 import com.example.shuttlemobile.util.ListDTO;
 import com.example.shuttlemobile.util.NotificationUtil;
@@ -42,10 +39,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Inbox fragment is shared between all users.

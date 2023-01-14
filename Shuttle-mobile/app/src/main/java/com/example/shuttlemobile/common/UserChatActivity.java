@@ -59,6 +59,7 @@ public class UserChatActivity extends SimpleToolbarActivity {
     private Long otherId;
     private Long rideId; // Can be null.
     private Message.Type type;
+    boolean loadedFirstTime = false;
 
     private BroadcastReceiver messageReceiver;
 
@@ -87,6 +88,11 @@ public class UserChatActivity extends SimpleToolbarActivity {
                 ListDTO<MessageDTO> msgs = (ListDTO<MessageDTO>)intent.getSerializableExtra(UserMessageService.INTENT_MESSAGE_KEY);
                 messages = msgs.getResults().stream().filter(m -> m.getRideId().equals(rideId)).collect(Collectors.toList());
                 ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
+
+                if (!loadedFirstTime) {
+                    listView.post(() -> listView.setSelection(listView.getCount() - 1));
+                    loadedFirstTime = true;
+                }
             }
         };
 
