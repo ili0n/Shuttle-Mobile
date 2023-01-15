@@ -51,8 +51,36 @@
             android:id="@+id/driver_stats_chart"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/driver_report_submit"
+            app:layout_constraintBottom_toTopOf="@+id/legend_d_chart"
             app:layout_constraintTop_toBottomOf="@+id/driver_report_end_date" />
+
+        <TableLayout
+            android:id="@+id/legend_d_chart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            app:layout_constraintBottom_toTopOf="@+id/driver_report_submit">
+
+            <TableRow>
+
+                <Space
+                    android:layout_width="30dp"
+                    android:layout_column="0"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="30dp"
+                    android:layout_column="1"
+                    android:layout_weight="1"
+                    android:text="@string/sum"></TextView>
+
+                <TextView
+                    android:layout_width="30dp"
+                    android:layout_column="2"
+                    android:layout_weight="1"
+                    android:text="@string/average"></TextView>
+            </TableRow>
+        </TableLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
