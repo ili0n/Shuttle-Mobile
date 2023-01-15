@@ -115,6 +115,8 @@ public class PassengerSearchRoute extends Fragment {
                 LocationDTO departure = new LocationDTO(txtDeparture.getText().toString(), A.latitude(), A.longitude());
                 LocationDTO destination = new LocationDTO(txtDestination.getText().toString(), B.latitude(), B.longitude());
                 RouteDTO routeDTO = new RouteDTO(departure, destination);
+
+                intent.putExtra(OrderActivity.KEY_DIST, parent.getDistance());
                 intent.putExtra(OrderActivity.KEY_ROUTE, routeDTO);
 
                 startActivity(intent);
