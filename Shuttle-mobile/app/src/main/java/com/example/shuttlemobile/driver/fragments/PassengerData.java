@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.UserChatActivity;
 import com.example.shuttlemobile.passenger.IPassengerService;
-import com.example.shuttlemobile.passenger.PassengerDTO;
+import com.example.shuttlemobile.passenger.dto.PassengerDTO;
 
 import java.util.Base64;
 import java.util.concurrent.ExecutorService;

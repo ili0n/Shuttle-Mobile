@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
@@ -18,6 +19,10 @@ import com.example.shuttlemobile.passenger.orderride.ICreateRideService;
 import com.example.shuttlemobile.passenger.orderride.OrderActivity;
 import com.example.shuttlemobile.ride.dto.CreateRideDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
+import com.example.shuttlemobile.route.RouteDTO;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +30,9 @@ import retrofit2.Response;
 
 public class ConfirmationFragment extends Fragment {
     private Button confirm;
+    private CreateRideDTO dto;
+
+    private TextView txtDeparture, txtDestination, txtBabies, txtPets, txtVehicleType, txtPassengerCount, txtScheduledFor, txtPrice;
 
     public static ConfirmationFragment newInstance(SessionContext session) {
         ConfirmationFragment fragment = new ConfirmationFragment();
@@ -44,12 +52,28 @@ public class ConfirmationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        confirm = (Button) view.findViewById(R.id.confirm_button);
+        dto = ((OrderActivity)getActivity()).getCreateRideDTO();
+
+        confirm = view.findViewById(R.id.confirm_button);
+        txtDeparture = view.findViewById(R.id.txt_order_stepper_departure);
+        txtDestination = view.findViewById(R.id.txt_order_stepper_destination);
+        txtBabies = view.findViewById(R.id.txt_order_stepper_babies);
+        txtPets = view.findViewById(R.id.txt_order_stepper_pets);
+        txtVehicleType = view.findViewById(R.id.txt_order_stepper_vehicle);
+        txtPassengerCount = view.findViewById(R.id.txt_order_stepper_passenger_cnt);
+        txtScheduledFor = view.findViewById(R.id.txt_order_stepper_scheduled_for);
+        txtPrice = view.findViewById(R.id.txt_order_stepper_cost);
+
+        initConfirmButton();
+        initViews();
+
+    }
+
+    private void initConfirmButton() {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CreateRideDTO createRideDTO =((OrderActivity) getActivity()).getCreateRideDTO();
-                Call<RideDTO> call = ICreateRideService.service.postRide(createRideDTO);
+                Call<RideDTO> call = ICreateRideService.service.postRide(dto);
                 call.enqueue(new Callback<RideDTO>() {
                     @Override
                     public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
@@ -71,7 +95,14 @@ public class ConfirmationFragment extends Fragment {
         });
     }
 
-    public Button getConfirmButton(){
-        return confirm;
+    private void initViews() {
+        txtDeparture.setText(dto.getLocations().get(0).getDeparture().getAddress());
+        txtDestination.setText(dto.getLocations().get(dto.getLocations().size() - 1).getDestination().getAddress());
+        txtBabies.setText(dto.isBabyTransport() ? "Bringing a baby" : "No babies");
+        txtPets.setText(dto.isPetTransport() ? "Bringing a pet" : "No pets");
+        txtVehicleType.setText(dto.getVehicleType() + " vehicle");
+        txtPassengerCount.setText(dto.getPassengers().size() + "");
+        txtScheduledFor.setText(dto.getScheduledTime() == null ? "Now!" : LocalDateTime.parse(dto.getScheduledTime()).format(DateTimeFormatter.ofPattern("HH:mm")));
+        txtPrice.setText("???");
     }
 }
