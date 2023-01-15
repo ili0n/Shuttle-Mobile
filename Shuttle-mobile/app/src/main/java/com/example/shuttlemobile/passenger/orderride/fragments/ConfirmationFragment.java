@@ -20,9 +20,12 @@ import com.example.shuttlemobile.passenger.orderride.OrderActivity;
 import com.example.shuttlemobile.ride.dto.CreateRideDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.RouteDTO;
+import com.example.shuttlemobile.vehicle.IVehicleService;
+import com.example.shuttlemobile.vehicle.VehicleTypeDTO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +34,7 @@ import retrofit2.Response;
 public class ConfirmationFragment extends Fragment {
     private Button confirm;
     private CreateRideDTO dto;
+    private List<VehicleTypeDTO> vehicleTypes = null;
 
     private TextView txtDeparture, txtDestination, txtBabies, txtPets, txtVehicleType, txtPassengerCount, txtScheduledFor, txtPrice;
 
@@ -64,9 +68,30 @@ public class ConfirmationFragment extends Fragment {
         txtScheduledFor = view.findViewById(R.id.txt_order_stepper_scheduled_for);
         txtPrice = view.findViewById(R.id.txt_order_stepper_cost);
 
+        confirm.setEnabled(false);
         initConfirmButton();
         initViews();
+        fetchVehicleTypes();
+    }
 
+    private void fetchVehicleTypes() {
+        IVehicleService.service.getVehicleTypes().enqueue(new Callback<List<VehicleTypeDTO>>() {
+            @Override
+            public void onResponse(Call<List<VehicleTypeDTO>> call, Response<List<VehicleTypeDTO>> response) {
+                if (response.code() == 200) {
+                    vehicleTypes = response.body();
+                    confirm.setEnabled(true);
+                    setPrice();
+                } else {
+                    Toast.makeText(getActivity(), "Could not fetch vehicle data.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VehicleTypeDTO>> call, Throwable t) {
+
+            }
+        });
     }
 
     private void initConfirmButton() {
@@ -103,6 +128,18 @@ public class ConfirmationFragment extends Fragment {
         txtVehicleType.setText(dto.getVehicleType() + " vehicle");
         txtPassengerCount.setText(dto.getPassengers().size() + "");
         txtScheduledFor.setText(dto.getScheduledTime() == null ? "Now!" : LocalDateTime.parse(dto.getScheduledTime()).format(DateTimeFormatter.ofPattern("HH:mm")));
-        txtPrice.setText("???");
+
+    }
+
+    private void setPrice() {
+        txtPrice.setText(calcPrice() + " RSD");
+    }
+
+    private Double calcPrice() {
+        final Long kmInt = Math.round(dto.getDistance() / 1000);
+        final Double vehicleTypeCost = vehicleTypes.stream().filter(t -> t.getName().equalsIgnoreCase(dto.getVehicleType())).findFirst().get().getPricePerKM();
+        final Double price = kmInt * (120 + vehicleTypeCost);
+
+        return price;
     }
 }
