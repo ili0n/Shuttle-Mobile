@@ -41,4 +41,6 @@
     <string name="yes">yes</string>
     <string name="average">AVERAGE</string>
     <string name="sum">SUM</string>
+    <string name="start">start</string>
+    <string name="end">end</string>
 </resources>
