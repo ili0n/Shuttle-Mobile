@@ -6,8 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".passenger.fragments.PassengerAccountStats">
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/chart1"
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/p_chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
