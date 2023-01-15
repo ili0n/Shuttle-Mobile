@@ -18,6 +18,7 @@ import com.example.shuttlemobile.passenger.fragments.PassengerHome;
 import com.example.shuttlemobile.common.InboxFragment;
 import com.example.shuttlemobile.passenger.services.PassengerMessageService;
 import com.example.shuttlemobile.passenger.services.PassengerRideService;
+import com.example.shuttlemobile.user.services.UserMessageService;
 
 public class PassengerActivity extends GenericUserActivity {
 
@@ -27,6 +28,7 @@ public class PassengerActivity extends GenericUserActivity {
         setContentView(R.layout.activity_passenger);
         startService(new Intent(this, PassengerMessageService.class));
         startService(new Intent(this, PassengerRideService.class));
+        startService(new Intent(this, UserMessageService.class));
     }
 
     @Override

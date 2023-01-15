@@ -1,7 +1,8 @@
 package com.example.shuttlemobile.message;
 
-public class SendMessageDTO {
-    private Long receiverId;
+import java.io.Serializable;
+
+public class SendMessageDTO implements Serializable {
     private String message;
     private String type;
     private Long rideId;
@@ -9,19 +10,10 @@ public class SendMessageDTO {
     public SendMessageDTO() {
     }
 
-    public SendMessageDTO(Long receiverId, String message, String type, Long rideId) {
-        this.receiverId = receiverId;
+    public SendMessageDTO(String message, String type, Long rideId) {
         this.message = message;
         this.type = type;
         this.rideId = rideId;
-    }
-
-    public Long getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
     }
 
     public String getMessage() {
@@ -51,7 +43,6 @@ public class SendMessageDTO {
     @Override
     public String toString() {
         return "SendMessageDTO{" +
-                "receiverId=" + receiverId +
                 ", message='" + message + '\'' +
                 ", type='" + type + '\'' +
                 ", rideId=" + rideId +

@@ -1,6 +1,10 @@
 package com.example.shuttlemobile.message;
 
-public class MessageDTO {
+import com.example.shuttlemobile.user.User;
+
+import java.io.Serializable;
+
+public class MessageDTO implements Serializable {
     private Long id;
     private String timeOfSending;
     private Long senderId;

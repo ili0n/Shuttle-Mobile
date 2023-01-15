@@ -24,7 +24,9 @@ import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.UserChatActivity;
+import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.passenger.IPassengerService;
+import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.passenger.dto.PassengerDTO;
 
 import java.util.Base64;
@@ -35,13 +37,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PassengerData#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PassengerData extends DialogFragment {
     public static final String PASSENGER_ID = "passenger id";
+    public static final String RIDE = "ride";
     private long passengerId;
     private PassengerDTO passenger;
 
@@ -53,6 +51,7 @@ public class PassengerData extends DialogFragment {
     private TextView tvAddress;
     private Button btnChat;
     private Button btnCall;
+    private RideDTO ride;
 
     public static PassengerData newInstance() {
         PassengerData fragment = new PassengerData();
@@ -65,6 +64,7 @@ public class PassengerData extends DialogFragment {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         passengerId = requireArguments().getLong(PASSENGER_ID);
+        ride = (RideDTO) requireArguments().getSerializable(RIDE);
     }
 
     private void fillData() {
@@ -156,10 +156,11 @@ public class PassengerData extends DialogFragment {
     }
 
     private void openChat() {
-        // TODO session
         Intent intent = new Intent(getActivity(), UserChatActivity.class);
-        intent.putExtra("session", "Asd");
-        intent.putExtra("chat", "Asd");
+
+        intent.putExtra(UserChatActivity.PARAM_OTHER_ID, passengerId);
+        intent.putExtra(UserChatActivity.PARAM_RIDE_ID, ride.getId());
+        intent.putExtra(UserChatActivity.PARAM_MSG_TYPE, Message.Type.RIDE);
 
         startActivity(intent);
     }
