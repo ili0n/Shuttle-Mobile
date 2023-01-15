@@ -1,10 +1,32 @@
 package com.example.shuttlemobile.driver.fragments;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -25,8 +48,14 @@ import com.example.shuttlemobile.user.JWT;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.vehicle.VehicleDTO;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,8 +67,12 @@ import retrofit2.Response;
  */
 public class DriverAccountInfo extends GenericUserFragment {
 
+    private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 101;
     DriverDTO driverDTO;
     VehicleDTO vehicleDTO;
+    ImageButton editPfp;
+    String currentImage;
+
 
     public static DriverAccountInfo newInstance(SessionContext session) {
         DriverAccountInfo fragment = new DriverAccountInfo();
@@ -65,7 +98,7 @@ public class DriverAccountInfo extends GenericUserFragment {
         EditText editSurname = getActivity().findViewById(R.id.txt_d_info_surname);
         EditText editAddress = getActivity().findViewById(R.id.txt_d_info_address);
         EditText editPhone = getActivity().findViewById(R.id.txt_d_info_phone);
-        ImageButton editPfp = getActivity().findViewById(R.id.img_d_info_pfp);
+        editPfp = getActivity().findViewById(R.id.img_d_info_pfp);
         EditText editModel = getActivity().findViewById(R.id.txt_d_info_vehicle_model);
         EditText editPlate = getActivity().findViewById(R.id.txt_d_info_vehicle_plate);
         Switch babySwitch = getActivity().findViewById(R.id.info_d_baby_switch);
@@ -85,7 +118,9 @@ public class DriverAccountInfo extends GenericUserFragment {
         editPfp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Select image from storage.
+                if (checkAndRequestPermissions(getActivity())) {
+                    chooseImage(getContext());
+                }
             }
         });
 
@@ -149,7 +184,8 @@ public class DriverAccountInfo extends GenericUserFragment {
                     editName.setText(driverDTO.getName());
                     editSurname.setText(driverDTO.getSurname());
                     editPhone.setText(driverDTO.getTelephoneNumber());
-
+                    editPfp.setImageBitmap(getImage(driverDTO.getProfilePicture()));
+                    currentImage = driverDTO.getProfilePicture();
                 } else {
                     Toast.makeText(getContext(), response.message(), Toast.LENGTH_LONG).show();
 
@@ -170,10 +206,13 @@ public class DriverAccountInfo extends GenericUserFragment {
         boolean vehicleChanged = checkVehicleDTO(editModel, editPlate, babySwitch, petSwitch, seatSpinner, typeSpinner);
         if (!driverChanged && !vehicleChanged) {
             Toast.makeText(getContext(), "You didnt make any changes", Toast.LENGTH_LONG).show();
-        } else if (driverChanged) {
-            updateDriver(editName, editSurname, editAddress, editPhone, jwt);
-        } else if (vehicleChanged) {
-            updateVehicle(editModel, editPlate, babySwitch, petSwitch, seatSpinner, typeSpinner, jwt);
+        } else {
+            if (driverChanged) {
+                updateDriver(editName, editSurname, editAddress, editPhone, jwt);
+            }
+            if (vehicleChanged) {
+                updateVehicle(editModel, editPlate, babySwitch, petSwitch, seatSpinner, typeSpinner, jwt);
+            }
         }
 
 
@@ -232,6 +271,7 @@ public class DriverAccountInfo extends GenericUserFragment {
         driverDTO.setAddress(editAddress.getText().toString());
         driverDTO.setSurname(editSurname.getText().toString());
         driverDTO.setTelephoneNumber(editPhone.getText().toString());
+        driverDTO.setProfilePicture(currentImage);
     }
 
     private boolean checkVehicleDTO(EditText editModel, EditText editPlate, Switch babySwitch, Switch petSwitch, Spinner seatSpinner, Spinner typeSpinner) {
@@ -260,7 +300,8 @@ public class DriverAccountInfo extends GenericUserFragment {
             return true;
         if (!driverDTO.getTelephoneNumber().equals(editPhone.getText().toString()) && !editPhone.getText().toString().isEmpty())
             return true;
-
+        if (!currentImage.equals(driverDTO.getProfilePicture()))
+            return true;
         return false;
     }
 
@@ -293,4 +334,144 @@ public class DriverAccountInfo extends GenericUserFragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
+
+
+    private void chooseImage(Context context) {
+
+        final CharSequence[] optionsMenu = {"Take Photo", "Choose from Gallery", "Exit"}; // create a menuOption Array
+
+        // create a dialog for showing the optionsMenu
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        // set the items in builder
+
+        builder.setItems(optionsMenu, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (optionsMenu[i].equals("Take Photo")) {
+
+                    // Open the camera and get the photo
+
+                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(takePicture, 0);
+                } else if (optionsMenu[i].equals("Choose from Gallery")) {
+
+                    // choose from  external storage
+
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto, 1);
+
+                } else if (optionsMenu[i].equals("Exit")) {
+                    dialogInterface.dismiss();
+                }
+
+            }
+        });
+        builder.show();
+    }
+
+
+    // function to check permission
+
+    public static boolean checkAndRequestPermissions(final Activity context) {
+        int WExtstorePermission = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int cameraPermission = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.CAMERA);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.CAMERA);
+        }
+        if (WExtstorePermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded
+                    .add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(context, listPermissionsNeeded
+                            .toArray(new String[listPermissionsNeeded.size()]),
+                    REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
+
+
+    // Handled permission Result
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ID_MULTIPLE_PERMISSIONS:
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getContext(),
+                                    "Shuttle Requires Access to Camara.", Toast.LENGTH_SHORT)
+                            .show();
+
+                } else if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getContext(),
+                            "Shuttle Requires Access to Your Storage.",
+                            Toast.LENGTH_SHORT).show();
+
+                } else {
+                    chooseImage(getContext());
+                }
+                break;
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+                        editPfp.setImageBitmap(selectedImage);
+                        currentImage = getBase64Bitmap(selectedImage);
+                    }
+                    break;
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri selectedImage = data.getData();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        if (selectedImage != null) {
+                            Cursor cursor = requireActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                            if (cursor != null) {
+                                cursor.moveToFirst();
+
+                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                String picturePath = cursor.getString(columnIndex);
+                                Bitmap pfp = BitmapFactory.decodeFile(picturePath);
+                                editPfp.setImageBitmap(pfp);
+                                currentImage = getBase64Bitmap(pfp);
+                                cursor.close();
+                            }
+                        }
+
+                    }
+                    break;
+            }
+        }
+    }
+
+    public Bitmap getImage(String imageBase64) {
+        byte[] decodedString = Base64.getDecoder().decode(imageBase64);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    public String getBase64Bitmap(Bitmap image) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return Base64.getEncoder().encodeToString(byteArray);
+    }
+
+
 }
