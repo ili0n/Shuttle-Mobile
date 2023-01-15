@@ -10,6 +10,7 @@ import android.util.TypedValue;
 
 import androidx.core.content.ContextCompat;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 
 public class Utils {
@@ -31,6 +32,13 @@ public class Utils {
     public static Bitmap getImageFromBase64(String imageBase64){
         byte[] decodedString = Base64.getDecoder().decode(imageBase64);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    public static String getBase64Bitmap(Bitmap image) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return Base64.getEncoder().encodeToString(byteArray);
     }
 
     /**
