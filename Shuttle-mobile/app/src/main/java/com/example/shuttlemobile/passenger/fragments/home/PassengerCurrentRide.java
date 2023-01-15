@@ -420,7 +420,7 @@ public class PassengerCurrentRide extends Fragment {
     }
 
     private void stopTimer() {
-        Intent myService = new Intent(getActivity(), CurrentRideTimeService.class);
+        Intent myService = new Intent(getContext(), CurrentRideTimeService.class);
         getActivity().stopService(myService);
     }
 

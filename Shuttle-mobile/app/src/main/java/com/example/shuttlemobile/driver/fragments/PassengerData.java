@@ -26,7 +26,6 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.UserChatActivity;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.passenger.IPassengerService;
-import com.example.shuttlemobile.passenger.PassengerDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.passenger.dto.PassengerDTO;
 

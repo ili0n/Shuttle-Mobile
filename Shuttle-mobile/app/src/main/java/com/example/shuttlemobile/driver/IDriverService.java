@@ -1,6 +1,6 @@
 package com.example.shuttlemobile.driver;
 
-import com.example.shuttlemobile.passenger.PassengerDTO;
+import com.example.shuttlemobile.passenger.dto.PassengerDTO;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
