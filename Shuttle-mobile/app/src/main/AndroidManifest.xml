@@ -26,15 +26,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <provider
-            android:name="com.example.shuttlemobile.driver.fragments.GenericFileProvider"
-            android:authorities="com.shuttlemobile.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
-        </provider>
 
         <activity
             android:name=".passenger.orderride.OrderActivity"
