@@ -9,9 +9,33 @@
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/p_chart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/legend_p_chart"
             />
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/legend_p_chart"
+            android:stretchColumns="*"
+            app:layout_constraintBottom_toBottomOf="parent">
+                <TableRow>
+                        <Space
+                            android:layout_width="30dp"
+                            android:layout_column="0"
+                            android:layout_weight="1"/>
+                        <TextView android:text="@string/sum"
+                            android:layout_width="30dp"
+                            android:layout_column="1"
+                            android:layout_weight="1">
+                        </TextView>
+                        <TextView android:text="@string/average"
+                            android:layout_width="30dp"
+                            android:layout_column="2"
+                            android:layout_weight="1">
+                        </TextView>
+                </TableRow>
+        </TableLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
