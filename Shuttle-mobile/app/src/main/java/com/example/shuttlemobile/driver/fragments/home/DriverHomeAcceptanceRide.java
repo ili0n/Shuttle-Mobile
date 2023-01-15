@@ -19,10 +19,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
+import com.example.shuttlemobile.driver.fragments.PassengerData;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
@@ -183,7 +185,9 @@ public class DriverHomeAcceptanceRide extends Fragment {
                     ride.getPassengers().stream().map(o -> o.getEmail()).collect(Collectors.toList()).toArray(new String[0]),
                     new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {}
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            showPassengerData(i);
+                        }
                     }
                 );
             AlertDialog dialog = builder.show();
@@ -292,5 +296,18 @@ public class DriverHomeAcceptanceRide extends Fragment {
 
             SettingsUtil.put(SettingsUtil.KEY_CURRENT_RIDE_ID, ride.getId());
         }
+    }
+
+    private void showPassengerData(int position) {
+        // Copied from DriverCurrentRide
+
+        Bundle bundle = new Bundle();
+        long passengerId = ride.getPassengers().get(position).getId();
+        bundle.putLong(PassengerData.PASSENGER_ID, passengerId);
+        bundle.putSerializable(PassengerData.RIDE, ride);
+
+        DialogFragment dialog = new PassengerData();
+        dialog.setArguments(bundle);
+        dialog.show(getChildFragmentManager(), "Passenger data");
     }
 }

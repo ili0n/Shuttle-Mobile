@@ -10,5 +10,6 @@ import retrofit2.http.Path;
 public interface IPassengerService {
     @GET("/api/passenger/{id}")
     Call<PassengerDTO> getPassenger(@Path("id") Long passengerId);
+
     IPassengerService service = RetrofitUtils.retrofit.create(IPassengerService.class);
 }

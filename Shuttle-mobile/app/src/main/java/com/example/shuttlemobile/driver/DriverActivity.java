@@ -16,6 +16,7 @@ import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.common.InboxFragment;
 import com.example.shuttlemobile.driver.services.DriverMessageService;
 import com.example.shuttlemobile.driver.services.DriverRideService;
+import com.example.shuttlemobile.user.services.UserMessageService;
 
 public class DriverActivity extends GenericUserActivity {
     @Override
@@ -24,6 +25,7 @@ public class DriverActivity extends GenericUserActivity {
         setContentView(R.layout.activity_driver);
         startService(new Intent(this, DriverMessageService.class));
         startService(new Intent(this, DriverRideService.class));
+        startService(new Intent(this, UserMessageService.class));
     }
 
     @Override

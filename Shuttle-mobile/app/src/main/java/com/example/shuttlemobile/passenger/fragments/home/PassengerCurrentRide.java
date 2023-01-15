@@ -222,10 +222,12 @@ public class PassengerCurrentRide extends Fragment {
                 btnMessage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO This will crash because chat activity uses the obsolete 'session'.
                         Intent intent = new Intent(PassengerCurrentRide.this.getActivity(), UserChatActivity.class);
-                        //intent.putExtra(UserChatActivity.PARAM_SESSION, null); no need for session anymore.
-                        intent.putExtra(UserChatActivity.PARAM_CHAT, new Chat());
+
+                        intent.putExtra(UserChatActivity.PARAM_OTHER_ID, ride.getDriver().getId());
+                        intent.putExtra(UserChatActivity.PARAM_RIDE_ID, ride.getId());
+                        intent.putExtra(UserChatActivity.PARAM_MSG_TYPE, Message.Type.RIDE);
+
                         startActivity(intent);
                     }
                 });
@@ -418,8 +420,8 @@ public class PassengerCurrentRide extends Fragment {
     }
 
     private void stopTimer() {
-        Intent myService = new Intent(requireContext(), CurrentRideTimeService.class);
-        requireContext().stopService(myService);
+        Intent myService = new Intent(getContext(), CurrentRideTimeService.class);
+        getActivity().stopService(myService);
     }
 
     private void drawAndFocusCurrentRoute() {
@@ -458,8 +460,7 @@ public class PassengerCurrentRide extends Fragment {
     }
 
     private void sendNote() {
-        IUserService.service.sendMessage(SettingsUtil.getUserJWT().getId(), new SendMessageDTO(
-                Long.valueOf(-1),
+        IUserService.service.sendMessage(Long.valueOf(-1), new SendMessageDTO(
                 "The driver is not following the expected route",
                 Message.Type.RIDE.toString(),
                 ride.getId()
