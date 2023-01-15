@@ -39,4 +39,6 @@
     <string name="chat">Chat</string>
     <string name="star">star</string>
     <string name="yes">yes</string>
+    <string name="average">AVERAGE</string>
+    <string name="sum">SUM</string>
 </resources>
