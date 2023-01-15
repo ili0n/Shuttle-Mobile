@@ -37,4 +37,6 @@
     <string name="address">address</string>
     <string name="call">Call</string>
     <string name="chat">Chat</string>
+    <string name="star">star</string>
+    <string name="yes">yes</string>
 </resources>

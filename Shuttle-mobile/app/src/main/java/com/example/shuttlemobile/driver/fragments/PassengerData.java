@@ -28,6 +28,7 @@ import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.passenger.IPassengerService;
 import com.example.shuttlemobile.passenger.PassengerDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
+import com.example.shuttlemobile.passenger.dto.PassengerDTO;
 
 import java.util.Base64;
 import java.util.concurrent.ExecutorService;
