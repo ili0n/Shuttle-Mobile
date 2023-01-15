@@ -3,14 +3,17 @@ package com.example.shuttlemobile.util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 
 import androidx.core.content.ContextCompat;
 
+import java.util.Base64;
+
 public class Utils {
-    public static final String ServerOrigin = "http://192.168.0.8:8080/";
+    public static final String ServerOrigin = "http://192.168.1.30:8080/";
 
     private Utils() {}
 
@@ -23,6 +26,11 @@ public class Utils {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    public static Bitmap getImageFromBase64(String imageBase64){
+        byte[] decodedString = Base64.getDecoder().decode(imageBase64);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
     /**

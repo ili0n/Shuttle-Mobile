@@ -50,8 +50,8 @@ public class PassengerAccount extends GenericUserTabbedFragment {
 
     @Override
     protected void initFragmentList() {
-        fragments.add(PassengerAccountInfo.newInstance(session));
-        fragments.add(PassengerAccountFavorites.newInstance(session));
-        fragments.add(PassengerAccountStats.newInstance(session));
+        fragments.add(PassengerAccountInfo.newInstance());
+        fragments.add(PassengerAccountFavorites.newInstance());
+        fragments.add(PassengerAccountStats.newInstance());
     }
 }

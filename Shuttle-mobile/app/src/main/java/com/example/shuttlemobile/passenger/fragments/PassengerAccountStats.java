@@ -47,10 +47,9 @@ public class PassengerAccountStats extends GenericUserFragment {
     private final int TOTAL_LENGTH_COLOR = R.color.red;
     private final int NUM_OF_RIDES_COLOR = R.color.green;
 
-    public static PassengerAccountStats newInstance(SessionContext session) {
+    public static PassengerAccountStats newInstance() {
         PassengerAccountStats fragment = new PassengerAccountStats();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
         fragment.setArguments(bundle);
         return fragment;
     }
