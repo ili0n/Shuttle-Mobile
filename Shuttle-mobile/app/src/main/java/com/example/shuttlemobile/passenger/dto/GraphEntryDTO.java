@@ -1,6 +1,10 @@
 package com.example.shuttlemobile.passenger.dto;
 
-public class GraphEntryDTO {
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class GraphEntryDTO implements Serializable {
     private String time;
     private Long numberOfRides;
     private Double costSum;

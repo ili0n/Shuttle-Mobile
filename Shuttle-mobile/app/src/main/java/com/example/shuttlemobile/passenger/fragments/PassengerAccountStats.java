@@ -12,40 +12,55 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.common.GenericUserFragment;
-import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.passenger.dto.GraphEntryDTO;
-import com.github.mikephil.charting.charts.BarChart;
+import com.example.shuttlemobile.ride.IRideService;
+import com.example.shuttlemobile.util.SettingsUtil;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.concurrent.Callable;
 
-public class PassengerAccountStats extends GenericUserFragment {
-    private LineChart chart;
-    private TableLayout table;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    private final int COST_SUM_COLOR = R.color.purple_200;
-    private final int TOTAL_LENGTH_COLOR = R.color.red;
-    private final int NUM_OF_RIDES_COLOR = R.color.green;
+public class PassengerAccountStats extends Fragment{
+    public static final String START = "start";
+    public static final String END = "end";
+    private LineChart chart;
+    protected Map<Integer, Fragment> fragments = new HashMap<>();
+    public static final int COST_SUM_COLOR = R.color.purple_200;
+    public static final int TOTAL_LENGTH_COLOR = R.color.red;
+    public static final int NUM_OF_RIDES_COLOR = R.color.green;
+
+    public static final String ENTRIES = "entries";
+    private Fragment currentFragment;
+    private ArrayList<GraphEntryDTO> entries;
 
     public static PassengerAccountStats newInstance() {
         PassengerAccountStats fragment = new PassengerAccountStats();
@@ -57,12 +72,13 @@ public class PassengerAccountStats extends GenericUserFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        initializeFragmentMap();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_passenger_account_stats, container, false);
-        table = v.findViewById(R.id.legend_p_chart);
+        setVisibleFragment(getDefaultFragment());
         createGraph(v);
         setData();
         return v;
@@ -72,11 +88,15 @@ public class PassengerAccountStats extends GenericUserFragment {
         chart = v.findViewById(R.id.p_chart);
         chart.getDescription().setEnabled(false);
         chart.setDrawGridBackground(false);
+        chart.getLegend().setEnabled(false);
     }
-    private void setData() {
-        ArrayList<GraphEntryDTO> entries = mockEntries();
+    public void setData() {
+        chart.invalidate();
+        chart.clear();
 
-        calculateAndAdd(entries);
+        if(entries == null){
+            return;
+        }
 
         ArrayList<Entry> costSum = new ArrayList<>();
         ArrayList<Entry> totalLength = new ArrayList<>();
@@ -90,7 +110,7 @@ public class PassengerAccountStats extends GenericUserFragment {
         LineDataSet costSumSet;
         LineDataSet totalLengthSet;
         LineDataSet numOfRidesSet;
-        chart.getLegend().setEnabled(false);
+
 //        change if data already exists
         if (chart.getData() != null &&
                 chart.getData().getDataSetCount() > 0) {
@@ -131,73 +151,9 @@ public class PassengerAccountStats extends GenericUserFragment {
             LineData data = new LineData(dataSets);
             data.setValueTextSize(10f);
             chart.setData(data);
+            chart.invalidate();
 
         }
-    }
-
-    private void calculateAndAdd(List<GraphEntryDTO> data){
-        double sum = data.stream().mapToDouble(GraphEntryDTO::getCostSum).sum();
-        OptionalDouble avgO = data.stream().mapToDouble(GraphEntryDTO::getCostSum).average();
-        double avg;
-        if(avgO.isPresent()){
-            avg = avgO.getAsDouble();
-        }
-        else {
-            avg = 0;
-        }
-        addRow(COST_SUM_COLOR, "Cost sum", sum, avg);
-
-        sum = data.stream().mapToDouble(GraphEntryDTO::getLength).sum();
-        avgO = data.stream().mapToDouble(GraphEntryDTO::getLength).average();
-        if(avgO.isPresent()){
-            avg = avgO.getAsDouble();
-        }
-        else {
-            avg = 0;
-        }
-        addRow(TOTAL_LENGTH_COLOR, "Total length", sum, avg);
-
-        sum = data.stream().mapToDouble(GraphEntryDTO::getNumberOfRides).sum();
-        avgO = data.stream().mapToDouble(GraphEntryDTO::getNumberOfRides).average();
-        if(avgO.isPresent()){
-            avg = avgO.getAsDouble();
-        }
-        else {
-            avg = 0;
-        }
-        addRow(NUM_OF_RIDES_COLOR, "Number of rides", sum, avg);
-
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void addRow(int colorVal, String labelText, double sum, double avg){
-        LayoutInflater inflater = getLayoutInflater();
-        TableRow tr = (TableRow) inflater.inflate(R.layout.chart_data_row,
-                table, false);
-        table.addView(tr);
-
-        View color =(View) tr.findViewById(R.id.color_p_chart);
-        TextView tvLabel = (TextView) tr.findViewById(R.id.lbl_p_chart_data);
-        TextView tvSum = (TextView) tr.findViewById(R.id.lbl_p_chart_sum);
-        TextView tvAvg = (TextView) tr.findViewById(R.id.lbl_p_chart_avg);
-
-        color.setBackgroundColor(getResources().getColor(colorVal, null));
-        tvLabel.setText(labelText);
-        tvSum.setText(Double.toString(sum));
-        tvAvg.setText( Double.toString(avg));
-    }
-
-    private ArrayList<GraphEntryDTO> mockEntries() {
-        ArrayList<GraphEntryDTO> entries = new ArrayList<>();
-        GraphEntryDTO g1 = new GraphEntryDTO("asd", 1L, (double) 2.0, 3.0);
-        GraphEntryDTO g2 = new GraphEntryDTO("efw", 3L, (double) 7.0, 9.0);
-        GraphEntryDTO g3 = new GraphEntryDTO("xcv", 4L, (double) 3.0, 10.0);
-        GraphEntryDTO g4 = new GraphEntryDTO("qwr", 5L, (double) 1.0, 2.0);
-        entries.add(g1);
-        entries.add(g2);
-        entries.add(g3);
-        entries.add(g4);
-        return entries;
     }
 
     private void setAxis(ArrayList<GraphEntryDTO> entries) {
@@ -207,5 +163,85 @@ public class PassengerAccountStats extends GenericUserFragment {
         xAxis.setGranularity(1f);
         xAxis.setGranularityEnabled(true);
         xAxis.setValueFormatter((value, axis) -> entries.get((int) value).getTime());
+    }
+
+    protected void initializeFragmentMap() {
+        fragments.put(R.layout.fragment_date_range_picker, DateRangePicker.newInstance());
+        fragments.put(R.layout.fragment_graph_data_table, GraphDataTable.newInstance());
+    }
+
+    protected final void setVisibleFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setReorderingAllowed(true)
+                .replace(getFragmentFrameId(), fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        currentFragment = fragment;
+    }
+
+    public void fetchGraphEntries(Long start, Long end) {
+        Instant instant = Instant.ofEpochMilli(start);
+        LocalDateTime startDate = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
+
+        instant = Instant.ofEpochMilli(end);
+        LocalDateTime endDate = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
+
+
+        Long passengerId = SettingsUtil.getUserJWT().getId();
+        Call<ArrayList<GraphEntryDTO>> call = IRideService.service.getPassengerGraphData(passengerId,
+                startDate.atZone(ZoneOffset.UTC).toString(),
+                endDate.atZone(ZoneOffset.UTC).toString());
+        call.enqueue(new Callback<ArrayList<GraphEntryDTO>>() {
+            @Override
+            public void onResponse(Call<ArrayList<GraphEntryDTO>> call, Response<ArrayList<GraphEntryDTO>> response) {
+                if(response.isSuccessful()){
+                    entries = response.body();
+                    if(entries != null && entries.size() == 0){
+                        Toast.makeText(requireContext(), "There are no rides matching criteria", Toast.LENGTH_LONG).show();
+                    }
+                    if(entries != null && entries.size() > 0) {
+                        setData();
+                        showTable();
+                    }
+                }
+                else {
+                    Toast.makeText(requireContext(), "Failed to fetch data", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<GraphEntryDTO>> call, Throwable t) {
+                Toast.makeText(requireContext(), "Failed to fetch data", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void showTable() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ENTRIES, entries);
+        Fragment table = fragments.get(R.layout.fragment_graph_data_table);
+        table.setArguments(bundle);
+        setVisibleFragment(table);
+    }
+
+//    public void onBackPressed() {
+//        FragmentManager fm = getChildFragmentManager();
+//
+//        if (currentFragment == getDefaultFragment()) {
+////            super.onBackPressed();
+//        } else {
+//            fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//            setVisibleFragment(getDefaultFragment());
+//        }
+//    }
+
+    private Fragment getDefaultFragment() {
+        return fragments.get(R.layout.fragment_date_range_picker);
+    }
+
+    protected int getFragmentFrameId() {
+        return R.id.container_p_stats;
     }
 }
