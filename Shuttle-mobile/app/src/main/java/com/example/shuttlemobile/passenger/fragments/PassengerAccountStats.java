@@ -1,10 +1,16 @@
 package com.example.shuttlemobile.passenger.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.shuttlemobile.R;
@@ -13,6 +19,8 @@ import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.passenger.dto.GraphEntryDTO;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -23,16 +31,25 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.concurrent.Callable;
 
 public class PassengerAccountStats extends GenericUserFragment {
     private LineChart chart;
+    private TableLayout table;
 
-    public static PassengerAccountStats newInstance(SessionContext session) {
+    private final int COST_SUM_COLOR = R.color.purple_200;
+    private final int TOTAL_LENGTH_COLOR = R.color.red;
+    private final int NUM_OF_RIDES_COLOR = R.color.green;
+
+    public static PassengerAccountStats newInstance() {
         PassengerAccountStats fragment = new PassengerAccountStats();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -45,6 +62,7 @@ public class PassengerAccountStats extends GenericUserFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_passenger_account_stats, container, false);
+        table = v.findViewById(R.id.legend_p_chart);
         createGraph(v);
         setData();
         return v;
@@ -57,6 +75,9 @@ public class PassengerAccountStats extends GenericUserFragment {
     }
     private void setData() {
         ArrayList<GraphEntryDTO> entries = mockEntries();
+
+        calculateAndAdd(entries);
+
         ArrayList<Entry> costSum = new ArrayList<>();
         ArrayList<Entry> totalLength = new ArrayList<>();
         ArrayList<Entry> numOfRides = new ArrayList<>();
@@ -69,6 +90,7 @@ public class PassengerAccountStats extends GenericUserFragment {
         LineDataSet costSumSet;
         LineDataSet totalLengthSet;
         LineDataSet numOfRidesSet;
+        chart.getLegend().setEnabled(false);
 //        change if data already exists
         if (chart.getData() != null &&
                 chart.getData().getDataSetCount() > 0) {
@@ -88,16 +110,16 @@ public class PassengerAccountStats extends GenericUserFragment {
         } else {
             setAxis(entries);
             costSumSet = new LineDataSet(costSum, "Cost sum");
-            costSumSet.setColors(new int[] { R.color.purple_200 }, requireContext());
+            costSumSet.setColors(new int[] { COST_SUM_COLOR }, requireContext());
             costSumSet.setDrawIcons(false);
 
             totalLengthSet = new LineDataSet(totalLength, "Total length");
-            totalLengthSet.setColors(new int[] { R.color.red }, requireContext());
+            totalLengthSet.setColors(new int[] { TOTAL_LENGTH_COLOR }, requireContext());
             setAxis(entries);
             totalLengthSet.setDrawIcons(false);
 
             numOfRidesSet = new LineDataSet(numOfRides, "Number of rides");
-            numOfRidesSet.setColors(new int[] {R.color.green }, requireContext());
+            numOfRidesSet.setColors(new int[] { NUM_OF_RIDES_COLOR }, requireContext());
             setAxis(entries);
             numOfRidesSet.setDrawIcons(false);
 
@@ -106,12 +128,63 @@ public class PassengerAccountStats extends GenericUserFragment {
             dataSets.add(totalLengthSet);
             dataSets.add(numOfRidesSet);
 
-
             LineData data = new LineData(dataSets);
             data.setValueTextSize(10f);
-//            data.setBarWidth(0.9f);
             chart.setData(data);
+
         }
+    }
+
+    private void calculateAndAdd(List<GraphEntryDTO> data){
+        double sum = data.stream().mapToDouble(GraphEntryDTO::getCostSum).sum();
+        OptionalDouble avgO = data.stream().mapToDouble(GraphEntryDTO::getCostSum).average();
+        double avg;
+        if(avgO.isPresent()){
+            avg = avgO.getAsDouble();
+        }
+        else {
+            avg = 0;
+        }
+        addRow(COST_SUM_COLOR, "Cost sum", sum, avg);
+
+        sum = data.stream().mapToDouble(GraphEntryDTO::getLength).sum();
+        avgO = data.stream().mapToDouble(GraphEntryDTO::getLength).average();
+        if(avgO.isPresent()){
+            avg = avgO.getAsDouble();
+        }
+        else {
+            avg = 0;
+        }
+        addRow(TOTAL_LENGTH_COLOR, "Total length", sum, avg);
+
+        sum = data.stream().mapToDouble(GraphEntryDTO::getNumberOfRides).sum();
+        avgO = data.stream().mapToDouble(GraphEntryDTO::getNumberOfRides).average();
+        if(avgO.isPresent()){
+            avg = avgO.getAsDouble();
+        }
+        else {
+            avg = 0;
+        }
+        addRow(NUM_OF_RIDES_COLOR, "Number of rides", sum, avg);
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void addRow(int colorVal, String labelText, double sum, double avg){
+        LayoutInflater inflater = getLayoutInflater();
+        TableRow tr = (TableRow) inflater.inflate(R.layout.chart_data_row,
+                table, false);
+        table.addView(tr);
+
+        View color =(View) tr.findViewById(R.id.color_p_chart);
+        TextView tvLabel = (TextView) tr.findViewById(R.id.lbl_p_chart_data);
+        TextView tvSum = (TextView) tr.findViewById(R.id.lbl_p_chart_sum);
+        TextView tvAvg = (TextView) tr.findViewById(R.id.lbl_p_chart_avg);
+
+        color.setBackgroundColor(getResources().getColor(colorVal, null));
+        tvLabel.setText(labelText);
+        tvSum.setText(Double.toString(sum));
+        tvAvg.setText( Double.toString(avg));
     }
 
     private ArrayList<GraphEntryDTO> mockEntries() {

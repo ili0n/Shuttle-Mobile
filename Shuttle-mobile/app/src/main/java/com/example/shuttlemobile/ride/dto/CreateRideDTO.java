@@ -12,15 +12,7 @@ public class CreateRideDTO {
     private boolean babyTransport;
     private boolean petTransport;
     private String scheduledTime;
-
-    public CreateRideDTO(List<RidePassengerDTO> passengers, List<RouteDTO> locations, String vehicleType, boolean babyTransport, boolean petTransport, String scheduledTime) {
-        this.passengers = passengers;
-        this.locations = locations;
-        this.vehicleType = vehicleType;
-        this.babyTransport = babyTransport;
-        this.petTransport = petTransport;
-        this.scheduledTime = scheduledTime;
-    }
+    private Double distance;
 
     public CreateRideDTO() {
     }
@@ -73,6 +65,14 @@ public class CreateRideDTO {
         this.scheduledTime = scheduledTime;
     }
 
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
     @Override
     public String toString() {
         return "CreateRideDTO{" +
@@ -82,6 +82,7 @@ public class CreateRideDTO {
                 ", babyTransport=" + babyTransport +
                 ", petTransport=" + petTransport +
                 ", scheduledTime='" + scheduledTime + '\'' +
+                ", distance=" + distance +
                 '}';
     }
 }

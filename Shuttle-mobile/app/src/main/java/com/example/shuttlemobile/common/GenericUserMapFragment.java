@@ -302,6 +302,10 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
     }
 
     public final void drawRoute(Point A, Point B, String hexColor) {
+        if (getActivity() == null) {
+            return;
+        }
+
         final List<Point> points = Arrays.asList(A, B);
 
         final MapboxDirections client = MapboxDirections.builder()
@@ -317,6 +321,7 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
             @Override
             public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
                 drawRoute_OnResponse(call, response, hexColor);
+                onGetDistance(response.body().routes().get(0).distance());
             }
 
             @Override
@@ -325,6 +330,8 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
             }
         });
     }
+
+    public void onGetDistance(Double distance) {}
 
     /**
      * Remove the route and its endpoint from the map (if any).

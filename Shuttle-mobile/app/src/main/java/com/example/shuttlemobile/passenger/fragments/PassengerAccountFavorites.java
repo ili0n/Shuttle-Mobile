@@ -41,10 +41,9 @@ public class PassengerAccountFavorites extends GenericUserFragment {
     private List<Long> ids = new ArrayList<>();
 
 
-    public static PassengerAccountFavorites newInstance(SessionContext session) {
+    public static PassengerAccountFavorites newInstance() {
         PassengerAccountFavorites fragment = new PassengerAccountFavorites();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(GenericUserFragment.KEY_SESSION, session);
         fragment.setArguments(bundle);
         return fragment;
     }

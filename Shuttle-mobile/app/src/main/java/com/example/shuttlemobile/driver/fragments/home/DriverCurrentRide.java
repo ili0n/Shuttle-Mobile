@@ -204,6 +204,7 @@ public class DriverCurrentRide extends Fragment {
         Bundle bundle = new Bundle();
         long passengerId = lvPassengers.getAdapter().getItemId(position);
         bundle.putLong(PassengerData.PASSENGER_ID, passengerId);
+        bundle.putSerializable(PassengerData.RIDE, currentRide);
 
         DialogFragment dialog = new PassengerData();
         dialog.setArguments(bundle);

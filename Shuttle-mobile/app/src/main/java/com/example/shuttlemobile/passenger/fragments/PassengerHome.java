@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -55,6 +56,7 @@ public class PassengerHome extends GenericUserMapFragment {
     private RideDTO ride = null;
     private Point A = null;
     private Point B = null;
+    private Double distance = 0.0;
 
     public static PassengerHome newInstance(SessionContext session) {
         PassengerHome fragment = new PassengerHome();
@@ -89,7 +91,7 @@ public class PassengerHome extends GenericUserMapFragment {
 
     @Override
     public String getPublicMapApiToken() {
-        return getResources().getString(R.string.mapbox_access_token);
+        return getActivity().getResources().getString(R.string.mapbox_access_token);
     }
 
     @Override
@@ -120,6 +122,16 @@ public class PassengerHome extends GenericUserMapFragment {
 
         subscribeToRideReceiver();
         subscribeToDriversLocationReceiver();
+    }
+
+    @Override
+    public void onGetDistance(Double d) {
+        super.onGetDistance(distance);
+        this.distance = d;
+    }
+
+    public Double getDistance() {
+        return distance;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

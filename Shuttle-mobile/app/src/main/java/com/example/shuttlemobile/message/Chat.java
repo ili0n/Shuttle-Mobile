@@ -11,14 +11,12 @@ public class Chat implements Serializable {
     private User sender;
     private User recipient;
     private Ride ride;
-    private List<Message> messages = new ArrayList<>();
-
-    // sender, recipient and ride are a controlled redundancy.
+    private List<MessageDTO> messages = new ArrayList<>();
 
     /**
      * @return Last message in this chat or <code>null</code> if none.
      */
-    public Message getLastMessage() {
+    public MessageDTO getLastMessage() {
         if (messages == null)
             return null;
         if (messages.size() == 0)
@@ -42,11 +40,11 @@ public class Chat implements Serializable {
         this.recipient = recipient;
     }
 
-    public List<Message> getMessages() {
+    public List<MessageDTO> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<Message> messages) {
+    public void setMessages(List<MessageDTO> messages) {
         this.messages = messages;
     }
 }

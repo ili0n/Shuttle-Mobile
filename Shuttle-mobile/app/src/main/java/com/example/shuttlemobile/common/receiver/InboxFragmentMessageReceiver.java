@@ -26,6 +26,6 @@ public class InboxFragmentMessageReceiver extends BroadcastReceiver {
         // if true, then call the update method, which
         // for now just sends dummy data.
 
-        owner.dummyFetchNewData();
+        //owner.dummyFetchNewData();
     }
 }

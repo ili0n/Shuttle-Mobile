@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.driver;
 
+import com.example.shuttlemobile.passenger.dto.PassengerDTO;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
@@ -23,6 +24,9 @@ public interface IDriverService {
     Call<VehicleDTO> updateVehicle(@Path("id") Long driverId, @Body VehicleDTO vehicleDTO);
     @PUT("/api/driver/{id}")
     Call<DriverDTO> updateDriver(@Path("id") Long driverId, @Body DriverDTO driverDTO);
+
+    @GET("/api/driver/{id}")
+    Call<PassengerDTO> getDriver(@Path("id") Long driverId); // TODO: UserDTO?
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Utils.ServerOrigin)
