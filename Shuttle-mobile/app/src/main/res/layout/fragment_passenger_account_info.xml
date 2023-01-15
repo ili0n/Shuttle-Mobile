@@ -34,7 +34,7 @@
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_marginTop="24dp"
-        android:background="#64B5F6"
+        android:background="@android:color/transparent"
         android:scaleType="fitStart"
         android:src="@drawable/ic_baseline_account_box_24"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,14 +64,34 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_p_info_name_lbl" />
 
     <TextView
+        android:id="@+id/txt_p_info_email_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/txt_p_info_email"
+        app:layout_constraintTop_toBottomOf="@+id/txt_p_info_surname" />
+
+    <EditText
+        android:id="@+id/txt_p_info_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_p_info_email_lbl"
+        tools:text="bob@gmail.com" />
+
+    <TextView
         android:id="@+id/txt_p_info_address_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Address"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/txt_p_info_surname"
-        app:layout_constraintTop_toBottomOf="@+id/txt_p_info_surname" />
+        app:layout_constraintStart_toStartOf="@id/txt_p_info_address"
+        app:layout_constraintTop_toBottomOf="@+id/txt_p_info_email" />
 
     <EditText
         android:id="@+id/txt_p_info_address"

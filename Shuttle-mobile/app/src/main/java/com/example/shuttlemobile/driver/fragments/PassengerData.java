@@ -28,6 +28,7 @@ import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.passenger.IPassengerService;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.passenger.dto.PassengerDTO;
+import com.example.shuttlemobile.util.Utils;
 
 import java.util.Base64;
 import java.util.concurrent.ExecutorService;
@@ -96,14 +97,9 @@ public class PassengerData extends DialogFragment {
             tvPhone.setText(passenger.getTelephoneNumber());
             tvEmail.setText(passenger.getEmail());
             tvAddress.setText(passenger.getAddress());
-            imgProfilePicture.setImageBitmap(getImage(passenger.getProfilePicture()));
+            imgProfilePicture.setImageBitmap(Utils.getImageFromBase64(passenger.getProfilePicture()));
         })
         );
-    }
-
-    public Bitmap getImage(String imageBase64){
-        byte[] decodedString = Base64.getDecoder().decode(imageBase64);
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
     private void initViews(View view) {
