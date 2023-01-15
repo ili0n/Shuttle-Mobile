@@ -29,6 +29,7 @@ import java.util.Map;
 
 public class OrderActivity extends AppCompatActivity {
     public static final String KEY_ROUTE = "route";
+    public static final String KEY_DIST = "dist";
 
     private int step = 0;
     private int MAX_STEP = 3;
@@ -39,6 +40,7 @@ public class OrderActivity extends AppCompatActivity {
     private Fragment currentFragment;
     private SessionContext session;
     private RouteDTO route;
+    private Double distance;
     private SeekBar seekbarProgress;
 
     public RouteDTO getRoute() {
@@ -50,6 +52,9 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         this.route = (RouteDTO) getIntent().getSerializableExtra(KEY_ROUTE);
+        this.distance = getIntent().getDoubleExtra(KEY_DIST, 0.0);
+
+        //Log.e("?", this.distance.toString());
 
         setContentView(R.layout.activity_order);
         initViewElements(getWindow().getDecorView().getRootView());
@@ -149,14 +154,13 @@ public class OrderActivity extends AppCompatActivity {
     private CreateRideDTO generateDTO(RidePropertiesFragment properties, ScheduleRide schedule, InviteFragment invite) {
         CreateRideDTO dto = new CreateRideDTO();
 
-        Log.e("?", this.route.toString());
-
         dto.setLocations(Arrays.asList(this.route));
         dto.setBabyTransport(properties.isBabyChecked());
         dto.setPetTransport(properties.isPetChecked());
         dto.setVehicleType(properties.getVehicleType());
         dto.setScheduledTime(schedule.getFutureTime());
         dto.setPassengers(invite.getPassengers());
+        dto.setDistance(distance);
 
         return dto;
     }
