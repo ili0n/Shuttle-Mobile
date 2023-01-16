@@ -33,6 +33,7 @@ public class SettingsUtil {
 
     public static void init(SharedPreferences prefs) {
         SettingsUtil.prefs = prefs;
+        SettingsUtil.clearUser();
     }
 
     public static JWT getUserJWT() {
@@ -79,6 +80,10 @@ public class SettingsUtil {
         return new User(id, name, lastName, location, phone, email, "", pfp, blocked, active, role);
     }
 */
+
+    public static void clearUser(){
+        prefs.edit().clear().commit();
+    }
     public static void put(String key, String value) {
         prefs.edit().putString(key, value).commit();
     }

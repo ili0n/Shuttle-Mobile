@@ -28,12 +28,12 @@ public class PassengerRideService extends Service {
 
     public PassengerRideService() {
     }
-
+    final ExecutorService executorService = Executors.newSingleThreadExecutor();
     @Override
     public void onCreate() {
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
         final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 1000;
+        final int delay = 10000;
 
         executorService.execute(new Runnable() {
                 @Override
@@ -78,5 +78,11 @@ public class PassengerRideService extends Service {
                 Log.e("REST ERROR", t.toString());
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        executorService.shutdownNow();
+        super.onDestroy();
     }
 }

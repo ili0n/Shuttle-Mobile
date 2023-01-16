@@ -31,6 +31,7 @@ public class PassengerMessageService extends Service {
     public PassengerMessageService() {
     }
 
+
     @Override
     public void onCreate() {
         executorService = Executors.newSingleThreadExecutor();
@@ -52,13 +53,13 @@ public class PassengerMessageService extends Service {
             return;
         }
         if (message_sync_interval.equals(possibleValues[1])) {
-            delay_ = 3000;
+            delay_ = 30000;
         }
         if (message_sync_interval.equals(possibleValues[2])) {
-            delay_ = 6000;
+            delay_ = 60000;
         }
         if (message_sync_interval.equals(possibleValues[3])) {
-            delay_ = 9000;
+            delay_ = 90000;
         }
 
         final int delay = delay_;
@@ -108,5 +109,11 @@ public class PassengerMessageService extends Service {
                 .setAutoCancel(true);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
         notificationManager.notify(112213, builder.build());
+    }
+
+    @Override
+    public void onDestroy() {
+        executorService.shutdownNow();
+        super.onDestroy();
     }
 }

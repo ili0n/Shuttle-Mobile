@@ -26,14 +26,15 @@ public class UserMessageService extends Service {
     public static String BROADCAST_CHANNEL = "user_service_broadcast_channel";
     public static String INTENT_MESSAGE_KEY = "message";
 
+    final ExecutorService executorService = Executors.newSingleThreadExecutor();
     public UserMessageService() {
     }
 
     @Override
     public void onCreate() {
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
         final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 2000;
+        final int delay = 20000;
 
         executorService.execute(new Runnable() {
                 @Override
@@ -75,5 +76,11 @@ public class UserMessageService extends Service {
                 Log.e("??", t.toString());
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        executorService.shutdownNow();
+        super.onDestroy();
     }
 }
