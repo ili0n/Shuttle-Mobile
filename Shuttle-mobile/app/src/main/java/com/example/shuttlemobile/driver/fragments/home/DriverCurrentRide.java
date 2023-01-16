@@ -64,7 +64,6 @@ public class DriverCurrentRide extends Fragment {
     private Button btnPassengers;
     private TextView tvDeparture;
     private TextView tvDestination;
-    private TextView tvDistance;
     private TextView tvTime;
     private TextView tvPrice;
     private TextView tvPassengerCount;
@@ -198,7 +197,6 @@ public class DriverCurrentRide extends Fragment {
         btnPassengers = view.findViewById(R.id.btn_current_ride_passengers);
         tvDeparture = view.findViewById(R.id.txt_current_ride_departure);
         tvDestination = view.findViewById(R.id.txt_current_ride_destination);
-        tvDistance = view.findViewById(R.id.txt_current_ride_distance);
         tvTime = view.findViewById(R.id.txt_current_ride_duration);
         tvPrice = view.findViewById(R.id.txt_current_ride_price);
         tvPassengerCount = view.findViewById(R.id.txt_current_ride_passengers);
@@ -253,7 +251,6 @@ public class DriverCurrentRide extends Fragment {
     @SuppressLint("DefaultLocale")
     private void fillTextViews() {
         tvPassengerCount.setText(Integer.toString(currentRide.getPassengers().size()));
-        tvDistance.setText("Unknown");
         tvPrice.setText(String.format("%.2f", currentRide.getTotalCost()));
     }
 
