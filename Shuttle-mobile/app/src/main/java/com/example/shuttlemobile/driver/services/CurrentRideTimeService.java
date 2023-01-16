@@ -47,7 +47,7 @@ public class CurrentRideTimeService extends PullingService {
             long secondsTotal = ChronoUnit.SECONDS.between(startTime, LocalDateTime.now());
             @SuppressLint("DefaultLocale") String result = String.format("%d:%02d:%02d",
                     secondsTotal / 3600, (secondsTotal % 3600) / 60, secondsTotal % 60);
-            sendResult(getResources().getString(R.string.elapsed_time) + result);
+            sendResult(result);
         }, 0, 1, TimeUnit.SECONDS);
     }
 }

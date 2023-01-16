@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.driver.fragments.home;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,6 +45,7 @@ import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
 import com.example.shuttlemobile.route.LocationDTO;
+import com.example.shuttlemobile.route.RouteDTO;
 import com.example.shuttlemobile.user.UserEmailDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
@@ -59,11 +61,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DriverCurrentRide extends Fragment {
-    private ListView lvPassengers;
-    private ListView lvLocations;
-    private CheckBox cbBaby;
-    private CheckBox cbPet;
+    private Button btnPassengers;
+    private TextView tvDeparture;
+    private TextView tvDestination;
     private TextView tvTime;
+    private TextView tvPrice;
+    private TextView tvPassengerCount;
     private Button btnFinish;
     private Button btnPanic;
 
@@ -190,19 +193,20 @@ public class DriverCurrentRide extends Fragment {
     }
 
     private void initViewElements(View view) {
-        lvPassengers = view.findViewById(R.id.lv_d_passengers);
-        lvPassengers.setOnItemClickListener((adapterView, view1, position, id) -> showPassengerData(position));
-        lvLocations = view.findViewById(R.id.lv_d_locations);
-        cbBaby = view.findViewById(R.id.cb_d_baby);
-        cbPet = view.findViewById(R.id.cb_d_pet);
-        tvTime = view.findViewById(R.id.tv_d_estimated_time);
+
+        btnPassengers = view.findViewById(R.id.btn_current_ride_passengers);
+        tvDeparture = view.findViewById(R.id.txt_current_ride_departure);
+        tvDestination = view.findViewById(R.id.txt_current_ride_destination);
+        tvTime = view.findViewById(R.id.txt_current_ride_duration);
+        tvPrice = view.findViewById(R.id.txt_current_ride_price);
+        tvPassengerCount = view.findViewById(R.id.txt_current_ride_passengers);
         btnFinish = view.findViewById(R.id.btn_d_finish);
         btnPanic = view.findViewById(R.id.btn_d_panic);
     }
 
     private void showPassengerData(int position) {
         Bundle bundle = new Bundle();
-        long passengerId = lvPassengers.getAdapter().getItemId(position);
+        long passengerId =  currentRide.getPassengers().get(position).getId();
         bundle.putLong(PassengerData.PASSENGER_ID, passengerId);
         bundle.putSerializable(PassengerData.RIDE, currentRide);
 
@@ -212,72 +216,48 @@ public class DriverCurrentRide extends Fragment {
     }
 
     private void fillData() {
-        fillPassengers();
+        fillTextViews();
+
         fillLocations();
-        cbBaby.setChecked(this.currentRide.getBabyTransport());
-        cbPet.setChecked(this.currentRide.getPetTransport());
         btnFinish.setOnClickListener(view -> finishRide());
 
         initPanicButton();
+        initPreviewButton();
     }
 
-    private void fillPassengers() {
-        List<UserEmailDTO> passengers = currentRide.getPassengers();
-        lvPassengers.setAdapter(new EasyListAdapter<UserEmailDTO>() {
-            @Override
-            public List<UserEmailDTO> getList() {
-                return passengers;
-            }
+    private void initPreviewButton() {
+        btnPassengers.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = requireActivity().getLayoutInflater();
+            View v = inflater.inflate(R.layout.alert_ride_passenger_list, null);
 
-            @Override
-            public LayoutInflater getLayoutInflater() {
-                return DriverCurrentRide.this.getLayoutInflater();
-            }
-
-            @Override
-            public void applyToView(View view, UserEmailDTO passenger) {
-                TextView tvPassenger = view.findViewById(R.id.list_d_content);
-                tvPassenger.setText(passenger.getEmail());
-            }
-
-            @Override
-            public long getItemId(int i) {
-                return getList().get(i).getId();
-            }
-
-            @Override
-            public int getListItemLayoutId() {
-                return R.layout.list_d_simple_item;
-            }
+            builder.setView(v)
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).setItems(
+                            currentRide.getPassengers()
+                                    .stream()
+                                    .map(o -> o.getEmail())
+                                    .collect(Collectors.toList())
+                                    .toArray(new String[0]), (dialogInterface, i) -> showPassengerData(i)
+                    );
+            builder.show();
         });
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void fillTextViews() {
+        tvPassengerCount.setText(Integer.toString(currentRide.getPassengers().size()));
+        tvPrice.setText(String.format("%.2f", currentRide.getTotalCost()));
     }
 
     private void fillLocations() {
-        List<String> locations = currentRide.getLocations().stream()
-                .map(route -> route.getDeparture().getAddress() + " -> " + route.getDestination().getAddress())
-                .collect(Collectors.toList());
-        lvLocations.setAdapter(new EasyListAdapter<String>() {
-            @Override
-            public List<String> getList() {
-                return locations;
-            }
-
-            @Override
-            public LayoutInflater getLayoutInflater() {
-                return DriverCurrentRide.this.getLayoutInflater();
-            }
-
-            @Override
-            public void applyToView(View view, String passenger) {
-                TextView tvLocation = view.findViewById(R.id.list_d_content);
-                tvLocation.setText(passenger);
-            }
-
-            @Override
-            public int getListItemLayoutId() {
-                return R.layout.list_d_simple_item;
-            }
-        });
+        List<RouteDTO> locations = currentRide.getLocations();
+        tvDeparture.setText(locations.get(0).getDeparture().getAddress());
+        tvDestination.setText(locations.get(locations.size() - 1).getDestination().getAddress());
     }
 
     private void finishRide(){

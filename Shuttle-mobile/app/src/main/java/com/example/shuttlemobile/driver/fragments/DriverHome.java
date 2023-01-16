@@ -94,6 +94,7 @@ public class DriverHome extends GenericUserMapFragment {
 
     @Override
     public void onMapLoaded() {
+        lookAtPoint(Point.fromLngLat(19.833549,45.267136), 15, 4000);
     }
 
     @Override
