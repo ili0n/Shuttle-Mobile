@@ -9,15 +9,24 @@ import com.example.shuttlemobile.vehicle.VehicleDTO;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface IDriverService {
     @GET("/api/driver/{id}/vehicle")
     Call<VehicleDTO> getVehicle(@Path("id") Long driverId);
-
     @GET("/api/driver/{id}")
-    Call<PassengerDTO> getDriver(@Path("id") Long driverId); // TODO: UserDTO?
+    Call<DriverDTO> getDriver(@Path("id") Long driverId);
+
+    @PUT("/api/driver/{id}/vehicle")
+    Call<VehicleDTO> updateVehicle(@Path("id") Long driverId, @Body VehicleDTO vehicleDTO);
+    @PUT("/api/driver/{id}")
+    Call<DriverDTO> updateDriver(@Path("id") Long driverId, @Body DriverDTO driverDTO);
+
+//    @GET("/api/driver/{id}")
+//    Call<PassengerDTO> getDriver(@Path("id") Long driverId); // TODO: UserDTO?
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Utils.ServerOrigin)
@@ -25,4 +34,6 @@ public interface IDriverService {
             .client(RetrofitUtils.basicJsonJwtClient())
             .build();
     IDriverService service = retrofit.create(IDriverService.class);
+
+
 }
