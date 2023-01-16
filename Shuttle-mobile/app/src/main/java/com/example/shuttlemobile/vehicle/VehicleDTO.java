@@ -9,6 +9,7 @@ public class VehicleDTO implements Serializable {
     private Long driverId;
     private String vehicleType;
     private String model;
+    private String licenseNumber;
     private LocationDTO currentLocation;
     private Long passengerSeats;
     private Boolean babyTransport;
@@ -26,6 +27,14 @@ public class VehicleDTO implements Serializable {
     }
 
     public VehicleDTO() {
+    }
+
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
+
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
     }
 
     public Long getId() {
