@@ -115,11 +115,6 @@ public class DriverHome extends GenericUserMapFragment {
         requireActivity().startService(intent);
     }
 
-    private void stopDriversLocationService() {
-        Intent intent = new Intent(getActivity(), DriversLocationService.class);
-        requireActivity().stopService(intent);
-    }
-
     @Override
     public int getMapViewID() {
         return R.id.map_driver_home;
@@ -134,8 +129,6 @@ public class DriverHome extends GenericUserMapFragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        stopDriversLocationService();
 
         getActivity().unregisterReceiver(rideReceiver);
         getActivity().unregisterReceiver(isActiveReceiver);
