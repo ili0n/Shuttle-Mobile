@@ -1,6 +1,8 @@
 package com.example.shuttlemobile.ride;
 
 import com.example.shuttlemobile.passenger.dto.FavoriteRouteDTO;
+import com.example.shuttlemobile.passenger.dto.GraphEntryDTO;
+import com.example.shuttlemobile.passenger.fragments.GraphDataTable;
 import com.example.shuttlemobile.ride.dto.PanicDTO;
 import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.dto.ReviewDTO;
@@ -14,6 +16,7 @@ import retrofit2.http.GET;
 
 import com.example.shuttlemobile.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -22,6 +25,7 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface IRideService {
     @GET("/api/ride/{id}")
@@ -64,4 +68,7 @@ public interface IRideService {
 
     @POST("/api/ride")
     Call<RideDTO> createRide(@Body FavoriteRouteDTO favoriteRoute);
-}
+
+    @GET("/api/ride/graph/passenger/{passengerId}")
+    Call<ArrayList<GraphEntryDTO>> getPassengerGraphData(@Path("passengerId") long passengerId, @Query("from") String start, @Query("to") String end);
+ }
