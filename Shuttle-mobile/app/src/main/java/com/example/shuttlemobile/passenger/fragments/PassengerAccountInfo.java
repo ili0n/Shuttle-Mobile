@@ -2,6 +2,7 @@ package com.example.shuttlemobile.passenger.fragments;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -60,6 +61,7 @@ public class PassengerAccountInfo extends GenericUserFragment {
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 101;
     private String currentImage;
     private PassengerDTO passenger;
+    String ogEmail;
 
     public static PassengerAccountInfo newInstance() {
         PassengerAccountInfo fragment = new PassengerAccountInfo();
@@ -84,7 +86,7 @@ public class PassengerAccountInfo extends GenericUserFragment {
         editSurname = getActivity().findViewById(R.id.txt_p_info_surname);
         editAddress = getActivity().findViewById(R.id.txt_p_info_address);
         editPhone = getActivity().findViewById(R.id.txt_p_info_phone);
-        editEmail= getActivity().findViewById(R.id.txt_p_info_email);
+        editEmail = getActivity().findViewById(R.id.txt_p_info_email);
         editPfp = getActivity().findViewById(R.id.img_p_info_pfp);
         btnSubmit = getActivity().findViewById(R.id.btn_p_info_info_submit);
 
@@ -103,7 +105,7 @@ public class PassengerAccountInfo extends GenericUserFragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(valid()){
+                if (valid()) {
 
                     updatePassenger();
 
@@ -113,36 +115,36 @@ public class PassengerAccountInfo extends GenericUserFragment {
     }
 
     private boolean valid() {
-        if(editName.getText().toString().equals("")){
+        if (editName.getText().toString().equals("")) {
             Toast.makeText(requireContext(), "Field name is required", Toast.LENGTH_LONG).show();
             return false;
         }
-        if(editAddress.getText().toString().equals("")){
+        if (editAddress.getText().toString().equals("")) {
             Toast.makeText(requireContext(), "Field surname is required", Toast.LENGTH_LONG).show();
             return false;
         }
-        if(editPhone.getText().toString().equals("")){
+        if (editPhone.getText().toString().equals("")) {
             Toast.makeText(requireContext(), "Field address is required", Toast.LENGTH_LONG).show();
             return false;
         }
-        if(editSurname.getText().toString().equals("")){
+        if (editSurname.getText().toString().equals("")) {
             Toast.makeText(requireContext(), "Field phone number is required", Toast.LENGTH_LONG).show();
             return false;
         }
-        if(editEmail.getText().toString().equals("")){
+        if (editEmail.getText().toString().equals("")) {
             Toast.makeText(requireContext(), "Field email is required", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
     }
 
-    private void fillData(){
+    private void fillData() {
         long passengerId = SettingsUtil.getUserJWT().getId();
         Call<PassengerDTO> call = IPassengerService.service.getPassenger(passengerId);
         call.enqueue(new Callback<PassengerDTO>() {
             @Override
             public void onResponse(Call<PassengerDTO> call, Response<PassengerDTO> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     passenger = response.body();
                     editPfp.setImageBitmap(Utils.getImageFromBase64(passenger.getProfilePicture()));
                     editName.setText(passenger.getName());
@@ -150,6 +152,7 @@ public class PassengerAccountInfo extends GenericUserFragment {
                     editAddress.setText(passenger.getAddress());
                     editPhone.setText(passenger.getTelephoneNumber());
                     editEmail.setText(passenger.getEmail());
+                    ogEmail = passenger.getEmail();
                 }
             }
 
@@ -169,10 +172,12 @@ public class PassengerAccountInfo extends GenericUserFragment {
                 if (response.isSuccessful()) {
 
                     passenger = response.body();
-                    ((PassengerActivity) getActivity()).StopServices();
                     Toast.makeText(getContext(), "Your changes have been posted", Toast.LENGTH_LONG).show();
-                    getActivity().finish();
-                    SettingsUtil.clearUser();
+                    if (!ogEmail.equals(passenger.getEmail())) {
+                        ((PassengerActivity) getActivity()).StopServices();
+                        getActivity().finish();
+                        SettingsUtil.clearUser();
+                    }
                 } else {
                     Toast.makeText(getContext(), response.message(), Toast.LENGTH_LONG).show();
                 }

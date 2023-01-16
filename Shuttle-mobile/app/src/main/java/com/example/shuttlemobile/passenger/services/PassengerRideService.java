@@ -37,7 +37,7 @@ public class PassengerRideService extends Service {
     public void onCreate() {
 
         final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 10000;
+        final int delay = 1000;
 
         future = executorService.submit(new Runnable() {
                 @Override
@@ -67,27 +67,29 @@ public class PassengerRideService extends Service {
 
     private void fetchRide() {
         final JWT jwt = SettingsUtil.getUserJWT();
-        Call<RideDTO> call = IRideService.service.getActiveRidePassenger(jwt.getId());
-        call.enqueue(new Callback<RideDTO>() {
-            @Override
-            public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
-                RideDTO ride = response.body();
-                if (ride == null) {
-                    Intent intent = new Intent(BROADCAST_CHANNEL);
-                    intent.putExtra(INTENT_RIDE_KEY, (java.io.Serializable) null);
-                    sendBroadcast(intent);
-                } else {
-                    Intent intent = new Intent(BROADCAST_CHANNEL);
-                    intent.putExtra(INTENT_RIDE_KEY, ride);
-                    sendBroadcast(intent);
+        if (jwt != null) {
+            Call<RideDTO> call = IRideService.service.getActiveRidePassenger(jwt.getId());
+            call.enqueue(new Callback<RideDTO>() {
+                @Override
+                public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
+                    RideDTO ride = response.body();
+                    if (ride == null) {
+                        Intent intent = new Intent(BROADCAST_CHANNEL);
+                        intent.putExtra(INTENT_RIDE_KEY, (java.io.Serializable) null);
+                        sendBroadcast(intent);
+                    } else {
+                        Intent intent = new Intent(BROADCAST_CHANNEL);
+                        intent.putExtra(INTENT_RIDE_KEY, ride);
+                        sendBroadcast(intent);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<RideDTO> call, Throwable t) {
-                Log.e("REST ERROR", t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<RideDTO> call, Throwable t) {
+                    Log.e("REST ERROR", t.toString());
+                }
+            });
+        }
     }
 
     @Override

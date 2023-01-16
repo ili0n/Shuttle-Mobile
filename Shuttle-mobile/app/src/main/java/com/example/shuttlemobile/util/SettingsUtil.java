@@ -44,7 +44,7 @@ public class SettingsUtil {
                     JWTDecoder.getPayloadJSON(SettingsUtil.get(SettingsUtil.KEY_ACCESS_TOKEN, "no-token")),
                     JWT.class
             );
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             return null;
         }
     }

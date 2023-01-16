@@ -69,23 +69,25 @@ public class UserMessageService extends Service {
 
     private void fetchMessages() {
         final JWT jwt = SettingsUtil.getUserJWT();
-        IUserService.service.getMessages(jwt.getId()).enqueue(new Callback<ListDTO<MessageDTO>>() {
-            @Override
-            public void onResponse(Call<ListDTO<MessageDTO>> call, Response<ListDTO<MessageDTO>> response) {
-                if (response.code() == 200) {
-                    Intent intent = new Intent(BROADCAST_CHANNEL);
-                    intent.putExtra(UserMessageService.INTENT_MESSAGE_KEY, response.body());
-                    sendBroadcast(intent);
-                } else {
-                    Log.e("??", response.toString());
+        if (jwt != null) {
+            IUserService.service.getMessages(jwt.getId()).enqueue(new Callback<ListDTO<MessageDTO>>() {
+                @Override
+                public void onResponse(Call<ListDTO<MessageDTO>> call, Response<ListDTO<MessageDTO>> response) {
+                    if (response.code() == 200) {
+                        Intent intent = new Intent(BROADCAST_CHANNEL);
+                        intent.putExtra(UserMessageService.INTENT_MESSAGE_KEY, response.body());
+                        sendBroadcast(intent);
+                    } else {
+                        Log.e("??", response.toString());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ListDTO<MessageDTO>> call, Throwable t) {
-                Log.e("??", t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<ListDTO<MessageDTO>> call, Throwable t) {
+                    Log.e("??", t.toString());
+                }
+            });
+        }
     }
 
     @Override

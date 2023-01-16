@@ -55,13 +55,13 @@ public class PassengerMessageService extends Service {
             return;
         }
         if (message_sync_interval.equals(possibleValues[1])) {
-            delay_ = 30000;
+            delay_ = 3000;
         }
         if (message_sync_interval.equals(possibleValues[2])) {
-            delay_ = 60000;
+            delay_ = 6000;
         }
         if (message_sync_interval.equals(possibleValues[3])) {
-            delay_ = 90000;
+            delay_ = 9000;
         }
 
         final int delay = delay_;
