@@ -169,10 +169,8 @@ public class PassengerAccountInfo extends GenericUserFragment {
                 if (response.isSuccessful()) {
 
                     passenger = response.body();
-                    ((PassengerActivity) getActivity()).StopServices();
-                    Toast.makeText(getContext(), "Your changes have been posted", Toast.LENGTH_LONG).show();
-                    getActivity().finish();
-                    SettingsUtil.clearUser();
+                    SettingsUtil.put(SettingsUtil.KEY_ACCESS_TOKEN,passenger.getJwt());
+                    Toast.makeText(getContext(), "Changes posted", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getContext(), response.message(), Toast.LENGTH_LONG).show();
                 }

@@ -32,14 +32,13 @@ public class PassengerRideService extends Service {
     }
     final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    Future future;
     @Override
     public void onCreate() {
 
         final Handler handler = new Handler(Looper.getMainLooper());
         final int delay = 10000;
 
-        future = executorService.submit(new Runnable() {
+        executorService.submit(new Runnable() {
                 @Override
                 public void run() {
                     if (Thread.currentThread().isInterrupted()) {
@@ -88,17 +87,5 @@ public class PassengerRideService extends Service {
                 Log.e("REST ERROR", t.toString());
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        future.cancel(true);
-        executorService.shutdownNow();
-        try {
-            executorService.awaitTermination(1, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        super.onDestroy();
     }
 }

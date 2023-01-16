@@ -30,7 +30,6 @@ public class UserMessageService extends Service {
 
     final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    Future future;
     public UserMessageService() {
     }
 
@@ -40,7 +39,7 @@ public class UserMessageService extends Service {
         final Handler handler = new Handler(Looper.getMainLooper());
         final int delay = 20000;
 
-         future = executorService.submit(new Runnable() {
+         executorService.submit(new Runnable() {
                 @Override
                 public void run() {
                     if (Thread.currentThread().isInterrupted()) {
@@ -86,17 +85,5 @@ public class UserMessageService extends Service {
                 Log.e("??", t.toString());
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        future.cancel(true);
-        executorService.shutdownNow();
-        try {
-            executorService.awaitTermination(1, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        super.onDestroy();
     }
 }

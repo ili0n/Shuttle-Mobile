@@ -23,6 +23,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1e9a298b-a87a-4bd0-9046-5f0d90278529" name="Changes" comment="partially fixed&#10;only issue with started services remains">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/dto/PassengerDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/dto/PassengerDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/fragments/PassengerAccountInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/fragments/PassengerAccountInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/services/PassengerMessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/services/PassengerMessageService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/services/PassengerRideService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/services/PassengerRideService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/user/services/UserMessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/user/services/UserMessageService.java" afterDir="false" />
@@ -105,12 +107,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "cidr.known.project.marker": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.example.shuttlemobile.passenger.dto" />
@@ -331,7 +333,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673834063108</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="implemented change email with logout&#10;services will shutdown async in background">
+      <created>1673838439742</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1673838439742</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -350,7 +359,8 @@
     <MESSAGE value="added legend to DriverAccountReports" />
     <MESSAGE value="added driver stats fragment gui" />
     <MESSAGE value="partially fixed&#10;only issue with started services remains" />
-    <option name="LAST_COMMIT_MESSAGE" value="partially fixed&#10;only issue with started services remains" />
+    <MESSAGE value="implemented change email with logout&#10;services will shutdown async in background" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented change email with logout&#10;services will shutdown async in background" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -361,9 +371,9 @@
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/services/PassengerRideService.java</url>
-          <line>95</line>
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/passenger/fragments/PassengerAccountInfo.java</url>
+          <line>171</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

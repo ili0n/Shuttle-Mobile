@@ -33,7 +33,6 @@ public class PassengerMessageService extends Service {
     public PassengerMessageService() {
     }
 
-    Future future;
     @Override
     public void onCreate() {
         executorService = Executors.newSingleThreadExecutor();
@@ -65,7 +64,7 @@ public class PassengerMessageService extends Service {
         }
 
         final int delay = delay_;
-        future = executorService.submit(new Runnable() {
+        executorService.submit(new Runnable() {
                 @Override
                 public void run() {
                     if (Thread.currentThread().isInterrupted()) {
@@ -117,17 +116,5 @@ public class PassengerMessageService extends Service {
                 .setAutoCancel(true);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
         notificationManager.notify(112213, builder.build());
-    }
-
-    @Override
-    public void onDestroy() {
-        future.cancel(true);
-        executorService.shutdownNow();
-        try {
-            executorService.awaitTermination(1, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        super.onDestroy();
     }
 }
