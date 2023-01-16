@@ -21,14 +21,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e9a298b-a87a-4bd0-9046-5f0d90278529" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/arrow_right.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/fragments/DriverHome.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/fragments/DriverHome.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/fragments/home/DriverCurrentRide.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/fragments/home/DriverCurrentRide.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/services/CurrentRideTimeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/driver/services/CurrentRideTimeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_driver_current_ride.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_driver_current_ride.xml" afterDir="false" />
-    </list>
+    <list default="true" id="1e9a298b-a87a-4bd0-9046-5f0d90278529" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
