@@ -25,13 +25,15 @@ import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class PassengerMessageService extends Service {
     private ExecutorService executorService;
     public PassengerMessageService() {
     }
 
-
+    Future future;
     @Override
     public void onCreate() {
         executorService = Executors.newSingleThreadExecutor();
@@ -63,12 +65,18 @@ public class PassengerMessageService extends Service {
         }
 
         final int delay = delay_;
-        executorService.execute(new Runnable() {
+        future = executorService.submit(new Runnable() {
                 @Override
                 public void run() {
+                    if (Thread.currentThread().isInterrupted()) {
+                        return;
+                    }
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            if (Thread.currentThread().isInterrupted()) {
+                                return;
+                            }
                             fetchNewMessages();
                             handler.postDelayed(this, delay);
                         }
@@ -113,7 +121,13 @@ public class PassengerMessageService extends Service {
 
     @Override
     public void onDestroy() {
+        future.cancel(true);
         executorService.shutdownNow();
+        try {
+            executorService.awaitTermination(1, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         super.onDestroy();
     }
 }

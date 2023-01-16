@@ -167,11 +167,12 @@ public class PassengerAccountInfo extends GenericUserFragment {
             @Override
             public void onResponse(Call<PassengerDTO> call, Response<PassengerDTO> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Your changes have been posted", Toast.LENGTH_LONG).show();
+
                     passenger = response.body();
                     ((PassengerActivity) getActivity()).StopServices();
-                    SettingsUtil.clearUser();
+                    Toast.makeText(getContext(), "Your changes have been posted", Toast.LENGTH_LONG).show();
                     getActivity().finish();
+                    SettingsUtil.clearUser();
                 } else {
                     Toast.makeText(getContext(), response.message(), Toast.LENGTH_LONG).show();
                 }

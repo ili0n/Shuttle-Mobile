@@ -17,6 +17,8 @@ import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,18 +31,26 @@ public class PassengerRideService extends Service {
     public PassengerRideService() {
     }
     final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    Future future;
     @Override
     public void onCreate() {
 
         final Handler handler = new Handler(Looper.getMainLooper());
         final int delay = 10000;
 
-        executorService.execute(new Runnable() {
+        future = executorService.submit(new Runnable() {
                 @Override
                 public void run() {
+                    if (Thread.currentThread().isInterrupted()) {
+                        return;
+                    }
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            if (Thread.currentThread().isInterrupted()) {
+                                return;
+                            }
                             fetchRide();
                             handler.postDelayed(this, delay);
                         }
@@ -82,7 +92,13 @@ public class PassengerRideService extends Service {
 
     @Override
     public void onDestroy() {
+        future.cancel(true);
         executorService.shutdownNow();
+        try {
+            executorService.awaitTermination(1, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         super.onDestroy();
     }
 }
