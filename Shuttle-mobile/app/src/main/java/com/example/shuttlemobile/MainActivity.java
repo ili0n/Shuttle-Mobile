@@ -10,10 +10,14 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +28,7 @@ import androidx.core.app.ActivityCompat;
 import com.example.shuttlemobile.unregistered.LoginActivity;
 import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkForNetworkConnection();
         createNotificationChannels();
         initLocationListener();
         initLocationManager();
@@ -47,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
             getSharedPreferences(SettingsUtil.PREF_FILE, Context.MODE_PRIVATE)
         );
     }
-
 
     @Override
     protected void onResume() {
@@ -60,6 +65,25 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         disableLocationListening();
     }
+
+    private void checkForNetworkConnection() {
+        ConnectivityManager mng = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkCapabilities networkCapabilities = mng.getNetworkCapabilities(mng.getActiveNetwork());
+
+        if (networkCapabilities == null) {
+            Toast.makeText(this, "Your device is offline.", Toast.LENGTH_SHORT).show();
+        } else {
+            if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                    networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) &&
+                    networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED)
+            ) {
+                Toast.makeText(this, "You are connected.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Your device is offline.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     private void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -151,12 +175,12 @@ public class MainActivity extends AppCompatActivity {
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Enable Location");
-            alertDialog.setMessage("Your locations setting is not enabled. Please enabled it.");
+            alertDialog.setMessage("This app requires for your location to be turned on.");
             alertDialog.setPositiveButton("Location Settings", (dialog, which) -> {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             });
-            alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
             alertDialog.create().show();
         }
     }
