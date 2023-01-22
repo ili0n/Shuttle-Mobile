@@ -251,7 +251,6 @@ public class DriverHome extends GenericUserMapFragment {
 
     private void determineSubFragment(RideDTO dto) {
         if (dto == null) {
-            Log.e("A", "BBBBBBBBBBBBBBBBBBBBBBBBBBB");
             setSubFragmentIfDifferent(blankFragment);
             removeRoute();
             return;
@@ -260,11 +259,11 @@ public class DriverHome extends GenericUserMapFragment {
         Ride.State state = Ride.State.valueOf(dto.getStatus().toUpperCase());
 
         switch (state) {
-            case PENDING:
+            case PENDING: case ACCEPTED:
                 setSubFragmentIfDifferent(fragmentAcceptance);
                 break;
-            case STARTED: case ACCEPTED:
-                setSubFragmentIfDifferent(currentRideFragment); // TODO: Use fragmentCurrentRide.
+            case STARTED:
+                setSubFragmentIfDifferent(currentRideFragment);
                 break;
             case CANCELED: case FINISHED: case REJECTED:
                 setSubFragmentIfDifferent(blankFragment);
