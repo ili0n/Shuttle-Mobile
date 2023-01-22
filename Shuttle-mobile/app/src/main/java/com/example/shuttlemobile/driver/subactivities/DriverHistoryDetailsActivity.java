@@ -43,34 +43,34 @@ public class DriverHistoryDetailsActivity extends SimpleToolbarActivity {
     }
 
     private void initView() {
-        ListView ridePassengers = findViewById(R.id.li_d_ride_passengers);
-
-        List<User> passengers = new ArrayList<>();
-        passengers.add(new Passenger());
-        passengers.get(0).setName("Bob");
-        passengers.get(0).setLastName("Jones");
-
-        ridePassengers.setAdapter(new EasyListAdapter<User>() {
-            @Override
-            public List<User> getList() {
-                return passengers;
-            }
-
-            @Override
-            public LayoutInflater getLayoutInflater() {
-                return DriverHistoryDetailsActivity.this.getLayoutInflater();
-            }
-
-            @Override
-            public void applyToView(View view, User obj) {
-                TextView txtName = view.findViewById(R.id.txt_p_history_p_name);
-                txtName.setText(obj.getName() + " " + obj.getLastName());
-            }
-
-            @Override
-            public int getListItemLayoutId() {
-                return R.layout.list_p_history_passengers;
-            }
-        });
+        //ListView ridePassengers = findViewById(R.id.li_d_ride_passengers);
+//
+//        List<User> passengers = new ArrayList<>();
+//        passengers.add(new Passenger());
+//        passengers.get(0).setName("Bob");
+//        passengers.get(0).setLastName("Jones");
+//
+//        ridePassengers.setAdapter(new EasyListAdapter<User>() {
+//            @Override
+//            public List<User> getList() {
+//                return passengers;
+//            }
+//
+//            @Override
+//            public LayoutInflater getLayoutInflater() {
+//                return DriverHistoryDetailsActivity.this.getLayoutInflater();
+//            }
+//
+//            @Override
+//            public void applyToView(View view, User obj) {
+//                TextView txtName = view.findViewById(R.id.txt_p_history_p_name);
+//                txtName.setText(obj.getName() + " " + obj.getLastName());
+//            }
+//
+//            @Override
+//            public int getListItemLayoutId() {
+//                return R.layout.list_p_history_passengers;
+//            }
+//        });
     }
 }
