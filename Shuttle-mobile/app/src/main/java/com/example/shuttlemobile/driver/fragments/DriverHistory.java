@@ -7,12 +7,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,18 +25,29 @@ import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
+import com.example.shuttlemobile.driver.IDriverService;
 import com.example.shuttlemobile.driver.services.DriverMessageService;
 import com.example.shuttlemobile.driver.subactivities.DriverHistoryDetailsActivity;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.ride.dto.RideDTO;
+import com.example.shuttlemobile.util.ListDTO;
 import com.example.shuttlemobile.util.NotificationUtil;
+import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.ShakePack;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class DriverHistory extends GenericUserFragment implements SensorEventListener {
     private SensorManager sensorManager;
     private ShakePack shakePack = new ShakePack(12);
+    private List<RideDTO> rides = new ArrayList<>();
+    private ListView listView;
+    private ProgressBar progressBar;
 
     public static DriverHistory newInstance(SessionContext session) {
         DriverHistory fragment = new DriverHistory();
@@ -51,35 +64,44 @@ public class DriverHistory extends GenericUserFragment implements SensorEventLis
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        initializeList();
+        //initializeList();
+
+        initViewElements(view);
         initSensorManager();
+        fetchRides();
     }
 
-    private void initSensorManager() {
-        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-    }
-
-    private void initializeList() {
-        ListView listView = getActivity().findViewById(R.id.list_d_history);
-
-        List<Ride> rides = new ArrayList<>();
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-
-        listView.setAdapter(new EasyListAdapter<Ride>() {
+    private void fetchRides() {
+        IDriverService.service.getRides(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<ListDTO<RideDTO>>() {
             @Override
-            public List<Ride> getList() { return rides; }
+            public void onResponse(Call<ListDTO<RideDTO>> call, Response<ListDTO<RideDTO>> response) {
+                if (response.code() == 200) {
+                    onFetchRides(response.body());
+                } else {
+                    Log.e("DriverHistory", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListDTO<RideDTO>> call, Throwable t) {
+                Log.e("DriverHistory", t.toString());
+            }
+        });
+    }
+
+    private void initViewElements(View view) {
+        listView = view.findViewById(R.id.list_d_history);
+        progressBar = view.findViewById(R.id.progress_d_history);
+
+        listView.setAdapter(new EasyListAdapter<RideDTO>() {
+            @Override
+            public List<RideDTO> getList() { return rides; }
             @Override
             public LayoutInflater getLayoutInflater() { return DriverHistory.this.getLayoutInflater(); }
             @Override
             public int getListItemLayoutId() { return R.layout.list_d_history; }
             @Override
-            public void applyToView(View view, Ride obj) {
+            public void applyToView(View view, RideDTO obj) {
                 TextView routeA = view.findViewById(R.id.list_d_history_route_A);
                 TextView routeB = view.findViewById(R.id.list_d_history_route_B);
                 TextView date = view.findViewById(R.id.list_d_history_date);
@@ -94,13 +116,65 @@ public class DriverHistory extends GenericUserFragment implements SensorEventLis
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Ride obj = (Ride)listView.getItemAtPosition(i);
+                RideDTO obj = (RideDTO)listView.getItemAtPosition(i);
                 openRideDetailsActivity(obj);
             }
         });
     }
 
-    private void openRideDetailsActivity(Ride ride) {
+    private void onFetchRides(ListDTO<RideDTO> response) {
+        this.rides = response.getResults();
+        this.progressBar.setVisibility(View.GONE);
+        this.listView.setVisibility(View.VISIBLE);
+        ((EasyListAdapter)this.listView.getAdapter()).notifyDataSetChanged();
+    }
+
+    private void initSensorManager() {
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+    }
+
+    private void initializeList() {
+//        ListView listView = getActivity().findViewById(R.id.list_d_history);
+//
+//        List<Ride> rides = new ArrayList<>();
+//        rides.add(new Ride());
+//        rides.add(new Ride());
+//        rides.add(new Ride());
+//        rides.add(new Ride());
+//        rides.add(new Ride());
+//        rides.add(new Ride());
+//        rides.add(new Ride());
+//
+//        listView.setAdapter(new EasyListAdapter<Ride>() {
+//            @Override
+//            public List<Ride> getList() { return rides; }
+//            @Override
+//            public LayoutInflater getLayoutInflater() { return DriverHistory.this.getLayoutInflater(); }
+//            @Override
+//            public int getListItemLayoutId() { return R.layout.list_d_history; }
+//            @Override
+//            public void applyToView(View view, Ride obj) {
+//                TextView routeA = view.findViewById(R.id.list_d_history_route_A);
+//                TextView routeB = view.findViewById(R.id.list_d_history_route_B);
+//                TextView date = view.findViewById(R.id.list_d_history_date);
+//                TextView time = view.findViewById(R.id.list_d_history_time);
+//                TextView cost = view.findViewById(R.id.list_d_history_cost);
+//                TextView driverFullName = view.findViewById(R.id.list_d_history_pname);
+//                ImageView driverPfp = view.findViewById(R.id.list_d_history_ppfp);
+//
+//                //passengerName.setText(obj.getPassenger().getName());
+//            }
+//        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Ride obj = (Ride)listView.getItemAtPosition(i);
+//                openRideDetailsActivity(obj);
+//            }
+//        });
+    }
+
+    private void openRideDetailsActivity(RideDTO ride) {
         Intent intent = new Intent(getActivity(), DriverHistoryDetailsActivity.class);
         intent.putExtra(DriverHistoryDetailsActivity.PARAM_SESSION, session);
         intent.putExtra(DriverHistoryDetailsActivity.PARAM_RIDE, ride);
