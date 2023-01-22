@@ -16,6 +16,7 @@ import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.passenger.Passenger;
 import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
 import com.example.shuttlemobile.ride.Ride;
+import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.user.User;
 
 import java.util.ArrayList;
@@ -23,9 +24,8 @@ import java.util.List;
 
 public class DriverHistoryDetailsActivity extends SimpleToolbarActivity {
     protected SessionContext session;
-    protected Ride ride;
+    protected RideDTO ride;
 
-    public static final String PARAM_SESSION = "session";
     public static final String PARAM_RIDE = "ride";
 
     @Override
@@ -39,15 +39,7 @@ public class DriverHistoryDetailsActivity extends SimpleToolbarActivity {
 
     private void initParams() {
         Intent intent = getIntent();
-        session = (SessionContext) intent.getSerializableExtra(PARAM_SESSION);
-        ride = (Ride)intent.getSerializableExtra(PARAM_RIDE);
-
-        if (session == null) {
-            throw new NullPointerException("Missing intent parameter " + PARAM_SESSION);
-        }
-        if (ride == null) {
-            throw new NullPointerException("Missing intent parameter " + PARAM_RIDE);
-        }
+        ride = (RideDTO)intent.getSerializableExtra(PARAM_RIDE);
     }
 
     private void initView() {
