@@ -59,26 +59,7 @@ public class DriverHistory extends GenericUserFragment implements SensorEventLis
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
     }
 
-    private void sendNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.DRIVER_NOTIFICATION_CHANNEL_ID)
-                .setContentTitle("Notification Title!")
-                .setContentText("Notification Text!")
-                .setSmallIcon(R.drawable.car_green)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-        notificationManager.notify(889988, builder.build());
-    }
-
     private void initializeList() {
-        ///////////////////////////////
-
-        sendNotification();
-        //getActivity().startService(new Intent(getActivity(), DriverMessageService.class));
-
-        ///////////////////////////////
-
-
         ListView listView = getActivity().findViewById(R.id.list_d_history);
 
         List<Ride> rides = new ArrayList<>();
