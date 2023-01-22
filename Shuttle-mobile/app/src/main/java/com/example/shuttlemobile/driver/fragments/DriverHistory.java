@@ -35,6 +35,8 @@ import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.ShakePack;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,10 +109,29 @@ public class DriverHistory extends GenericUserFragment implements SensorEventLis
                 TextView date = view.findViewById(R.id.list_d_history_date);
                 TextView time = view.findViewById(R.id.list_d_history_time);
                 TextView cost = view.findViewById(R.id.list_d_history_cost);
-                TextView driverFullName = view.findViewById(R.id.list_d_history_pname);
-                ImageView driverPfp = view.findViewById(R.id.list_d_history_ppfp);
 
-                //passengerName.setText(obj.getPassenger().getName());
+                final DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+                final DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+
+                String dateStart = "", timeStart = "";
+                String dateEnd = "", timeEnd = "";
+
+                if (obj.getStartTime() != null) {
+                    final LocalDateTime ts = LocalDateTime.parse(obj.getStartTime());
+                    dateStart = ts.format(formatterDate);
+                    timeStart = ts.format(formatterTime);
+                }
+                if (obj.getEndTime() != null) {
+                    final LocalDateTime ts = LocalDateTime.parse(obj.getEndTime());
+                    dateEnd = ts.format(formatterDate);
+                    timeEnd = ts.format(formatterTime);
+                }
+
+                routeA.setText(obj.getLocations().get(0).getDeparture().getAddress());
+                routeB.setText(obj.getLocations().get(obj.getLocations().size() - 1).getDestination().getAddress());
+                date.setText(dateStart);
+                time.setText(timeStart + " - " + timeEnd);
+                cost.setText(obj.getTotalCost() + " RSD");
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
