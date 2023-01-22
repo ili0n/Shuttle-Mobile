@@ -1,9 +1,12 @@
 package com.example.shuttlemobile.driver.subactivities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -26,6 +29,10 @@ public class DriverHistoryDetailsActivity extends SimpleToolbarActivity {
     protected SessionContext session;
     protected RideDTO ride;
 
+    public RideDTO getRide() {
+        return ride;
+    }
+
     public static final String PARAM_RIDE = "ride";
 
     @Override
@@ -34,12 +41,25 @@ public class DriverHistoryDetailsActivity extends SimpleToolbarActivity {
         setContentView(R.layout.activity_driver_history_details);
 
         initParams();
+
+        Log.e("2", "2");
+
+        DriverHistoryDetails frag = DriverHistoryDetails.newInstance(ride);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_bottom)
+                .setReorderingAllowed(true)
+                .replace(R.id.driver_history_fragment_view, frag);
+        fragmentTransaction.commit();
+
         initView();
     }
 
     private void initParams() {
         Intent intent = getIntent();
         ride = (RideDTO)intent.getSerializableExtra(PARAM_RIDE);
+        Log.e("?", ride.toString());
     }
 
     private void initView() {

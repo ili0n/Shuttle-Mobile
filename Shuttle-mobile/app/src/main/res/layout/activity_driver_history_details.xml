@@ -12,7 +12,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/driver_history_fragment_view"
-        android:name="com.example.shuttlemobile.driver.subactivities.DriverHistoryDetails"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,6 +19,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/driver_history_toolbar"
-        tools:layout="@layout/fragment_driver_history_details" />
+        tools:layout="@layout/fragment_blank" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
