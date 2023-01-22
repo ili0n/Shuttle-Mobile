@@ -27,6 +27,7 @@ import com.example.shuttlemobile.driver.fragments.DriverHome;
 import com.example.shuttlemobile.driver.fragments.PassengerData;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.IRideService;
+import com.example.shuttlemobile.ride.Ride;
 import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
@@ -49,6 +50,7 @@ public class DriverHomeAcceptanceRide extends Fragment {
     private TextView txtPassengerCount;
     private Button btnReject;
     private Button btnBegin;
+    private Button btnAccept;
     private Button btnViewPassengers;
 
     private DriverHome parent = null;
@@ -107,11 +109,31 @@ public class DriverHomeAcceptanceRide extends Fragment {
         txtPassengerCount = view.findViewById(R.id.txt_acceptance_ride_passengers);
         btnReject = view.findViewById(R.id.btn_acceptance_ride_reject);
         btnBegin = view.findViewById(R.id.btn_acceptance_ride_begin);
+        btnAccept = view.findViewById(R.id.btn_acceptance_ride_accept);
         btnViewPassengers = view.findViewById(R.id.btn_acceptance_ride_passengers);
 
         initRejectButton();
+        initAcceptButton();
         initBeginButton();
         initViewPassengersButton();
+
+        updateButtonVisibility();
+    }
+
+    private void updateButtonVisibility() {
+        if (this.ride == null) {
+            return;
+        }
+
+        if (Ride.State.valueOf(ride.getStatus()) == Ride.State.ACCEPTED) {
+            this.btnBegin.setVisibility(View.VISIBLE);
+            this.btnAccept.setVisibility(View.INVISIBLE);
+            this.btnReject.setVisibility(View.INVISIBLE);
+        } else {
+            this.btnBegin.setVisibility(View.INVISIBLE);
+            this.btnAccept.setVisibility(View.VISIBLE);
+            this.btnReject.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initRejectButton() {
@@ -169,6 +191,15 @@ public class DriverHomeAcceptanceRide extends Fragment {
         });
     }
 
+    private void initAcceptButton() {
+        this.btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                acceptRide();
+            }
+        });
+    }
+
     private void initViewPassengersButton() {
         btnViewPassengers.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -194,12 +225,29 @@ public class DriverHomeAcceptanceRide extends Fragment {
         });
     }
 
-    private void beginRide() {
+    private void acceptRide() {
         if (ride == null) {
             return;
         }
 
         IRideService.service.acceptRide(ride.getId()).enqueue(new Callback<RideDTO>() {
+            @Override
+            public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
+            }
+
+            @Override
+            public void onFailure(Call<RideDTO> call, Throwable t) {
+                Log.e("REST Error", t.toString());
+            }
+        });
+    }
+
+    private void beginRide() {
+        if (ride == null) {
+            return;
+        }
+
+        IRideService.service.startRide(ride.getId()).enqueue(new Callback<RideDTO>() {
             @Override
             public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
             }
@@ -276,6 +324,7 @@ public class DriverHomeAcceptanceRide extends Fragment {
         txtTime.setText(dto.getEstimatedTimeInMinutes() + "min");
         txtPrice.setText(dto.getTotalCost() + " RSD");
         txtPassengerCount.setText(dto.getPassengers().size() + "");
+        updateButtonVisibility();
 
         // Update the things from above if neccessary.
 

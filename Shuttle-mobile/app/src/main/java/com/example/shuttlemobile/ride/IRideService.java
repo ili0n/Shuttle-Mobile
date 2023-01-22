@@ -49,6 +49,9 @@ public interface IRideService {
     @PUT("/api/ride/{id}/accept")
     Call<RideDTO> acceptRide(@Path("id") Long rideId);
 
+    @PUT("/api/ride/{id}/start")
+    Call<RideDTO> startRide(@Path("id") Long rideId);
+
     @PUT("/api/ride/{id}/panic")
     Call<RideDTO> panicRide(@Path("id") Long rideId, @Body PanicDTO panicDTO);
 
