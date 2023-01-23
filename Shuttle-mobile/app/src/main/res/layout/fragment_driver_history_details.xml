@@ -7,20 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".driver.fragments.DriverHome">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        mapbox:layout_constraintBottom_toBottomOf="parent"
-        mapbox:layout_constraintEnd_toEndOf="parent"
-        mapbox:layout_constraintStart_toStartOf="parent" />
-
     <com.mapbox.maps.MapView
         android:id="@+id/map_driver_history_details"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        mapbox:layout_constraintBottom_toTopOf="@+id/textView3"
+        android:layout_height="150dp"
+        mapbox:layout_constraintBottom_toTopOf="@+id/scrollView4"
         mapbox:layout_constraintEnd_toEndOf="parent"
         mapbox:layout_constraintStart_toStartOf="parent"
         mapbox:layout_constraintTop_toTopOf="parent"
@@ -29,5 +19,124 @@
         mapbox:mapbox_cameraZoom="9.0">
 
     </com.mapbox.maps.MapView>
+
+    <ScrollView
+        android:id="@+id/scrollView4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toBottomOf="@+id/map_driver_history_details">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/lbl_dhd_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Start:"
+                mapbox:layout_constraintStart_toStartOf="parent"
+                mapbox:layout_constraintTop_toBottomOf="@+id/txt_dhd_A" />
+
+            <TextView
+                android:id="@+id/txt_dhd_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="23/01/2023 9:56"
+                mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_start"
+                mapbox:layout_constraintTop_toTopOf="@+id/lbl_dhd_start" />
+
+            <TextView
+                android:id="@+id/lbl_dhd_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End:"
+                mapbox:layout_constraintStart_toStartOf="@+id/lbl_dhd_start"
+                mapbox:layout_constraintTop_toBottomOf="@+id/lbl_dhd_start" />
+
+            <TextView
+                android:id="@+id/txt_dhd_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_end"
+                mapbox:layout_constraintTop_toBottomOf="@+id/txt_dhd_start"
+                tools:text="23/01/2023 10:00" />
+
+            <TextView
+                android:id="@+id/lbl_dhd_dist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distance:"
+                mapbox:layout_constraintStart_toStartOf="@+id/lbl_dhd_end"
+                mapbox:layout_constraintTop_toBottomOf="@+id/lbl_dhd_end" />
+
+            <TextView
+                android:id="@+id/txt_dhd_dist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_dist"
+                mapbox:layout_constraintTop_toBottomOf="@+id/lbl_dhd_end"
+                tools:text="12.5km" />
+
+            <TextView
+                android:id="@+id/lbl_dhd_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cost:"
+                mapbox:layout_constraintStart_toStartOf="@+id/lbl_dhd_dist"
+                mapbox:layout_constraintTop_toBottomOf="@+id/lbl_dhd_dist" />
+
+            <TextView
+                android:id="@+id/txt_dhd_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1234 RSD"
+                mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_price"
+                mapbox:layout_constraintTop_toTopOf="@+id/lbl_dhd_price" />
+
+            <TextView
+                android:id="@+id/txt_dhd_A"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                mapbox:layout_constraintStart_toStartOf="parent"
+                mapbox:layout_constraintTop_toTopOf="parent"
+                tools:text="Location ABC 123" />
+
+            <TextView
+                android:id="@+id/lbl_dhd_slash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="-"
+                mapbox:layout_constraintStart_toEndOf="@+id/txt_dhd_A"
+                mapbox:layout_constraintTop_toTopOf="@+id/txt_dhd_A" />
+
+            <TextView
+                android:id="@+id/txt_dhd_B"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_slash"
+                mapbox:layout_constraintTop_toTopOf="@+id/txt_dhd_A"
+                tools:text="Location DEF 456" />
+
+            <ListView
+                android:id="@+id/list_dhd_passengers"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                mapbox:layout_constraintBottom_toBottomOf="parent"
+                mapbox:layout_constraintEnd_toEndOf="parent"
+                mapbox:layout_constraintStart_toStartOf="parent"
+                mapbox:layout_constraintTop_toBottomOf="@+id/lbl_dhd_price"
+                tools:listitem="@layout/list_dhd_passenger" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
