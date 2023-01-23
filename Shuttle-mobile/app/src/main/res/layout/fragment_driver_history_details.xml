@@ -10,6 +10,7 @@
     <com.mapbox.maps.MapView
         android:id="@+id/map_driver_history_details"
         android:layout_height="150dp"
+        android:layout_width="0dp"
         mapbox:layout_constraintBottom_toTopOf="@+id/scrollView4"
         mapbox:layout_constraintEnd_toEndOf="parent"
         mapbox:layout_constraintStart_toStartOf="parent"
@@ -39,7 +40,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
                 android:text="Start:"
+                android:textSize="16sp"
                 mapbox:layout_constraintStart_toStartOf="parent"
                 mapbox:layout_constraintTop_toBottomOf="@+id/txt_dhd_A" />
 
@@ -47,7 +50,9 @@
                 android:id="@+id/txt_dhd_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="23/01/2023 9:56"
+                android:textSize="16sp"
                 mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_start"
                 mapbox:layout_constraintTop_toTopOf="@+id/lbl_dhd_start" />
 
@@ -55,7 +60,9 @@
                 android:id="@+id/lbl_dhd_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:text="End:"
+                android:textSize="16sp"
                 mapbox:layout_constraintStart_toStartOf="@+id/lbl_dhd_start"
                 mapbox:layout_constraintTop_toBottomOf="@+id/lbl_dhd_start" />
 
@@ -63,6 +70,8 @@
                 android:id="@+id/txt_dhd_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="16sp"
                 mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_end"
                 mapbox:layout_constraintTop_toBottomOf="@+id/txt_dhd_start"
                 tools:text="23/01/2023 10:00" />
@@ -71,7 +80,9 @@
                 android:id="@+id/lbl_dhd_dist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:text="Distance:"
+                android:textSize="16sp"
                 mapbox:layout_constraintStart_toStartOf="@+id/lbl_dhd_end"
                 mapbox:layout_constraintTop_toBottomOf="@+id/lbl_dhd_end" />
 
@@ -79,7 +90,9 @@
                 android:id="@+id/txt_dhd_dist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="TextView"
+                android:textSize="16sp"
                 mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_dist"
                 mapbox:layout_constraintTop_toBottomOf="@+id/lbl_dhd_end"
                 tools:text="12.5km" />
@@ -88,7 +101,9 @@
                 android:id="@+id/lbl_dhd_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:text="Cost:"
+                android:textSize="16sp"
                 mapbox:layout_constraintStart_toStartOf="@+id/lbl_dhd_dist"
                 mapbox:layout_constraintTop_toBottomOf="@+id/lbl_dhd_dist" />
 
@@ -96,7 +111,9 @@
                 android:id="@+id/txt_dhd_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="1234 RSD"
+                android:textSize="16sp"
                 mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_price"
                 mapbox:layout_constraintTop_toTopOf="@+id/lbl_dhd_price" />
 
@@ -105,6 +122,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="20sp"
                 mapbox:layout_constraintStart_toStartOf="parent"
                 mapbox:layout_constraintTop_toTopOf="parent"
                 tools:text="Location ABC 123" />
@@ -114,7 +133,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif-medium"
                 android:text="-"
+                android:textSize="20sp"
                 mapbox:layout_constraintStart_toEndOf="@+id/txt_dhd_A"
                 mapbox:layout_constraintTop_toTopOf="@+id/txt_dhd_A" />
 
@@ -123,6 +144,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="20sp"
                 mapbox:layout_constraintStart_toEndOf="@+id/lbl_dhd_slash"
                 mapbox:layout_constraintTop_toTopOf="@+id/txt_dhd_A"
                 tools:text="Location DEF 456" />
