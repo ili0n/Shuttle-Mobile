@@ -85,7 +85,7 @@ public class DriverHistoryDetails extends GenericUserMapFragment {
 
         drawRoute(A, B, "#FF0000");
         lookAtPoint(A, 10, 1000);
-        
+
         initViewElements(view);
         fetchReviews(); // After initViewElements.
     }
@@ -184,7 +184,7 @@ public class DriverHistoryDetails extends GenericUserMapFragment {
             txtEnd.setText(LocalDateTime.parse(ride.getEndTime()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
         }
 
-        //txtDist.setText((ride.getTotalLength() / 1000.0) + "km");
+        txtDist.setText(String.format("%.2f km", ride.getTotalLength() / 1000.0));
         txtPrice.setText(ride.getTotalCost() + " RSD");
 
         initPassengerList(view);
