@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.ride.dto;
+package com.example.shuttlemobile.review;
 
 import com.example.shuttlemobile.user.UserEmailDTO;
 

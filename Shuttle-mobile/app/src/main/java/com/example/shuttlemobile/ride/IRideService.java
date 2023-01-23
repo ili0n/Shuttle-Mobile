@@ -2,11 +2,10 @@ package com.example.shuttlemobile.ride;
 
 import com.example.shuttlemobile.passenger.dto.FavoriteRouteDTO;
 import com.example.shuttlemobile.passenger.dto.GraphEntryDTO;
-import com.example.shuttlemobile.passenger.fragments.GraphDataTable;
 import com.example.shuttlemobile.ride.dto.PanicDTO;
 import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
-import com.example.shuttlemobile.ride.dto.ReviewDTO;
-import com.example.shuttlemobile.ride.dto.ReviewSendDTO;
+import com.example.shuttlemobile.review.ReviewDTO;
+import com.example.shuttlemobile.review.ReviewSendDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 
@@ -14,13 +13,9 @@ import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 
-import com.example.shuttlemobile.util.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -54,12 +49,6 @@ public interface IRideService {
 
     @PUT("/api/ride/{id}/panic")
     Call<RideDTO> panicRide(@Path("id") Long rideId, @Body PanicDTO panicDTO);
-
-    @POST("/api/review/{rideId}/vehicle")
-    Call<ReviewDTO> leaveReviewVehicle(@Path("rideId") Long rideId, @Body ReviewSendDTO review);
-
-    @POST("/api/review/{rideId}/driver")
-    Call<ReviewDTO> leaveReviewDriver(@Path("rideId") Long rideId, @Body ReviewSendDTO review);
 
     @GET("/api/ride/favorites/passenger/{id}")
     Call<List<FavoriteRouteDTO>> getFavoriteRidesByPassenger(@Path("id") long passengerId);
