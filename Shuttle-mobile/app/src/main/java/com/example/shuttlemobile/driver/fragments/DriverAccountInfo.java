@@ -294,11 +294,11 @@ public class DriverAccountInfo extends GenericUserFragment {
     private boolean checkDriverDTO(EditText editName, EditText editSurname, EditText editAddress, EditText editPhone) {
         if (!driverDTO.getAddress().equals(editAddress.getText().toString()) && !editAddress.getText().toString().isEmpty())
             return true;
-        if (!driverDTO.getName().equals(editName.getText().toString()) && !editName.getText().toString().isEmpty())
+        if (!editName.getText().toString().equals(driverDTO.getName()) && !editName.getText().toString().isEmpty())
             return true;
-        if (!driverDTO.getSurname().equals(editSurname.getText().toString()) && !editSurname.getText().toString().isEmpty())
+        if (!editSurname.getText().toString().equals(driverDTO.getSurname()) && !editSurname.getText().toString().isEmpty())
             return true;
-        if (!driverDTO.getTelephoneNumber().equals(editPhone.getText().toString()) && !editPhone.getText().toString().isEmpty())
+        if (!editPhone.getText().toString().equals(driverDTO.getTelephoneNumber()) && !editPhone.getText().toString().isEmpty())
             return true;
         if (!currentImage.equals(driverDTO.getProfilePicture()))
             return true;

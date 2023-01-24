@@ -1,5 +1,6 @@
 package com.example.shuttlemobile.passenger;
 
+import com.example.shuttlemobile.common.UserDTONoPassword;
 import com.example.shuttlemobile.passenger.dto.PassengerDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 
@@ -17,5 +18,8 @@ public interface IPassengerService {
     IPassengerService service = RetrofitUtils.retrofit.create(IPassengerService.class);
 
     @PUT("/api/passenger/{id}")
-    Call<PassengerDTO> updatePassenger(@Path("id") Long id,@Body PassengerDTO passenger);
+    Call<PassengerDTO> updatePassenger(@Path("id") Long id, @Body PassengerDTO passenger);
+
+    @POST("/api/passenger")
+    Call<UserDTONoPassword> registerPassenger(@Body PassengerDTO passengerDTO);
 }
