@@ -24,8 +24,8 @@
         mapbox:layout_constraintEnd_toEndOf="parent"
         mapbox:layout_constraintStart_toStartOf="parent"
         mapbox:layout_constraintTop_toBottomOf="@+id/switch_is_active"
-        mapbox:mapbox_cameraTargetLat="40.7128"
-        mapbox:mapbox_cameraTargetLng="-74.0060"
+        mapbox:mapbox_cameraTargetLat="45.256930"
+        mapbox:mapbox_cameraTargetLng="19.810578"
         mapbox:mapbox_cameraZoom="9.0">
     </com.mapbox.maps.MapView>
 
