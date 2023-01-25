@@ -10,8 +10,6 @@ import android.view.MenuItem;
 import com.example.shuttlemobile.common.GenericUserActivity;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.SettingsFragment;
-import com.example.shuttlemobile.driver.services.DriverMessageService;
-import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.passenger.fragments.PassengerAccount;
 import com.example.shuttlemobile.passenger.fragments.PassengerHistory;
 import com.example.shuttlemobile.passenger.fragments.PassengerHome;
@@ -20,15 +18,36 @@ import com.example.shuttlemobile.passenger.services.PassengerMessageService;
 import com.example.shuttlemobile.passenger.services.PassengerRideService;
 import com.example.shuttlemobile.user.services.UserMessageService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PassengerActivity extends GenericUserActivity {
+
+    List<Intent> serviceIntents = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passenger);
-        startService(new Intent(this, PassengerMessageService.class));
-        startService(new Intent(this, PassengerRideService.class));
-        startService(new Intent(this, UserMessageService.class));
+        StartServices();
+    }
+
+    private void StartServices() {
+        Intent passengerMessageServiceIntent = new Intent(this, PassengerMessageService.class);
+        Intent passengerRideServiceIntent = new Intent(this, PassengerRideService.class);
+        Intent userMessageServiceIntent = new Intent(this, UserMessageService.class);
+        startService(passengerMessageServiceIntent);
+        startService(passengerRideServiceIntent);
+        startService(userMessageServiceIntent);
+        serviceIntents.add(passengerMessageServiceIntent);
+        serviceIntents.add(passengerRideServiceIntent);
+        serviceIntents.add(userMessageServiceIntent);
+    }
+
+    public void StopServices() {
+        for (Intent i : serviceIntents) {
+            stopService(i);
+        }
     }
 
     @Override
