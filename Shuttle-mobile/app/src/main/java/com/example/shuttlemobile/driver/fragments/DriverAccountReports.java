@@ -25,6 +25,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.text.SimpleDateFormat;
@@ -37,6 +38,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -183,9 +185,9 @@ public class DriverAccountReports extends GenericUserFragment {
         }
     }
 
-    private void calculateAndAdd(List<GraphEntryDTO> data) {
-        double sum = data.stream().mapToDouble(GraphEntryDTO::getCostSum).sum();
-        OptionalDouble avgO = data.stream().mapToDouble(GraphEntryDTO::getCostSum).average();
+    private void calculateAndAdd() {
+        double sum = entries.stream().mapToDouble(GraphEntryDTO::getCostSum).sum();
+        OptionalDouble avgO = entries.stream().mapToDouble(GraphEntryDTO::getCostSum).average();
         double avg;
         if (avgO.isPresent()) {
             avg = avgO.getAsDouble();
@@ -194,8 +196,8 @@ public class DriverAccountReports extends GenericUserFragment {
         }
         addRow(COST_SUM_COLOR, "Cost sum", sum, avg);
 
-        sum = data.stream().mapToDouble(GraphEntryDTO::getLength).sum();
-        avgO = data.stream().mapToDouble(GraphEntryDTO::getLength).average();
+        sum = entries.stream().mapToDouble(GraphEntryDTO::getLength).sum();
+        avgO = entries.stream().mapToDouble(GraphEntryDTO::getLength).average();
         if (avgO.isPresent()) {
             avg = avgO.getAsDouble();
         } else {
@@ -203,8 +205,8 @@ public class DriverAccountReports extends GenericUserFragment {
         }
         addRow(TOTAL_LENGTH_COLOR, "Total length", sum, avg);
 
-        sum = data.stream().mapToDouble(GraphEntryDTO::getNumberOfRides).sum();
-        avgO = data.stream().mapToDouble(GraphEntryDTO::getNumberOfRides).average();
+        sum = entries.stream().mapToDouble(GraphEntryDTO::getNumberOfRides).sum();
+        avgO = entries.stream().mapToDouble(GraphEntryDTO::getNumberOfRides).average();
         if (avgO.isPresent()) {
             avg = avgO.getAsDouble();
         } else {
@@ -238,7 +240,8 @@ public class DriverAccountReports extends GenericUserFragment {
         xAxis.setDrawGridLines(true);
         xAxis.setGranularity(1f);
         xAxis.setGranularityEnabled(true);
-//        xAxis.setValueFormatter((value, axis) -> entries.get((int) value).getTime());
+        List<String> dates = entries.stream().map(entry ->entry.getTime()).collect(Collectors.toList());
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
     }
 
     public void fetchGraphEntries(Long start, Long end) {
@@ -263,6 +266,7 @@ public class DriverAccountReports extends GenericUserFragment {
                     }
                     if (entries != null && entries.size() > 0) {
                         setData();
+                        calculateAndAdd();
                     }
                 } else {
                     Toast.makeText(requireContext(), "Failed to fetch data", Toast.LENGTH_LONG).show();
@@ -275,4 +279,7 @@ public class DriverAccountReports extends GenericUserFragment {
             }
         });
     }
+
+
+
 }
