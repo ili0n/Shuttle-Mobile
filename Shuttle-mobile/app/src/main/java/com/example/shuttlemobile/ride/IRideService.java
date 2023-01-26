@@ -63,4 +63,6 @@ public interface IRideService {
 
     @GET("/api/ride/graph/passenger/{passengerId}")
     Call<ArrayList<GraphEntryDTO>> getPassengerGraphData(@Path("passengerId") long passengerId, @Query("from") String start, @Query("to") String end);
+    @GET("/api/ride/graph/driver/{driverId}")
+    Call<ArrayList<GraphEntryDTO>> getDriverGraphData(@Path("driverId") long passengerId, @Query("from") String start, @Query("to") String end);
  }

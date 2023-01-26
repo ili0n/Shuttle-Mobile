@@ -15,6 +15,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface IDriverService {
     @GET("/api/driver/{id}/vehicle")
@@ -32,6 +33,9 @@ public interface IDriverService {
 
 //    @GET("/api/driver/{id}")
 //    Call<PassengerDTO> getDriver(@Path("id") Long driverId); // TODO: UserDTO?
+
+    @GET("/api/driver/{id}/stats")
+    Call<DriverStatsDTO> getStatistics(@Path("id") Long driverId, @Query("scope") String scope);
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Utils.ServerOrigin)

@@ -27,6 +27,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
@@ -44,6 +45,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -162,7 +164,8 @@ public class PassengerAccountStats extends Fragment{
         xAxis.setDrawGridLines(true);
         xAxis.setGranularity(1f);
         xAxis.setGranularityEnabled(true);
-        xAxis.setValueFormatter((value, axis) -> entries.get((int) value).getTime());
+        List<String> dates = entries.stream().map(entry ->entry.getTime()).collect(Collectors.toList());
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
     }
 
     protected void initializeFragmentMap() {
