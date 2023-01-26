@@ -142,9 +142,20 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
                         }
                 ).collect(Collectors.toList());
 
-        // TODO: Pin support.
+        pinSupportToTop();
 
         ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
+    }
+
+    private void pinSupportToTop() {
+        MessageDTO support = null;
+        for (int i = 0; i < lastChats.size(); i++) {
+            if (lastChats.get(i).getType().equals("SUPPORT")) support = lastChats.get(i);
+        }
+        if (support!= null){
+            lastChats.remove(support);
+            lastChats.add(0,support);
+        }
     }
 
     @Override
@@ -183,6 +194,15 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
     }
 
     private void initListView() {
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setReceiverId(-1L);
+        messageDTO.setSenderId(SettingsUtil.getUserJWT().getId());
+        messageDTO.setRideId(0L);
+        messageDTO.setType("SUPPORT");
+        messageDTO.setTimeOfSending(LocalDateTime.now().toString());
+        messageDTO.setMessage("");
+        lastChats.add(0,messageDTO);
+
         listView = getActivity().findViewById(R.id.list_u_inbox);
         listView.setAdapter(new EasyListAdapter<MessageDTO>() {
             @Override
@@ -221,7 +241,10 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
                 LocalDateTime ldt = LocalDateTime.parse(obj.getTimeOfSending());
                 lastMsgDate.setText(ldt.format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
                 lastMsgTime.setText(ldt.format(DateTimeFormatter.ofPattern("HH:mm")));
-                otherName.setText("Name Surname");
+                if (obj.getType().equals("SUPPORT"))
+                    otherName.setText("Support");
+                else
+                    otherName.setText("Name Surname");
             }
         });
 
@@ -263,6 +286,7 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
 
     private void onShake() {
         Collections.reverse(lastChats);
+        pinSupportToTop();
         Toast.makeText(getActivity(), "Shaking detected.", Toast.LENGTH_SHORT).show();
     }
 }
