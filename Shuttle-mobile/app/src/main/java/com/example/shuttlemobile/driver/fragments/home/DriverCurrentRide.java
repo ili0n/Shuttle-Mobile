@@ -13,42 +13,27 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
-import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.driver.fragments.DriverHome;
-import com.example.shuttlemobile.driver.fragments.PanicPromptFragment;
 import com.example.shuttlemobile.driver.fragments.PassengerData;
 import com.example.shuttlemobile.driver.services.CurrentRideTimeService;
 import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.dto.PanicDTO;
-import com.example.shuttlemobile.ride.dto.RejectionDTOMinimal;
 import com.example.shuttlemobile.ride.dto.RideDTO;
-import com.example.shuttlemobile.ride.dto.RidePassengerDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.route.RouteDTO;
-import com.example.shuttlemobile.user.UserEmailDTO;
-import com.example.shuttlemobile.util.RetrofitUtils;
-import com.example.shuttlemobile.util.Utils;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
@@ -57,8 +42,6 @@ import java.util.stream.Collectors;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DriverCurrentRide extends Fragment {
     private Button btnPassengers;

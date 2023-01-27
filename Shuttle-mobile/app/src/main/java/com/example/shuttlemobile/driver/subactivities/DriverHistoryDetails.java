@@ -22,19 +22,16 @@ import com.example.shuttlemobile.common.UserChatActivity;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.review.IReviewService;
-import com.example.shuttlemobile.review.ReviewDTO;
 import com.example.shuttlemobile.review.ReviewPairDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
-import com.example.shuttlemobile.user.UserEmailDTO;
+import com.example.shuttlemobile.user.dto.UserEmailDTO;
 import com.mapbox.geojson.Point;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;

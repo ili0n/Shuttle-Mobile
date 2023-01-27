@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.user;
+package com.example.shuttlemobile.user.dto;
 
 public class RidePassengerDTO {
     private Long id;
