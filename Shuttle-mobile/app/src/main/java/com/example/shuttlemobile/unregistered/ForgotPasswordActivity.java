@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -12,9 +11,8 @@ import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.user.IUserService;
-import com.example.shuttlemobile.user.PasswordResetDTO;
-import com.example.shuttlemobile.user.UserEmailDTO;
-import com.example.shuttlemobile.util.SettingsUtil;
+import com.example.shuttlemobile.user.dto.PasswordResetDTO;
+import com.example.shuttlemobile.user.dto.UserEmailDTO;
 
 import retrofit2.Call;
 import retrofit2.Callback;

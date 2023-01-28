@@ -1,6 +1,6 @@
 package com.example.shuttlemobile.passenger.orderride;
 
-import com.example.shuttlemobile.user.RidePassengerDTO;
+import com.example.shuttlemobile.user.dto.RidePassengerDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
 

@@ -1,7 +1,7 @@
 package com.example.shuttlemobile.ride.dto;
 
 import com.example.shuttlemobile.route.RouteDTO;
-import com.example.shuttlemobile.user.UserEmailDTO;
+import com.example.shuttlemobile.user.dto.UserEmailDTO;
 
 import java.io.Serializable;
 import java.util.List;

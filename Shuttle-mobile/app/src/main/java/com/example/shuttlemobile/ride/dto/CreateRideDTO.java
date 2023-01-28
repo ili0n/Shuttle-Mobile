@@ -1,7 +1,7 @@
 package com.example.shuttlemobile.ride.dto;
 
 import com.example.shuttlemobile.route.RouteDTO;
-import com.example.shuttlemobile.user.RidePassengerDTO;
+import com.example.shuttlemobile.user.dto.RidePassengerDTO;
 
 import java.util.List;
 

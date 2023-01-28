@@ -20,7 +20,7 @@ import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.passenger.orderride.ICheckUsersService;
 import com.example.shuttlemobile.user.JWT;
-import com.example.shuttlemobile.user.RidePassengerDTO;
+import com.example.shuttlemobile.user.dto.RidePassengerDTO;
 import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.ArrayList;

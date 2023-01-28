@@ -1,4 +1,4 @@
-package com.example.shuttlemobile.user;
+package com.example.shuttlemobile.user.dto;
 
 import java.io.Serializable;
 
