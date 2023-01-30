@@ -131,36 +131,7 @@ public class DriverAccountInfo extends GenericUserFragment {
         });
 
         Button btnLogout = getActivity().findViewById(R.id.btn_driver_logout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                IUserService.service.setInactive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
-                    @Override
-                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                        getActivity().stopService(new Intent(getActivity().getApplicationContext(), DriverMessageService.class));
-                        getActivity().stopService(new Intent(getActivity().getApplicationContext(), DriverRideService.class));
-                        getActivity().stopService(new Intent(getActivity().getApplicationContext(), UserMessageService.class));
-
-                        SettingsUtil.clearUser();
-                        Intent toLogin = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
-                        startActivity(toLogin);
-                        getActivity().finish();
-                    }
-
-                    @Override
-                    public void onFailure(Call<Boolean> call, Throwable t) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Could not log out.", Toast.LENGTH_SHORT);
-                    }
-                });
-            }
-        });
-
-//        editName.setText(session.getUser().getName());
-//        editSurname.setText(session.getUser().getLastName());
-//        editAddress.setText(session.getUser().getLocation());
-//        editPhone.setText(session.getUser().getPhone());
-        // editPfp.
+        btnLogout.setOnClickListener(view -> logout());
 
         // TODO: If all the input fields are the same as the current user data, disable the button.
         // You have to use listeners for each edit text.
@@ -168,6 +139,27 @@ public class DriverAccountInfo extends GenericUserFragment {
         btnSubmit.setActivated(canSubmit);
         btnSubmit.setOnClickListener(view1 -> pushChanges(editName, editSurname, editAddress, editPhone,
                 editModel, editPlate, babySwitch, petSwitch, seatSpinner, typeSpinner, jwt));
+    }
+
+    private void logout() {
+        IUserService.service.setInactive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), DriverMessageService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), DriverRideService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), UserMessageService.class));
+
+                SettingsUtil.clearUser();
+                Intent toLogin = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                startActivity(toLogin);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Toast.makeText(getActivity().getApplicationContext(), "Could not log out.", Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     private void setVehicleDataFields(EditText editModel, EditText editPlate, Switch babySwitch, Switch petSwitch, Spinner seatSpinner, Spinner typeSpinner, JWT jwt) {

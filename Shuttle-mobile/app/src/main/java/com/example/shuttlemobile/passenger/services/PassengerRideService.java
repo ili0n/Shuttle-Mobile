@@ -65,7 +65,13 @@ public class PassengerRideService extends Service {
     }
 
     private void fetchRide() {
-        final JWT jwt = SettingsUtil.getUserJWT();
+        JWT jwt;
+        try {
+            jwt = SettingsUtil.getUserJWT();
+        } catch (Exception e) {
+            stopSelf();
+            return;
+        }
         Call<RideDTO> call = IRideService.service.getActiveRidePassenger(jwt.getId());
         call.enqueue(new Callback<RideDTO>() {
             @Override
