@@ -23,9 +23,9 @@ public class DriverActivity extends GenericUserActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver);
-        startService(new Intent(this, DriverMessageService.class));
-        startService(new Intent(this, DriverRideService.class));
-        startService(new Intent(this, UserMessageService.class));
+        startService(new Intent(getApplicationContext(), DriverMessageService.class));
+        startService(new Intent(getApplicationContext(), DriverRideService.class));
+        startService(new Intent(getApplicationContext(), UserMessageService.class));
     }
 
     @Override

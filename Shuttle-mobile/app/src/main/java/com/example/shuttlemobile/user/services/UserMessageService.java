@@ -37,7 +37,7 @@ public class UserMessageService extends Service {
     public void onCreate() {
 
         final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 20000;
+        final int delay = 1000;
 
          executorService.submit(new Runnable() {
                 @Override
@@ -67,7 +67,13 @@ public class UserMessageService extends Service {
     }
 
     private void fetchMessages() {
-        final JWT jwt = SettingsUtil.getUserJWT();
+        JWT jwt;
+        try {
+            jwt = SettingsUtil.getUserJWT();
+        } catch (Exception e) {
+            stopSelf();
+            return;
+        }
         IUserService.service.getMessages(jwt.getId()).enqueue(new Callback<ListDTO<MessageDTO>>() {
             @Override
             public void onResponse(Call<ListDTO<MessageDTO>> call, Response<ListDTO<MessageDTO>> response) {

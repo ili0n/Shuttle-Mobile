@@ -31,9 +31,16 @@ import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
+import com.example.shuttlemobile.driver.services.DriverMessageService;
+import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.passenger.IPassengerService;
 import com.example.shuttlemobile.passenger.PassengerActivity;
 import com.example.shuttlemobile.passenger.dto.PassengerDTO;
+import com.example.shuttlemobile.passenger.services.PassengerMessageService;
+import com.example.shuttlemobile.passenger.services.PassengerRideService;
+import com.example.shuttlemobile.unregistered.LoginActivity;
+import com.example.shuttlemobile.user.IUserService;
+import com.example.shuttlemobile.user.services.UserMessageService;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.Utils;
 
@@ -108,6 +115,30 @@ public class PassengerAccountInfo extends GenericUserFragment {
                     updatePassenger();
 
                 }
+            }
+        });
+
+        Button btnLogout = getActivity().findViewById(R.id.btn_passenger_logout);
+        btnLogout.setOnClickListener(view -> logout());
+    }
+
+    private void logout() {
+        IUserService.service.setInactive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), PassengerRideService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), PassengerMessageService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), UserMessageService.class));
+
+                SettingsUtil.clearUser();
+                Intent toLogin = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                startActivity(toLogin);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Toast.makeText(getActivity().getApplicationContext(), "Could not log out.", Toast.LENGTH_SHORT);
             }
         });
     }

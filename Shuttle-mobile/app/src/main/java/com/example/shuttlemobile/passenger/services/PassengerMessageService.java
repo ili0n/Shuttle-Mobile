@@ -63,7 +63,7 @@ public class PassengerMessageService extends Service {
             delay_ = 90000;
         }
 
-        final int delay = delay_;
+        final int delay = 1000;
         executorService.submit(new Runnable() {
                 @Override
                 public void run() {

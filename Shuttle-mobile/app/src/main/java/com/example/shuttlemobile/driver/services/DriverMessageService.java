@@ -20,7 +20,7 @@ public class DriverMessageService extends Service {
     public void onCreate() {
         final ExecutorService executorService = Executors.newSingleThreadExecutor();
         final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 3000;
+        final int delay = 1000;
 
         executorService.execute(new Runnable() {
                 @Override

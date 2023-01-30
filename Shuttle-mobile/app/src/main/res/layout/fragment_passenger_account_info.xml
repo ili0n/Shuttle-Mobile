@@ -56,13 +56,13 @@
                 android:id="@+id/img_p_info_pfp"
                 android:layout_width="128dp"
                 android:layout_height="128dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitStart"
                 android:src="@drawable/ic_baseline_account_box_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_passenger_logout" />
 
             <EditText
                 android:id="@+id/txt_p_info_address"
@@ -153,6 +153,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_p_info_address" />
+
+            <Button
+                android:id="@+id/btn_passenger_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Logout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

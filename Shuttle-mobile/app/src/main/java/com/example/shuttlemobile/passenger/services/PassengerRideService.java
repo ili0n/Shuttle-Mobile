@@ -36,7 +36,7 @@ public class PassengerRideService extends Service {
     public void onCreate() {
 
         final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 10000;
+        final int delay = 500;
 
         executorService.submit(new Runnable() {
                 @Override
@@ -65,7 +65,13 @@ public class PassengerRideService extends Service {
     }
 
     private void fetchRide() {
-        final JWT jwt = SettingsUtil.getUserJWT();
+        JWT jwt;
+        try {
+            jwt = SettingsUtil.getUserJWT();
+        } catch (Exception e) {
+            stopSelf();
+            return;
+        }
         Call<RideDTO> call = IRideService.service.getActiveRidePassenger(jwt.getId());
         call.enqueue(new Callback<RideDTO>() {
             @Override
