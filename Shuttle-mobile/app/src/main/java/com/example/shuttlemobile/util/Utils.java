@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 
 public class Utils {
-    public static final String ServerOrigin = "http://192.168.0.34:8080/";
+    public static final String ServerOrigin = "http://192.168.0.8:8080/";
 
     private Utils() {}
 

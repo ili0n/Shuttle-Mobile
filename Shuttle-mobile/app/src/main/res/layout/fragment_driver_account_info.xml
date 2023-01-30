@@ -42,13 +42,12 @@
                 android:id="@+id/img_d_info_pfp"
                 android:layout_width="128dp"
                 android:layout_height="128dp"
-                android:layout_marginTop="16dp"
                 android:background="#64B5F6"
                 android:scaleType="fitStart"
                 android:src="@drawable/ic_baseline_account_box_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_driver_logout" />
 
             <TextView
                 android:id="@+id/txt_d_info_name_lbl"
@@ -219,6 +218,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/info_d_seat_count_spinner"
                 app:layout_constraintVertical_bias="0.0" />
+
+            <Button
+                android:id="@+id/btn_driver_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

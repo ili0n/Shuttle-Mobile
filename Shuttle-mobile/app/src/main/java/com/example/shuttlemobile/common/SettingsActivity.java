@@ -1,12 +1,17 @@
 package com.example.shuttlemobile.common;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.unregistered.LoginActivity;
+import com.example.shuttlemobile.util.SettingsUtil;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -24,5 +29,16 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+
+        Button btnLogout = findViewById(R.id.btn_logout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingsUtil.clearUser();
+                Intent toLogin = new Intent(SettingsActivity.this, LoginActivity.class);
+                startActivity(toLogin);
+            }
+        });
     }
 }

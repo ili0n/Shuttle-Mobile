@@ -42,9 +42,14 @@ import android.widget.Toast;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.common.SettingsActivity;
 import com.example.shuttlemobile.driver.DriverDTO;
 import com.example.shuttlemobile.driver.IDriverService;
+import com.example.shuttlemobile.driver.services.DriverMessageService;
+import com.example.shuttlemobile.driver.services.DriverRideService;
+import com.example.shuttlemobile.unregistered.LoginActivity;
 import com.example.shuttlemobile.user.JWT;
+import com.example.shuttlemobile.user.services.UserMessageService;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.vehicle.VehicleDTO;
 
@@ -121,6 +126,21 @@ public class DriverAccountInfo extends GenericUserFragment {
                 if (checkAndRequestPermissions(getActivity())) {
                     chooseImage(getContext());
                 }
+            }
+        });
+
+        Button btnLogout = getActivity().findViewById(R.id.btn_driver_logout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), DriverMessageService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), DriverRideService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), UserMessageService.class));
+
+                SettingsUtil.clearUser();
+                Intent toLogin = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                startActivity(toLogin);
+                getActivity().finish();
             }
         });
 

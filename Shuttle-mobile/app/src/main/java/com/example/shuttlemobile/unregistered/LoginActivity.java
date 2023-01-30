@@ -67,8 +67,10 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (jwt.getRoles().contains(User.Role.Passenger)) {
                         startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
+                        finish();
                     } else if (jwt.getRoles().contains(User.Role.Driver)) {
                         startActivity(new Intent(getApplicationContext(), DriverActivity.class));
+                        finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Unauthorized!", Toast.LENGTH_LONG).show();
                     }

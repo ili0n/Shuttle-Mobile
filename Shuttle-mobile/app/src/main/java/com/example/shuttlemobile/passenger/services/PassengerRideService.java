@@ -36,7 +36,7 @@ public class PassengerRideService extends Service {
     public void onCreate() {
 
         final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 10000;
+        final int delay = 500;
 
         executorService.submit(new Runnable() {
                 @Override
