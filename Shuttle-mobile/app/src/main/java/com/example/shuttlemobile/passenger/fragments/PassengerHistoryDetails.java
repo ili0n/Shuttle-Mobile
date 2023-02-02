@@ -186,7 +186,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         imgDriver.setImageBitmap(Utils.getImageFromBase64(driver.getProfilePicture()));
         txtDriverFullName.setText(driver.getName() + " " + driver.getSurname());
         btnChat.setOnClickListener(view -> {
-            openSMS(driver.getTelephoneNumber());
+            openChat(driver.getId());
         });
 
         Call<VehicleDTO> call = IDriverService.service.getVehicle(driver.getId());
@@ -208,12 +208,15 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         });
     }
 
-    private void openSMS(String number) {
-        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-        sendIntent.setData(Uri.parse("sms:" + number));
-        startActivity(sendIntent);
-    }
+    private void openChat(Long driverId) {
+        Intent intent = new Intent(getActivity(), UserChatActivity.class);
 
+        intent.putExtra(UserChatActivity.PARAM_OTHER_ID, driverId);
+        intent.putExtra(UserChatActivity.PARAM_RIDE_ID, ride.getId());
+        intent.putExtra(UserChatActivity.PARAM_MSG_TYPE, Message.Type.RIDE);
+
+        startActivity(intent);
+    }
     private void initViews(View view) {
         txtRouteFrom = view.findViewById(R.id.txt_p_ride_routeA);
         txtRouteTo = view.findViewById(R.id.txt_p_ride_routeB);
