@@ -139,25 +139,27 @@ public class PassengerHistory extends GenericUserFragment implements SensorEvent
     }
 
     private void fillData(View view, RideDTO ride){
-        TextView routeA = view.findViewById(R.id.list_p_history_route_A);
-        TextView routeB = view.findViewById(R.id.list_p_history_route_B);
-        TextView date = view.findViewById(R.id.list_p_history_date);
-        TextView time = view.findViewById(R.id.list_p_history_time);
-        TextView cost = view.findViewById(R.id.list_p_history_cost);
-        TextView driverEmail = view.findViewById(R.id.list_p_history_dname);
+        if(ride.getStatus().equalsIgnoreCase("finished")){
+            TextView routeA = view.findViewById(R.id.list_p_history_route_A);
+            TextView routeB = view.findViewById(R.id.list_p_history_route_B);
+            TextView date = view.findViewById(R.id.list_p_history_date);
+            TextView time = view.findViewById(R.id.list_p_history_time);
+            TextView cost = view.findViewById(R.id.list_p_history_cost);
+            TextView driverEmail = view.findViewById(R.id.list_p_history_dname);
 
-        LocalDateTime endTime = LocalDateTime.parse(ride.getEndTime());
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDateTime endTime = LocalDateTime.parse(ride.getEndTime());
+            final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
+            final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+            date.setText(dateFormatter.format(endTime));
+            time.setText(timeFormatter.format(endTime));
 
-        List<RouteDTO> locations = ride.getLocations();
-        routeA.setText(locations.get(0).getDeparture().getAddress());
-        routeB.setText(locations.get(locations.size() - 1).getDestination().getAddress());
-        date.setText(dateFormatter.format(endTime));
-        time.setText(timeFormatter.format(endTime));
-        cost.setText(Double.toString(ride.getTotalCost()));
-        driverEmail.setText(ride.getDriver().getEmail());
-        ((EasyListAdapter)lvRides.getAdapter()).notifyDataSetChanged();
+            List<RouteDTO> locations = ride.getLocations();
+            routeA.setText(locations.get(0).getDeparture().getAddress());
+            routeB.setText(locations.get(locations.size() - 1).getDestination().getAddress());
+            cost.setText(Double.toString(ride.getTotalCost()));
+            driverEmail.setText(ride.getDriver().getEmail());
+            ((EasyListAdapter)lvRides.getAdapter()).notifyDataSetChanged();
+        }
     }
 
     private void openRideDetailsActivity(RideDTO ride) {
