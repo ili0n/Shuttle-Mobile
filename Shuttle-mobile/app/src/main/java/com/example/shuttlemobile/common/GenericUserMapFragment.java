@@ -401,4 +401,8 @@ public abstract class GenericUserMapFragment extends GenericUserFragment {
         final MapAnimationOptions mapAnimationOptions = new MapAnimationOptions.Builder().duration(animDurationInMs).build();
         final Cancelable cancelable = CameraAnimationsUtils.flyTo(mapboxMap, lookOptions, mapAnimationOptions);
     }
+
+    public MapView getMapView() {
+        return mapView;
+    }
 }

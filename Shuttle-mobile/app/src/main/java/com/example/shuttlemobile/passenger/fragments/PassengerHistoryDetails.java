@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +49,14 @@ import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.Utils;
 import com.example.shuttlemobile.vehicle.IVehicleService;
 import com.example.shuttlemobile.vehicle.VehicleDTO;
+import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Point;
+import com.mapbox.maps.extension.observable.eventdata.CameraChangedEventData;
+import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener;
+import com.mapbox.maps.plugin.gestures.GesturesPlugin;
+import com.mapbox.maps.plugin.gestures.GesturesPluginImpl;
+import com.mapbox.maps.plugin.gestures.GesturesUtils;
+import com.mapbox.maps.plugin.gestures.OnMoveListener;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -84,6 +93,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
     private ListView lvPassengers;
     private View viewRateDriver;
     private View viewRateVehicle;
+    private ScrollView viewScroll;
 
     public static PassengerHistoryDetails newInstance(RideDTO ride) {
         PassengerHistoryDetails fragment = new PassengerHistoryDetails();
@@ -333,7 +343,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         btnOrderAgain = view.findViewById(R.id.bnt_p_ride_again);
         btnFavorite = view.findViewById(R.id.btn_p_ride_favorite);
 
-        imgDriver =  view.findViewById(R.id.img_p_ride_dpfp);
+        imgDriver = view.findViewById(R.id.img_p_ride_dpfp);
         txtDriverFullName = view.findViewById(R.id.txt_p_ride_dname);
         txtVehicle = view.findViewById(R.id.txt_p_ride_dcar);
         btnChat = view.findViewById(R.id.btn_p_ride_dchat);
@@ -349,6 +359,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         setLowerLimit(viewRateDriver);
         setLowerLimit(viewRateVehicle);
 
+        viewScroll = view.findViewById(R.id.scroll_p_history_details);
     }
 
     private void setLowerLimit(View viewRate) {
@@ -367,7 +378,24 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
 
     @Override
     public void onMapLoaded() {
+//        disable scrolling while panning
+        GesturesPlugin gesturesPlugin = GesturesUtils.getGestures(this.getMapView());
+        gesturesPlugin.addOnMoveListener(new OnMoveListener() {
+            @Override
+            public void onMoveBegin(@NonNull MoveGestureDetector moveGestureDetector) {
+                viewScroll.requestDisallowInterceptTouchEvent(true);
+            }
 
+            @Override
+            public boolean onMove(@NonNull MoveGestureDetector moveGestureDetector) {
+                return false;
+            }
+
+            @Override
+            public void onMoveEnd(@NonNull MoveGestureDetector moveGestureDetector) {
+                viewScroll.requestDisallowInterceptTouchEvent(false);
+            }
+        });
     }
 
     @Override
