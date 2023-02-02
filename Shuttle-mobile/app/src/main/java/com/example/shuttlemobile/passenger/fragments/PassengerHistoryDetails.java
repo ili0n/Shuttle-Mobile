@@ -33,9 +33,13 @@ import com.example.shuttlemobile.driver.IDriverService;
 import com.example.shuttlemobile.driver.fragments.DriverHistory;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.passenger.orderride.OrderActivity;
+import com.example.shuttlemobile.review.IReviewService;
+import com.example.shuttlemobile.review.ReviewDTO;
+import com.example.shuttlemobile.review.ReviewPairDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.user.dto.UserEmailDTO;
+import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.Utils;
 import com.example.shuttlemobile.vehicle.IVehicleService;
 import com.example.shuttlemobile.vehicle.VehicleDTO;
@@ -45,6 +49,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +58,9 @@ import retrofit2.Response;
 public class PassengerHistoryDetails extends GenericUserMapFragment {
     private RideDTO ride;
     private DriverDTO driver;
+    private List<ReviewPairDTO> reviews;
+    private VehicleDTO vehicle;
+
     private static final String RIDE_KEY = "ride";
 
     private TextView txtRouteFrom;
@@ -67,7 +75,6 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
     private TextView txtPrice;
     private TextView txtDate;
     private TextView txtTime;
-    private VehicleDTO vehicle;
     private ListView lvPassengers;
 
     public static PassengerHistoryDetails newInstance(RideDTO ride) {
@@ -138,6 +145,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
             favoriteDialog.show(getChildFragmentManager(), "favorite");
         });
 
+//        set passengers
         lvPassengers.setAdapter(new EasyListAdapter<UserEmailDTO>() {
             @Override
             public List<UserEmailDTO> getList() {
@@ -162,6 +170,27 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
             }
         });
 
+        Call<List<ReviewPairDTO>> getReviews = IReviewService.service.findByRide(ride.getId());
+        getReviews.enqueue(new Callback<List<ReviewPairDTO>>() {
+            @Override
+            public void onResponse(Call<List<ReviewPairDTO>> call, Response<List<ReviewPairDTO>> response) {
+                if(response.isSuccessful()){
+                    reviews = response.body();
+                    if(reviews != null){
+                        if(reviews.stream().anyMatch(review -> Objects.equals(review.getDriverReview().getPassenger().getId(), SettingsUtil.getUserJWT().getId()))){
+
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReviewPairDTO>> call, Throwable t) {
+
+            }
+        });
+
 //        driver fetching and filling data
         Call<DriverDTO> call = IDriverService.service.getDriver(ride.getDriver().getId());
         call.enqueue(new Callback<DriverDTO>() {
@@ -180,6 +209,9 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
 
             }
         });
+    }
+
+    private void fillReviews() {
     }
 
     private void fillDriverData(DriverDTO driver) {
