@@ -139,6 +139,7 @@ public class PassengerHistory extends GenericUserFragment implements SensorEvent
     }
 
     private void fillData(View view, RideDTO ride){
+//        TODO maybe edn time != null
         if(ride.getStatus().equalsIgnoreCase("finished")){
             TextView routeA = view.findViewById(R.id.list_p_history_route_A);
             TextView routeB = view.findViewById(R.id.list_p_history_route_B);
