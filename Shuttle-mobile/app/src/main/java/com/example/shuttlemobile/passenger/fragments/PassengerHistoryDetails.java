@@ -18,10 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shuttlemobile.FavoriteDialog;
 import com.example.shuttlemobile.R;
@@ -36,6 +39,7 @@ import com.example.shuttlemobile.passenger.orderride.OrderActivity;
 import com.example.shuttlemobile.review.IReviewService;
 import com.example.shuttlemobile.review.ReviewDTO;
 import com.example.shuttlemobile.review.ReviewPairDTO;
+import com.example.shuttlemobile.review.ReviewSendDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.user.dto.UserEmailDTO;
@@ -50,6 +54,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,6 +82,8 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
     private TextView txtDate;
     private TextView txtTime;
     private ListView lvPassengers;
+    private View viewRateDriver;
+    private View viewRateVehicle;
 
     public static PassengerHistoryDetails newInstance(RideDTO ride) {
         PassengerHistoryDetails fragment = new PassengerHistoryDetails();
@@ -145,6 +153,13 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
             favoriteDialog.show(getChildFragmentManager(), "favorite");
         });
 
+//        set on rate review
+        Button btnVehicleRating = viewRateVehicle.findViewById(R.id.btn_p_ride_leave_rating);
+        btnVehicleRating.setOnClickListener(view -> onRate(viewRateVehicle, IReviewService.service::leaveReviewVehicle));
+
+        Button btnDriverRating = viewRateDriver.findViewById(R.id.btn_p_ride_leave_rating);
+        btnDriverRating.setOnClickListener(view -> onRate(viewRateDriver, IReviewService.service::leaveReviewDriver));
+
 //        set passengers
         lvPassengers.setAdapter(new EasyListAdapter<UserEmailDTO>() {
             @Override
@@ -170,28 +185,44 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
             }
         });
 
-        Call<List<ReviewPairDTO>> getReviews = IReviewService.service.findByRide(ride.getId());
-        getReviews.enqueue(new Callback<List<ReviewPairDTO>>() {
+//        fetch  reviews
+        fetchReviews();
+//        driver fetching and filling data
+        fetchDriver();
+    }
+
+    private void onRate(View viewRate, BiFunction<Long, ReviewSendDTO, Call<ReviewDTO>> func) {
+        RatingBar ratingBar = viewRate.findViewById(R.id.rating_p_ride_rating);
+        EditText etComment = viewRate.findViewById(R.id.txt_p_ride_comment);
+        Long rating = (long) ratingBar.getRating();
+        String comment = etComment.getText().toString();
+
+        if(comment.equals("")) {
+            Toast.makeText(requireContext(), "Comment field can't be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        ReviewSendDTO review = new ReviewSendDTO();
+        review.setRating(rating);
+        review.setComment(comment);
+
+        Call<ReviewDTO> call = func.apply(ride.getId(), review);
+        call.enqueue(new Callback<ReviewDTO>() {
             @Override
-            public void onResponse(Call<List<ReviewPairDTO>> call, Response<List<ReviewPairDTO>> response) {
+            public void onResponse(Call<ReviewDTO> call, Response<ReviewDTO> response) {
                 if(response.isSuccessful()){
-                    reviews = response.body();
-                    if(reviews != null){
-                        if(reviews.stream().anyMatch(review -> Objects.equals(review.getDriverReview().getPassenger().getId(), SettingsUtil.getUserJWT().getId()))){
-
-                        }
-                    }
-
+                    fetchReviews();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<ReviewPairDTO>> call, Throwable t) {
+            public void onFailure(Call<ReviewDTO> call, Throwable t) {
 
             }
         });
+    }
 
-//        driver fetching and filling data
+    private void fetchDriver() {
         Call<DriverDTO> call = IDriverService.service.getDriver(ride.getDriver().getId());
         call.enqueue(new Callback<DriverDTO>() {
             @Override
@@ -211,7 +242,54 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         });
     }
 
-    private void fillReviews() {
+    private void fetchReviews() {
+        Call<List<ReviewPairDTO>> getReviews = IReviewService.service.findByRide(ride.getId());
+        getReviews.enqueue(new Callback<List<ReviewPairDTO>>() {
+            @Override
+            public void onResponse(Call<List<ReviewPairDTO>> call, Response<List<ReviewPairDTO>> response) {
+                if(response.isSuccessful()){
+                    reviews = response.body();
+                    if(reviews != null){
+                        Optional<ReviewDTO> vehicleReview = reviews
+                                .stream()
+                                .map(ReviewPairDTO::getVehicleReview)
+                                .filter(review -> Objects.nonNull(review.getPassenger()))
+                                .filter(review ->
+                                        Objects.equals(review.getPassenger().getId(), SettingsUtil.getUserJWT().getId())).findFirst();
+                        vehicleReview.ifPresent(reviewDTO -> fillReview(reviewDTO, "Vehicle rate", viewRateVehicle));
+                        Optional<ReviewDTO> driverReview = reviews
+                                .stream()
+                                .map(ReviewPairDTO::getDriverReview)
+                                .filter(review -> Objects.nonNull(review.getPassenger()))
+                                .filter(review ->
+                                        Objects.equals(review.getPassenger().getId(), SettingsUtil.getUserJWT().getId())).findFirst();
+                        driverReview.ifPresent(reviewDTO -> fillReview(reviewDTO, "Driver rate", viewRateDriver));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReviewPairDTO>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void fillReview(ReviewDTO reviewDTO, String title, View viewRate) {
+        TextView lblRating = viewRate.findViewById(R.id.lbl_p_rating);
+        RatingBar ratingBar = viewRate.findViewById(R.id.rating_p_ride_rating);
+        EditText etComment = viewRate.findViewById(R.id.txt_p_ride_comment);
+        Button btnRate = viewRate.findViewById(R.id.btn_p_ride_leave_rating);
+
+        lblRating.setText(title);
+
+        ratingBar.setRating(reviewDTO.getRating());
+        ratingBar.setIsIndicator(true);
+
+        etComment.setText(reviewDTO.getComment());
+        etComment.setEnabled(false);
+
+        btnRate.setVisibility(View.GONE);
     }
 
     private void fillDriverData(DriverDTO driver) {
@@ -232,7 +310,6 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<VehicleDTO> call, Throwable t) {
 
@@ -249,6 +326,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
 
         startActivity(intent);
     }
+
     private void initViews(View view) {
         txtRouteFrom = view.findViewById(R.id.txt_p_ride_routeA);
         txtRouteTo = view.findViewById(R.id.txt_p_ride_routeB);
@@ -265,6 +343,21 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         txtTime = view.findViewById(R.id.txt_p_ride_tinterval);
         lvPassengers = view.findViewById(R.id.li_p_ride_passengers);
 
+        viewRateDriver = view.findViewById(R.id.p_history_driver_rating);
+        viewRateVehicle = view.findViewById(R.id.p_history_vehicle_rating);
+
+        setLowerLimit(viewRateDriver);
+        setLowerLimit(viewRateVehicle);
+
+    }
+
+    private void setLowerLimit(View viewRate) {
+        RatingBar ratingBar = viewRate.findViewById(R.id.rating_p_ride_rating);
+        ratingBar.setOnRatingBarChangeListener((ratingBar1, rating, fromUser) -> {
+            if(rating < 1){
+                ratingBar1.setRating(1);
+            }
+        });
     }
 
     @Override
