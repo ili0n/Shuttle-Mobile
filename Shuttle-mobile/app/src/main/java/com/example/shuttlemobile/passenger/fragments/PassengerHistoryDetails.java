@@ -20,18 +20,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.shuttlemobile.FavoriteDialog;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserMapFragment;
 import com.example.shuttlemobile.common.UserChatActivity;
+import com.example.shuttlemobile.common.adapter.EasyListAdapter;
 import com.example.shuttlemobile.driver.DriverDTO;
 import com.example.shuttlemobile.driver.IDriverService;
+import com.example.shuttlemobile.driver.fragments.DriverHistory;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.passenger.orderride.OrderActivity;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
+import com.example.shuttlemobile.user.dto.UserEmailDTO;
 import com.example.shuttlemobile.util.Utils;
 import com.example.shuttlemobile.vehicle.IVehicleService;
 import com.example.shuttlemobile.vehicle.VehicleDTO;
@@ -39,6 +43,7 @@ import com.mapbox.geojson.Point;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -63,6 +68,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
     private TextView txtDate;
     private TextView txtTime;
     private VehicleDTO vehicle;
+    private ListView lvPassengers;
 
     public static PassengerHistoryDetails newInstance(RideDTO ride) {
         PassengerHistoryDetails fragment = new PassengerHistoryDetails();
@@ -101,6 +107,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
     }
 
     private void fillData() {
+//        basic ride data
         final LocationDTO A_loc = ride.getLocations().get(0).getDeparture();
         final LocationDTO B_loc = ride.getLocations().get(ride.getLocations().size() - 1).getDestination();
         txtRouteFrom.setText(A_loc.getAddress());
@@ -108,7 +115,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         txtDistace.setText(ride.getTotalLength().toString() + "km");
         txtPrice.setText(ride.getTotalCost().toString() + "RSD");
 
-
+//        Date time data
         LocalDateTime endTime = LocalDateTime.parse(ride.getEndTime());
         LocalDateTime startTime = LocalDateTime.parse(ride.getStartTime());
         final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
@@ -116,6 +123,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         txtDate.setText(dateFormatter.format(endTime));
         txtTime.setText(timeFormatter.format(startTime) + " - " + timeFormatter.format(endTime));
 
+//        button listeners
         btnOrderAgain.setOnClickListener(view -> {
             Intent intent = new Intent(requireContext(), OrderActivity.class);
             Bundle bundle = new Bundle();
@@ -130,6 +138,31 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
             favoriteDialog.show(getChildFragmentManager(), "favorite");
         });
 
+        lvPassengers.setAdapter(new EasyListAdapter<UserEmailDTO>() {
+            @Override
+            public List<UserEmailDTO> getList() {
+                return ride.getPassengers();
+            }
+
+            @Override
+            public LayoutInflater getLayoutInflater() {
+                return PassengerHistoryDetails.this.getLayoutInflater();
+            }
+
+            @Override
+            public void applyToView(View view, UserEmailDTO passenger) {
+                TextView txtPassenger = view.findViewById(R.id.txt_p_history_p_name);
+                txtPassenger.setText(passenger.getEmail());
+
+            }
+
+            @Override
+            public int getListItemLayoutId() {
+                return R.layout.list_p_history_passengers;
+            }
+        });
+
+//        driver fetching and filling data
         Call<DriverDTO> call = IDriverService.service.getDriver(ride.getDriver().getId());
         call.enqueue(new Callback<DriverDTO>() {
             @Override
@@ -195,6 +228,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         txtPrice = view.findViewById(R.id.txt_p_ride_price);
         txtDate = view.findViewById(R.id.txt_p_ride_date);
         txtTime = view.findViewById(R.id.txt_p_ride_tinterval);
+        lvPassengers = view.findViewById(R.id.li_p_ride_passengers);
 
     }
 
