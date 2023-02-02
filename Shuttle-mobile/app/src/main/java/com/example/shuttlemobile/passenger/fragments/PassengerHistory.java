@@ -162,7 +162,6 @@ public class PassengerHistory extends GenericUserFragment implements SensorEvent
 
     private void openRideDetailsActivity(RideDTO ride) {
         Intent intent = new Intent(getActivity(), PassengerHistoryDetailsActivity.class);
-        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_SESSION, session);
         intent.putExtra(PassengerHistoryDetailsActivity.PARAM_RIDE, ride);
         startActivity(intent);
     }

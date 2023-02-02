@@ -1,8 +1,8 @@
 package com.example.shuttlemobile.common;
 
-import com.example.shuttlemobile.passenger.dto.BasicUserInfoDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.route.RouteDTO;
+import com.example.shuttlemobile.user.dto.UserEmailDTO;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -51,8 +51,8 @@ public class MyValidator {
         }
     }
 
-    public static void validateUserRef(List<BasicUserInfoDTO> idEmailList, String name) throws MyValidatorException {
-        for (BasicUserInfoDTO u : idEmailList) {
+    public static void validateUserRef(List<UserEmailDTO> idEmailList, String name) throws MyValidatorException {
+        for (UserEmailDTO u : idEmailList) {
             validateRequired(u.getId(), name + ".id");
             validateRequired(u.getEmail(), name + ".email");
 

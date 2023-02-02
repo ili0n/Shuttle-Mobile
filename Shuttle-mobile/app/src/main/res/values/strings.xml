@@ -43,4 +43,7 @@
     <string name="sum">SUM</string>
     <string name="start">start</string>
     <string name="end">end</string>
+    <string name="give_your_favorite_ride_a_name">Give your favorite ride a name</string>
+    <string name="favorite_ride_name">favorite ride name</string>
+    <string name="name">Name</string>
 </resources>
