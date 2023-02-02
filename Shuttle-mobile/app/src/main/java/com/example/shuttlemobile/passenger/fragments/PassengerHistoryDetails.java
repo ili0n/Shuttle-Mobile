@@ -51,6 +51,7 @@ import com.example.shuttlemobile.vehicle.IVehicleService;
 import com.example.shuttlemobile.vehicle.VehicleDTO;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Point;
+import com.mapbox.maps.MapView;
 import com.mapbox.maps.extension.observable.eventdata.CameraChangedEventData;
 import com.mapbox.maps.plugin.delegates.listeners.OnCameraChangeListener;
 import com.mapbox.maps.plugin.gestures.GesturesPlugin;
@@ -94,6 +95,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
     private View viewRateDriver;
     private View viewRateVehicle;
     private ScrollView viewScroll;
+    private MapView mapView;
 
     public static PassengerHistoryDetails newInstance(RideDTO ride) {
         PassengerHistoryDetails fragment = new PassengerHistoryDetails();
@@ -360,6 +362,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         setLowerLimit(viewRateVehicle);
 
         viewScroll = view.findViewById(R.id.scroll_p_history_details);
+        mapView = view.findViewById(R.id.p_details_map);
     }
 
     private void setLowerLimit(View viewRate) {
@@ -379,7 +382,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
     @Override
     public void onMapLoaded() {
 //        disable scrolling while panning
-        GesturesPlugin gesturesPlugin = GesturesUtils.getGestures(this.getMapView());
+        GesturesPlugin gesturesPlugin = GesturesUtils.getGestures(mapView);
         gesturesPlugin.addOnMoveListener(new OnMoveListener() {
             @Override
             public void onMoveBegin(@NonNull MoveGestureDetector moveGestureDetector) {
