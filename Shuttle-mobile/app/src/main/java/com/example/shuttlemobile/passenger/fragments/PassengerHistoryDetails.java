@@ -139,16 +139,28 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
         final LocationDTO B_loc = ride.getLocations().get(ride.getLocations().size() - 1).getDestination();
         txtRouteFrom.setText(A_loc.getAddress());
         txtRouteTo.setText(B_loc.getAddress());
-        txtDistace.setText(ride.getTotalLength().toString() + "km");
-        txtPrice.setText(ride.getTotalCost().toString() + "RSD");
+        if(ride.getTotalLength() != null)
+            txtDistace.setText(ride.getTotalLength().toString() + "km");
+        if(ride.getTotalCost() != null)
+            txtPrice.setText(ride.getTotalCost().toString() + "RSD");
 
 //        Date time data
-        LocalDateTime endTime = LocalDateTime.parse(ride.getEndTime());
-        LocalDateTime startTime = LocalDateTime.parse(ride.getStartTime());
         final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
         final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        txtDate.setText(dateFormatter.format(endTime));
-        txtTime.setText(timeFormatter.format(startTime) + " - " + timeFormatter.format(endTime));
+        String endTimeStr = "";
+        String startTimeStr = "";
+        String endDateStr = "";
+        if(ride.getEndTime() != null) {
+            LocalDateTime endTime = LocalDateTime.parse(ride.getEndTime());
+            endTimeStr = timeFormatter.format(endTime);
+            endDateStr = dateFormatter.format(endTime);
+        }
+        if(ride.getStartTime() != null){
+            LocalDateTime startTime = LocalDateTime.parse(ride.getStartTime());
+            startTimeStr = timeFormatter.format(startTime);
+        }
+        txtDate.setText(endDateStr);
+        txtTime.setText(startTimeStr + " - " + endTimeStr);
 
 //        button listeners
         btnOrderAgain.setOnClickListener(view -> {
