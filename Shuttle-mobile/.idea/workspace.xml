@@ -21,9 +21,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e9a298b-a87a-4bd0-9046-5f0d90278529" name="Changes" comment="removed unused imports&#10;implemented driver reports">
+    <list default="true" id="cfa5b2b3-b4e9-4094-8ac4-8c4b13cebdc7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/UserChatActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/UserChatActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/unregistered/LoginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/unregistered/LoginActivity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,11 +66,11 @@
         <option value="valueResourceFile" />
         <option value="CMakeLists.txt" />
         <option value="Interface" />
-        <option value="layoutResourceFile" />
         <option value="Interface" />
         <option value="layoutResourceFile" />
         <option value="resourceFile" />
         <option value="Class" />
+        <option value="layoutResourceFile" />
       </list>
     </option>
   </component>
@@ -105,6 +106,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="android-custom-view/home/nemanja/.gradle/caches/modules-2/files-2.1/com.mapbox.maps/android/10.10.0/8725feb22526c69eb694e203bc016606ea52460/android-10.10.0-sources.jar!/com/mapbox/maps/MapView.kt_SELECTED" value="MapView" />
     <property name="cidr.known.project.marker" value="true" />
   </component>
   <component name="RecentsManager">
@@ -274,7 +276,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="1e9a298b-a87a-4bd0-9046-5f0d90278529" name="Changes" comment="" />
+      <changelist id="cfa5b2b3-b4e9-4094-8ac4-8c4b13cebdc7" name="Changes" comment="" />
       <created>1673137914216</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -343,26 +345,6 @@
           <line>71</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/InboxFragment.java</url>
-          <line>260</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/InboxFragment.java</url>
-          <line>250</line>
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/InboxFragment.java</url>
-          <line>164</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/InboxFragment.java</url>
-          <line>168</line>
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
@@ -370,6 +352,13 @@
         <watch expression="holder.cbStar.isChecked()" language="JAVA" />
         <watch expression="getList().get(i).isSet()" language="JAVA" />
         <watch expression="i" language="JAVA" />
+        <watch expression="routeA.getText()" language="JAVA" />
+        <watch expression="routeB.getText()" language="JAVA" />
+        <watch expression="etName.getText().toString()" language="JAVA" />
+        <watch expression="ride.getLocations().get(0)" language="JAVA" />
+        <watch expression="ride.getTotalLength()" language="JAVA" />
+        <watch expression="getIntent()" language="JAVA" />
+        <watch expression="getIntent().getSerializableExtra(KEY_ROUTE)" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

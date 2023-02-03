@@ -30,7 +30,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initButtonCallbacks();
-        openHomeActivityFromJwtInSharedPrefs(); // If this fails (no problem, you'll login).
+        Log.e("A", "B");
+
+        if (openHomeActivityFromJwtInSharedPrefs()) {
+            finish();
+        }
     }
 
     private void initButtonCallbacks() {
@@ -61,6 +65,8 @@ public class LoginActivity extends AppCompatActivity {
                     SettingsUtil.put(SettingsUtil.KEY_ACCESS_TOKEN, token.getAccessToken());
                     if (!openHomeActivityFromJwtInSharedPrefs()) {
                         Toast.makeText(LoginActivity.this, "Unauthorized!", Toast.LENGTH_LONG).show();
+                    } else {
+                        finish();
                     }
                 }
             }

@@ -250,7 +250,7 @@ public class UserChatActivity extends SimpleToolbarActivity {
                 txtMessage.setText(m.getMessage());
 
                 LocalDateTime ldt = LocalDateTime.parse(m.getTimeOfSending());
-                txtDate.setText(ldt.format(DateTimeFormatter.ofPattern("DD/MM/YYYY")));
+                txtDate.setText(ldt.format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
                 txtTime.setText(ldt.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 
                 return v;
