@@ -36,6 +36,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
+    private boolean openingLogin = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -166,6 +167,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onHasLocations() {
+        if (openingLogin) {
+            return;
+        }
+        openingLogin = true;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
