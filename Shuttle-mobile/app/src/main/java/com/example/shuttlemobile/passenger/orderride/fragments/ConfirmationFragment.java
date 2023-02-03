@@ -20,9 +20,14 @@ import com.example.shuttlemobile.passenger.orderride.OrderActivity;
 import com.example.shuttlemobile.ride.dto.CreateRideDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.RouteDTO;
+import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.vehicle.IVehicleService;
 import com.example.shuttlemobile.vehicle.VehicleTypeDTO;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -104,14 +109,14 @@ public class ConfirmationFragment extends Fragment {
                     public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
                         if(response.code() == 200)
                             Toast.makeText(getContext(), "Ride created", Toast.LENGTH_LONG).show();
-                        else {
-                            Toast.makeText(getContext(), response.message(), Toast.LENGTH_LONG).show();
+                        else{
+                            Toast.makeText(getContext(), RetrofitUtils.getErrorMessage(response), Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<RideDTO> call, Throwable t) {
-                        Toast.makeText(getContext(), "Failed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
                 getActivity().finish();

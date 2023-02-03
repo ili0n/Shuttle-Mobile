@@ -16,25 +16,41 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
 import com.example.shuttlemobile.common.adapter.EasyListAdapter;
+import com.example.shuttlemobile.driver.DriverDTO;
+import com.example.shuttlemobile.driver.IDriverService;
+import com.example.shuttlemobile.passenger.IPassengerService;
 import com.example.shuttlemobile.passenger.services.PassengerMessageService;
 import com.example.shuttlemobile.passenger.subactivities.PassengerHistoryDetailsActivity;
+import com.example.shuttlemobile.ride.IRideService;
 import com.example.shuttlemobile.ride.Ride;
-import com.example.shuttlemobile.util.NotificationUtil;
+import com.example.shuttlemobile.ride.dto.RideDTO;
+import com.example.shuttlemobile.route.LocationDTO;
+import com.example.shuttlemobile.route.RouteDTO;
+import com.example.shuttlemobile.util.ListDTO;
+import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.ShakePack;
+import com.example.shuttlemobile.util.Utils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PassengerHistory extends GenericUserFragment implements SensorEventListener {
     private SensorManager sensorManager;
     private ShakePack shakePack = new ShakePack(12);
+    private List<RideDTO> rides;
+    private ListView lvRides;
 
     public static PassengerHistory newInstance(SessionContext session) {
         PassengerHistory fragment = new PassengerHistory();
@@ -59,67 +75,89 @@ public class PassengerHistory extends GenericUserFragment implements SensorEvent
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
     }
 
-    private void sendNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID)
-                .setContentTitle("Notification Title!")
-                .setContentText("Notification Text!")
-                .setSmallIcon(R.drawable.car_green)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-        notificationManager.notify(900009, builder.build());
+    private void initializeList() {
+
+        Call<ListDTO<RideDTO>> call = IPassengerService.service.getRides(SettingsUtil.getUserJWT().getId());
+        call.enqueue(new Callback<ListDTO<RideDTO>>() {
+            @Override
+            public void onResponse(Call<ListDTO<RideDTO>> call, Response<ListDTO<RideDTO>> response) {
+                if(response.isSuccessful()){
+                    rides = response.body().getResults();
+                    rides.sort((r1, r2) -> {
+                        if(r1.getEndTime() != null && r2.getEndTime() != null){
+                            LocalDateTime time1 = LocalDateTime.parse(r1.getEndTime());
+                            LocalDateTime time2 = LocalDateTime.parse(r2.getEndTime());
+                            return time1.compareTo(time2);
+                        }
+                        return 1;
+                    });
+                    fillListView();
+                }
+                else{
+                    Toast.makeText(requireContext(), "Failed to fetch rides", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListDTO<RideDTO>> call, Throwable t) {
+                Toast.makeText(requireContext(), "Failed to fetch rides", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    private void initializeList() {
-        ///////////////////////////////
-
-        sendNotification();
-
-        ///////////////////////////////
-
-        ListView listView = getActivity().findViewById(R.id.list_p_history);
-
-        List<Ride> rides = new ArrayList<>();
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-        rides.add(new Ride());
-
-        listView.setAdapter(new EasyListAdapter<Ride>() {
+    private void fillListView(){
+        lvRides = requireActivity().findViewById(R.id.list_p_rides);
+        lvRides.setAdapter(new EasyListAdapter<RideDTO>() {
             @Override
-            public List<Ride> getList() { return rides; }
+            public List<RideDTO> getList() { return rides; }
             @Override
             public LayoutInflater getLayoutInflater() { return PassengerHistory.this.getLayoutInflater(); }
             @Override
             public int getListItemLayoutId() { return R.layout.list_p_history; }
             @Override
-            public void applyToView(View view, Ride obj) {
-                TextView routeA = view.findViewById(R.id.list_p_history_route_A);
-                TextView routeB = view.findViewById(R.id.list_p_history_route_B);
-                TextView date = view.findViewById(R.id.list_p_history_date);
-                TextView time = view.findViewById(R.id.list_p_history_time);
-                TextView cost = view.findViewById(R.id.list_p_history_cost);
-                TextView driverFullName = view.findViewById(R.id.list_p_history_dname);
-                ImageView driverPfp = view.findViewById(R.id.list_p_history_dpfp);
-
-                //passengerName.setText(obj.getPassenger().getName());
+            public void applyToView(View view, RideDTO ride) {
+                fillData(view, ride);
             }
         });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvRides.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Ride obj = (Ride)listView.getItemAtPosition(i);
+                RideDTO obj = (RideDTO)lvRides.getItemAtPosition(i);
                 openRideDetailsActivity(obj);
             }
         });
     }
 
-    private void openRideDetailsActivity(Ride ride) {
+    private void fillData(View view, RideDTO ride){
+        TextView routeA = view.findViewById(R.id.list_p_history_route_A);
+        TextView routeB = view.findViewById(R.id.list_p_history_route_B);
+        TextView date = view.findViewById(R.id.list_p_history_date);
+        TextView time = view.findViewById(R.id.list_p_history_time);
+        TextView cost = view.findViewById(R.id.list_p_history_cost);
+        TextView driverEmail = view.findViewById(R.id.list_p_history_dname);
+
+
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
+        final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        if(ride.getEndTime() != null){
+            LocalDateTime endTime = LocalDateTime.parse(ride.getEndTime());
+            date.setText(dateFormatter.format(endTime));
+            time.setText(timeFormatter.format(endTime));
+        }
+
+        List<RouteDTO> locations = ride.getLocations();
+        routeA.setText(locations.get(0).getDeparture().getAddress());
+        routeB.setText(locations.get(locations.size() - 1).getDestination().getAddress());
+        if(ride.getTotalCost() != null){
+            cost.setText(Double.toString(ride.getTotalCost()));
+        }
+        driverEmail.setText(ride.getDriver().getEmail());
+        ((EasyListAdapter)lvRides.getAdapter()).notifyDataSetChanged();
+    }
+
+    private void openRideDetailsActivity(RideDTO ride) {
         Intent intent = new Intent(getActivity(), PassengerHistoryDetailsActivity.class);
-        intent.putExtra(PassengerHistoryDetailsActivity.PARAM_SESSION, session);
         intent.putExtra(PassengerHistoryDetailsActivity.PARAM_RIDE, ride);
         startActivity(intent);
     }
@@ -150,12 +188,15 @@ public class PassengerHistory extends GenericUserFragment implements SensorEvent
         }
     }
 
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
 
     private void onShake() {
-        Toast.makeText(getActivity(), "Shaking detected.", Toast.LENGTH_SHORT).show();
+        Collections.reverse(rides);
+        ((EasyListAdapter)this.lvRides.getAdapter()).notifyDataSetChanged();
+        Toast.makeText(getActivity(), "Shaking detected, reversing the list", Toast.LENGTH_SHORT).show();
     }
 }

@@ -65,4 +65,7 @@ public interface IRideService {
     Call<ArrayList<GraphEntryDTO>> getPassengerGraphData(@Path("passengerId") long passengerId, @Query("from") String start, @Query("to") String end);
     @GET("/api/ride/graph/driver/{driverId}")
     Call<ArrayList<GraphEntryDTO>> getDriverGraphData(@Path("driverId") long passengerId, @Query("from") String start, @Query("to") String end);
- }
+
+    @POST("/api/ride/favorites")
+    Call<FavoriteRouteDTO> createFavoriteRoute(@Body FavoriteRouteDTO favorite);
+}
