@@ -261,7 +261,6 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
 
             @Override
             public void onFailure(Call<DriverDTO> call, Throwable t) {
-
             }
         });
     }
@@ -274,20 +273,7 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
                 if(response.isSuccessful()){
                     reviews = response.body();
                     if(reviews != null){
-                        Optional<ReviewDTO> vehicleReview = reviews
-                                .stream()
-                                .map(ReviewPairDTO::getVehicleReview)
-                                .filter(review -> Objects.nonNull(review.getPassenger()))
-                                .filter(review ->
-                                        Objects.equals(review.getPassenger().getId(), SettingsUtil.getUserJWT().getId())).findFirst();
-                        vehicleReview.ifPresent(reviewDTO -> fillReview(reviewDTO, "Vehicle rate", viewRateVehicle));
-                        Optional<ReviewDTO> driverReview = reviews
-                                .stream()
-                                .map(ReviewPairDTO::getDriverReview)
-                                .filter(review -> Objects.nonNull(review.getPassenger()))
-                                .filter(review ->
-                                        Objects.equals(review.getPassenger().getId(), SettingsUtil.getUserJWT().getId())).findFirst();
-                        driverReview.ifPresent(reviewDTO -> fillReview(reviewDTO, "Driver rate", viewRateDriver));
+                        handleReviews(reviews);
                     }
                 }
             }
@@ -297,6 +283,35 @@ public class PassengerHistoryDetails extends GenericUserMapFragment {
 
             }
         });
+    }
+
+    private void handleReviews(List<ReviewPairDTO> reviews) {
+        Optional<ReviewDTO> vehicleReview = reviews
+                .stream()
+                .map(ReviewPairDTO::getVehicleReview)
+                .filter(review -> Objects.nonNull(review.getPassenger()))
+                .filter(review ->
+                        Objects.equals(review.getPassenger().getId(), SettingsUtil.getUserJWT().getId())).findFirst();
+        vehicleReview.ifPresent(reviewDTO -> fillReview(reviewDTO, "Vehicle rate", viewRateVehicle));
+        if(!vehicleReview.isPresent()){
+            LocalDateTime endTime = LocalDateTime.parse(ride.getEndTime());
+            if(endTime.isBefore(LocalDateTime.now().minusDays(3))){
+                viewRateVehicle.setVisibility(View.GONE);
+            }
+        }
+        Optional<ReviewDTO> driverReview = reviews
+                .stream()
+                .map(ReviewPairDTO::getDriverReview)
+                .filter(review -> Objects.nonNull(review.getPassenger()))
+                .filter(review ->
+                        Objects.equals(review.getPassenger().getId(), SettingsUtil.getUserJWT().getId())).findFirst();
+        driverReview.ifPresent(reviewDTO -> fillReview(reviewDTO, "Driver rate", viewRateDriver));
+        if(!driverReview.isPresent()){
+            LocalDateTime endTime = LocalDateTime.parse(ride.getEndTime());
+            if(endTime.isBefore(LocalDateTime.now().minusDays(3))){
+                viewRateDriver.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void fillReview(ReviewDTO reviewDTO, String title, View viewRate) {
