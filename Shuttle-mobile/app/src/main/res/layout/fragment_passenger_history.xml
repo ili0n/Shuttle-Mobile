@@ -7,9 +7,10 @@
     tools:context=".passenger.fragments.PassengerHistory">
 
     <ListView
+
         android:id="@+id/list_p_rides"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scrollbars="vertical"
         android:verticalScrollbarPosition="right"
         android:fadeScrollbars="false"
