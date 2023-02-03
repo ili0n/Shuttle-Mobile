@@ -82,14 +82,16 @@ public class UserChatActivity extends SimpleToolbarActivity {
     }
 
     private void initMessageReceiver() {
+        messages = new ArrayList<>();
         Long myId = SettingsUtil.getUserJWT().getId();
         messageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 ListDTO<MessageDTO> msgs = (ListDTO<MessageDTO>)intent.getSerializableExtra(UserMessageService.INTENT_MESSAGE_KEY);
+
                 messages = msgs.getResults().stream().filter(m -> {
-                    boolean senderOk = m.getSenderId().equals(otherId) || m.getSenderId().equals(myId);
-                    boolean receiverOk = m.getReceiverId().equals(otherId) || m.getReceiverId().equals(myId);
+                    boolean senderOk = (m.getSenderId().equals(otherId) || otherId == -1) || m.getSenderId().equals(myId);
+                    boolean receiverOk = (m.getReceiverId().equals(otherId) || otherId == -1) || m.getReceiverId().equals(myId);
 
                     return senderOk && receiverOk;
                 }).collect(Collectors.toList());

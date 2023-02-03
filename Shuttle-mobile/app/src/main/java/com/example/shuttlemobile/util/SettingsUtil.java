@@ -33,7 +33,6 @@ public class SettingsUtil {
 
     public static void init(SharedPreferences prefs) {
         SettingsUtil.prefs = prefs;
-        SettingsUtil.clearUser();
     }
 
     public static JWT getUserJWT() {
@@ -44,7 +43,7 @@ public class SettingsUtil {
                     JWTDecoder.getPayloadJSON(SettingsUtil.get(SettingsUtil.KEY_ACCESS_TOKEN, "no-token")),
                     JWT.class
             );
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             return null;
         }
     }

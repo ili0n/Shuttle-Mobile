@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initButtonCallbacks();
+        openHomeActivityFromJwtInSharedPrefs(); // If this fails (no problem, you'll login).
     }
 
     private void initButtonCallbacks() {
@@ -58,20 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Wrong email or password", Toast.LENGTH_LONG).show();
                 } else {
                     SettingsUtil.put(SettingsUtil.KEY_ACCESS_TOKEN, token.getAccessToken());
-
-                    final JWT jwt = SettingsUtil.getUserJWT();
-                    Log.e("e-mail", jwt.getEmail());
-                    Log.e("id", jwt.getId().toString());
-                    Log.e("rolesRaw", jwt.getRolesRaw().toString());
-                    Log.e("roles", jwt.getRoles().toString());
-
-                    if (jwt.getRoles().contains(User.Role.Passenger)) {
-                        startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
-                        finish();
-                    } else if (jwt.getRoles().contains(User.Role.Driver)) {
-                        startActivity(new Intent(getApplicationContext(), DriverActivity.class));
-                        finish();
-                    } else {
+                    if (!openHomeActivityFromJwtInSharedPrefs()) {
                         Toast.makeText(LoginActivity.this, "Unauthorized!", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -82,6 +70,25 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("REST ERROR", t.toString());
             }
         });
+    }
+
+    private boolean openHomeActivityFromJwtInSharedPrefs() {
+        final JWT jwt = SettingsUtil.getUserJWT();
+
+        if (jwt == null) {
+            return false;
+        }
+
+        if (jwt.getRoles().contains(User.Role.Passenger)) {
+            startActivity(new Intent(getApplicationContext(), PassengerActivity.class));
+            finish();
+            return true;
+        } else if (jwt.getRoles().contains(User.Role.Driver)) {
+            startActivity(new Intent(getApplicationContext(), DriverActivity.class));
+            finish();
+            return true;
+        }
+        return false;
     }
 
     private void openRegistrationActivity() {

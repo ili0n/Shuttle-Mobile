@@ -72,6 +72,11 @@ public class PassengerRideService extends Service {
             stopSelf();
             return;
         }
+        if (jwt == null) {
+            stopSelf();
+            return;
+        }
+
         Call<RideDTO> call = IRideService.service.getActiveRidePassenger(jwt.getId());
         call.enqueue(new Callback<RideDTO>() {
             @Override

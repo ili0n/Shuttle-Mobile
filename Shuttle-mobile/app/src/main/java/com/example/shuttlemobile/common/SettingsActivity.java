@@ -35,7 +35,6 @@ public class SettingsActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SettingsUtil.clearUser();
                 Intent toLogin = new Intent(SettingsActivity.this, LoginActivity.class);
                 startActivity(toLogin);
             }

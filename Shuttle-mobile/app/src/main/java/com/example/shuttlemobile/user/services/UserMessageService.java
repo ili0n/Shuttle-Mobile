@@ -74,6 +74,10 @@ public class UserMessageService extends Service {
             stopSelf();
             return;
         }
+        if (jwt == null) {
+            stopSelf();
+            return;
+        }
         IUserService.service.getMessages(jwt.getId()).enqueue(new Callback<ListDTO<MessageDTO>>() {
             @Override
             public void onResponse(Call<ListDTO<MessageDTO>> call, Response<ListDTO<MessageDTO>> response) {
