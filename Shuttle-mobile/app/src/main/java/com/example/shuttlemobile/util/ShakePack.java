@@ -22,9 +22,13 @@ public class ShakePack {
         final float y = acceleration[1];
         final float z = acceleration[2];
         lastAcc = currAcc;
-        currAcc = (float)Math.sqrt(x*x + y*y + z*z);
+        currAcc = (float) Math.sqrt(x * x + y * y + z * z);
         final float delta = currAcc - lastAcc;
         acc = acc * 0.9f + delta;
+    }
+
+    public float getAcc() {
+        return Math.abs(acc);
     }
 
     public boolean isShaking() {
