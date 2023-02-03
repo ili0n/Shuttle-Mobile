@@ -66,7 +66,8 @@ public class OrderActivity extends AppCompatActivity {
 
     private void previousStep() {
         step--;
-        if (step < 0) step = 0;
+        if (step < -1) step = -1;
+        getSupportFragmentManager().popBackStack(STACK_FRAGMENTS, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         changeStep();
     }
 
@@ -102,7 +103,7 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private Fragment getDefaultFragment() {
-        return fragments.get(R.id.toolbar_home);
+        return fragments.get(0);
     }
 
     private void initViewElements(View view) {
@@ -134,14 +135,12 @@ public class OrderActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
-
-        if (currentFragment == getDefaultFragment()) {
+        previousStep();
+        if(step == -1){
+            getSupportFragmentManager().popBackStack();
             super.onBackPressed();
-        } else {
-            fm.popBackStack(STACK_FRAGMENTS, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            setVisibleFragment(getDefaultFragment());
         }
+
     }
 
     public CreateRideDTO getCreateRideDTO() {
