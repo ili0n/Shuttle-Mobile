@@ -122,6 +122,10 @@ public abstract class GenericUserActivity extends SimpleToolbarActivity {
         FragmentManager fm = getSupportFragmentManager();
 
         if (currentFragment == getDefaultFragment()) {
+            if (fm.getBackStackEntryCount() == 1) {
+                finish();
+                return;
+            }
             super.onBackPressed();
         } else {
             fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
