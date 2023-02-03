@@ -36,6 +36,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
+    private boolean openingLogin = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,14 +126,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void initLocationManager() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.e("", "No location permission, asking");
             ActivityCompat.requestPermissions(this, new String[] {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
             }, 13579);
-            return;
         }
+        enableLocationListening();
         createLocationRequest();
     }
 
@@ -142,19 +145,11 @@ public class MainActivity extends AppCompatActivity {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000L, (float) 0.1, locationListener);
         enableLocationListening();
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                finish();
-            }
-        }, 3000);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         Log.e("", "onRequestPermissionsResult()");
         if (requestCode == 13579) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -171,17 +166,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void onHasLocations() {
+        if (openingLogin) {
+            return;
+        }
+        openingLogin = true;
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
+            }
+        }, 3000);
+    }
+
     private void enableLocationListening() {
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!gps_enabled && !network_enabled) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Enable Location");
             alertDialog.setMessage("This app requires for your location to be turned on.");
             alertDialog.setPositiveButton("Location Settings", (dialog, which) -> {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
+                enableLocationListening();
             });
-            alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+            alertDialog.setNegativeButton("Cancel", (dialog, which) -> MainActivity.this.finishAffinity());
             alertDialog.create().show();
+        } else {
+            onHasLocations();
         }
     }
 

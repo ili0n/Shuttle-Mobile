@@ -68,6 +68,10 @@ public class DriverRideService extends Service {
             stopSelf();
             return;
         }
+        if (jwt == null) {
+            stopSelf();
+            return;
+        }
         Call<RideDTO> call = IRideService.service.getActiveRideDriver(jwt.getId());
         call.enqueue(new Callback<RideDTO>() {
             @Override

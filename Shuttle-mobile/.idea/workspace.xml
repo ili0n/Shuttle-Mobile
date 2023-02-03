@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SPLITTER_PROPORTION" value="0.28945902" />
+  </component>
   <component name="AndroidLayouts">
     <shared>
       <config>
@@ -21,9 +24,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e9a298b-a87a-4bd0-9046-5f0d90278529" name="Changes" comment="removed unused imports&#10;implemented driver reports">
+    <list default="true" id="cfa5b2b3-b4e9-4094-8ac4-8c4b13cebdc7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_passenger_history_details.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_passenger_history_details.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/GenericUserActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/shuttlemobile/common/GenericUserActivity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -275,7 +278,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="1e9a298b-a87a-4bd0-9046-5f0d90278529" name="Changes" comment="" />
+      <changelist id="cfa5b2b3-b4e9-4094-8ac4-8c4b13cebdc7" name="Changes" comment="" />
       <created>1673137914216</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -348,6 +351,16 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="AndroidRunConfigurationType">
+        <watch expression="holder.cbStar.isChecked()" language="JAVA" />
+        <watch expression="getList().get(i).isSet()" language="JAVA" />
+        <watch expression="i" language="JAVA" />
+        <watch expression="routeA.getText()" language="JAVA" />
+        <watch expression="routeB.getText()" language="JAVA" />
+        <watch expression="etName.getText().toString()" language="JAVA" />
+        <watch expression="ride.getLocations().get(0)" language="JAVA" />
+        <watch expression="ride.getTotalLength()" language="JAVA" />
+        <watch expression="getIntent()" language="JAVA" />
+        <watch expression="getIntent().getSerializableExtra(KEY_ROUTE)" language="JAVA" />
         <watch expression="this.currentFragment" language="JAVA" />
         <watch expression="fm.mBackStack" language="JAVA" />
         <watch expression="fm.getBackStackEntryCount()" language="JAVA" />
