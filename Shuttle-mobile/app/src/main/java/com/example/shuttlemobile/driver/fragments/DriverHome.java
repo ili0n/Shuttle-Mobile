@@ -338,8 +338,8 @@ public class DriverHome extends GenericUserMapFragment implements SensorEventLis
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             shakePack.update(sensorEvent.values);
-            String spdFormatted = String.format("%.1f", shakePack.getAcc());
-            speed.setText(spdFormatted + " m/s");
+            String spdFormatted = String.format("%.1f", shakePack.getAcc() * 1000.0 / 3600.0);
+            speed.setText(spdFormatted + " km/h");
         }
     }
 
