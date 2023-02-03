@@ -42,6 +42,8 @@ import com.example.shuttlemobile.util.Utils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -101,6 +103,14 @@ public class PassengerHistory extends GenericUserFragment implements SensorEvent
             public void onResponse(Call<ListDTO<RideDTO>> call, Response<ListDTO<RideDTO>> response) {
                 if(response.isSuccessful()){
                     rides = response.body().getResults();
+                    rides.sort((r1, r2) -> {
+                        if(r1.getEndTime() != null && r2.getEndTime() != null){
+                            LocalDateTime time1 = LocalDateTime.parse(r1.getEndTime());
+                            LocalDateTime time2 = LocalDateTime.parse(r2.getEndTime());
+                            return time1.compareTo(time2);
+                        }
+                        return 1;
+                    });
                     fillListView();
                 }
                 else{
@@ -198,12 +208,15 @@ public class PassengerHistory extends GenericUserFragment implements SensorEvent
         }
     }
 
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
 
     private void onShake() {
-        Toast.makeText(getActivity(), "Shaking detected.", Toast.LENGTH_SHORT).show();
+        Collections.reverse(rides);
+        ((EasyListAdapter)this.lvRides.getAdapter()).notifyDataSetChanged();
+        Toast.makeText(getActivity(), "Shaking detected, reversing the list", Toast.LENGTH_SHORT).show();
     }
 }
