@@ -80,6 +80,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 } else if (response.code() == 404) {
                     Toast.makeText(ForgotPasswordActivity.this, "Could not send email. Please check your address.", Toast.LENGTH_SHORT).show();
                 } else {
+                    Log.e("?", response.toString());
                     Log.e("?", "" + response.code());
                 }
             }
@@ -109,6 +110,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 } else if (response.code() == 404) {
                     Toast.makeText(ForgotPasswordActivity.this, "Code is expired or not correct!", Toast.LENGTH_SHORT).show();
                 } else {
+                    Log.e("?", response.toString());
                     Log.e("?", "" + response.code());
                 }
             }

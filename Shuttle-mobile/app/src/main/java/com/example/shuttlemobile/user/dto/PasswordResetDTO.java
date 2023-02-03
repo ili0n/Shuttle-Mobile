@@ -3,23 +3,23 @@ package com.example.shuttlemobile.user.dto;
 import java.io.Serializable;
 
 public class PasswordResetDTO implements Serializable {
-    private String new_password;
+    private String newPassword;
     private String code;
 
     public PasswordResetDTO(String new_password, String code) {
-        this.new_password = new_password;
+        this.newPassword = new_password;
         this.code = code;
     }
 
     public PasswordResetDTO() {
     }
 
-    public String getNew_password() {
-        return new_password;
+    public String getNewPassword() {
+        return newPassword;
     }
 
-    public void setNew_password(String new_password) {
-        this.new_password = new_password;
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
     public String getCode() {
@@ -33,7 +33,7 @@ public class PasswordResetDTO implements Serializable {
     @Override
     public String toString() {
         return "PasswordResetDTO{" +
-                "new_password='" + new_password + '\'' +
+                "new_password='" + newPassword + '\'' +
                 ", code='" + code + '\'' +
                 '}';
     }
