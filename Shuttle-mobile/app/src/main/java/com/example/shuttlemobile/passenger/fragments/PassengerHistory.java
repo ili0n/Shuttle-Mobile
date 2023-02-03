@@ -16,9 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
@@ -34,7 +31,6 @@ import com.example.shuttlemobile.ride.dto.RideDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.route.RouteDTO;
 import com.example.shuttlemobile.util.ListDTO;
-import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.ShakePack;
 import com.example.shuttlemobile.util.Utils;
@@ -79,23 +75,7 @@ public class PassengerHistory extends GenericUserFragment implements SensorEvent
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
     }
 
-    private void sendNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtil.PASSENGER_NOTIFICATION_CHANNEL_ID)
-                .setContentTitle("Notification Title!")
-                .setContentText("Notification Text!")
-                .setSmallIcon(R.drawable.car_green)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-        notificationManager.notify(900009, builder.build());
-    }
-
     private void initializeList() {
-        ///////////////////////////////
-
-        sendNotification();
-
-        ///////////////////////////////
 
         Call<ListDTO<RideDTO>> call = IPassengerService.service.getRides(SettingsUtil.getUserJWT().getId());
         call.enqueue(new Callback<ListDTO<RideDTO>>() {
