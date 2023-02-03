@@ -10,7 +10,7 @@
     tools:context=".passenger.fragments.PassengerHistoryDetails">
 
     <ScrollView
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +49,8 @@
 
             <TextView
                 android:id="@+id/txt_p_ride_from"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -61,6 +63,8 @@
 
             <TextView
                 android:id="@+id/txt_p_ride_to"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -82,7 +86,8 @@
                 android:id="@+id/img_p_ride_dpfp"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="80dp"
+                app:layout_constraintHorizontal_bias="0.31"
+                android:layout_marginStart="40dp"
                 android:layout_marginTop="32dp"
                 android:background="#FF9800"
                 app:layout_constraintStart_toStartOf="parent"
@@ -167,6 +172,7 @@
                 android:fontFamily="sans-serif-light"
                 android:text="15km"
                 android:textSize="16sp"
+                app:layout_constraintHorizontal_bias="0.25"
                 app:layout_constraintStart_toEndOf="@id/img_p_ride_dpfp"
                 app:layout_constraintTop_toBottomOf="@id/img_p_ride_dpfp" />
 
@@ -219,9 +225,10 @@
                 android:id="@+id/btn_p_ride_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 app:layout_constraintBottom_toBottomOf="@id/bnt_p_ride_again"
                 app:layout_constraintEnd_toEndOf="@id/btn_p_ride_dchat"
-                app:layout_constraintStart_toStartOf="@id/btn_p_ride_dchat"
+                app:layout_constraintStart_toEndOf="@id/bnt_p_ride_again"
                 app:layout_constraintTop_toTopOf="@id/bnt_p_ride_again"
                 android:background="?selectableItemBackgroundBorderless"
                 app:srcCompat="@drawable/heart_active" />
