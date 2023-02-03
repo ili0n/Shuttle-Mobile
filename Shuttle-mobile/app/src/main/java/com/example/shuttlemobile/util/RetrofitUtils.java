@@ -1,11 +1,17 @@
 package com.example.shuttlemobile.util;
 
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -42,5 +48,14 @@ public class RetrofitUtils {
             }
         }).build();
         return client;
+    }
+
+    public static <T> String getErrorMessage( retrofit2.Response<T> response){
+        try {
+            JSONObject error = new JSONObject(response.errorBody().string());
+            return error.getString("message");
+        } catch (JSONException | NullPointerException | IOException e) {
+            return "Failed";
+        }
     }
 }

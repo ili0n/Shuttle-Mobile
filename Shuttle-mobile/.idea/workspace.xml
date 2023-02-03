@@ -33,7 +33,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[V7LB12BN1KC0383]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[e5a1a494]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -361,6 +361,13 @@
         <watch expression="ride.getTotalLength()" language="JAVA" />
         <watch expression="getIntent()" language="JAVA" />
         <watch expression="getIntent().getSerializableExtra(KEY_ROUTE)" language="JAVA" />
+        <watch expression="this.currentFragment" language="JAVA" />
+        <watch expression="fm.mBackStack" language="JAVA" />
+        <watch expression="fm.getBackStackEntryCount()" language="JAVA" />
+        <watch expression="this.fragments" language="JAVA" />
+        <watch expression="getSupportFragmentManager().getBackStackEntryCount()" language="JAVA" />
+        <watch expression="this.step" language="JAVA" />
+        <watch expression="error.getString(&quot;message&quot;)" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

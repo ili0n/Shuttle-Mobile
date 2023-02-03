@@ -87,6 +87,7 @@ public class DriverHistoryDetails extends GenericUserMapFragment {
         fetchReviews(); // After initViewElements.
     }
 
+
     @Override
     public String getPublicMapApiToken() {
         return getActivity().getResources().getString(R.string.mapbox_access_token);
