@@ -316,7 +316,7 @@ public class DriverAccountInfo extends GenericUserFragment {
     }
 
     private boolean checkDriverDTO(EditText editName, EditText editSurname, EditText editAddress, EditText editPhone) {
-        if (!driverDTO.getAddress().equals(editAddress.getText().toString()) && !editAddress.getText().toString().isEmpty())
+        if (!editAddress.getText().toString().equals(driverDTO.getAddress()) && !editAddress.getText().toString().isEmpty())
             return true;
         if (!editName.getText().toString().equals(driverDTO.getName()) && !editName.getText().toString().isEmpty())
             return true;

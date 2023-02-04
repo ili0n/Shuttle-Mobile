@@ -25,7 +25,7 @@ public interface IDriverService {
 
     @PUT("/api/driver/{id}/vehicle")
     Call<VehicleDTO> updateVehicle(@Path("id") Long driverId, @Body VehicleDTO vehicleDTO);
-    @PUT("/api/driver/{id}")
+    @PUT("/api/driver/{id}/request")
     Call<DriverDTO> updateDriver(@Path("id") Long driverId, @Body DriverDTO driverDTO);
 
     @GET("/api/driver/{id}/ride")

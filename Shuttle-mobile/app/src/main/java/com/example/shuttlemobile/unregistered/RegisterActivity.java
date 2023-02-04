@@ -77,7 +77,7 @@ public class RegisterActivity extends SimpleToolbarActivity {
                         @Override
                         public void onResponse(Call<UserDTONoPassword> call, Response<UserDTONoPassword> response) {
                             if (response.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Confirm your mali to continue", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Confirm your mail to continue", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                             else {
