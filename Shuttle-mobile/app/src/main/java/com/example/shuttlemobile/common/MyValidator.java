@@ -118,4 +118,8 @@ public class MyValidator {
     public static String msgRange(String field, Long min, Long max) {
         return "Field (" + field + ") must be between " + min.toString() + " and " + max.toString() + "!";
     }
+
+    public static void validateMatchingPassword(String password,String confirmPassword) throws MyValidatorException {
+        if (!confirmPassword.equals(password)) throw new MyValidatorException("Passwords not matching");
+    }
 }
