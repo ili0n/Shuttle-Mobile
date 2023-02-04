@@ -1,7 +1,7 @@
 package com.example.shuttlemobile.ride.dto;
 
 import com.example.shuttlemobile.route.RouteDTO;
-import com.example.shuttlemobile.user.UserEmailDTO;
+import com.example.shuttlemobile.user.dto.UserEmailDTO;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,25 +21,9 @@ public class RideDTO implements Serializable {
     private RejectionDTO rejection;
     private List<com.example.shuttlemobile.route.RouteDTO> locations;
     private String status;
+    private Double totalLength;
 
     public RideDTO() {
-    }
-
-    public RideDTO(Long id, String startTime, String endTime, String scheduledTime, Double totalCost, UserEmailDTO driver, List<UserEmailDTO> passengers, Long estimatedTimeInMinutes, String vehicleType, Boolean babyTransport, Boolean petTransport, RejectionDTO rejection, List<RouteDTO> locations, String status) {
-        this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.scheduledTime = scheduledTime;
-        this.totalCost = totalCost;
-        this.driver = driver;
-        this.passengers = passengers;
-        this.estimatedTimeInMinutes = estimatedTimeInMinutes;
-        this.vehicleType = vehicleType;
-        this.babyTransport = babyTransport;
-        this.petTransport = petTransport;
-        this.rejection = rejection;
-        this.locations = locations;
-        this.status = status;
     }
 
     public Long getId() {
@@ -154,6 +138,14 @@ public class RideDTO implements Serializable {
         this.scheduledTime = scheduledTime;
     }
 
+    public Double getTotalLength() {
+        return totalLength;
+    }
+
+    public void setTotalLength(Double totalLength) {
+        this.totalLength = totalLength;
+    }
+
     @Override
     public String toString() {
         return "RideDTO{" +
@@ -171,6 +163,7 @@ public class RideDTO implements Serializable {
                 ", rejection=" + rejection +
                 ", locations=" + locations +
                 ", status='" + status + '\'' +
+                ", distance=" + totalLength +
                 '}';
     }
 }

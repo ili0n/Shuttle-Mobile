@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -20,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -29,16 +27,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
-import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.driver.services.DriverMessageService;
+import com.example.shuttlemobile.driver.services.DriverRideService;
 import com.example.shuttlemobile.passenger.IPassengerService;
+import com.example.shuttlemobile.passenger.PassengerActivity;
 import com.example.shuttlemobile.passenger.dto.PassengerDTO;
-import com.example.shuttlemobile.user.JWT;
-import com.example.shuttlemobile.util.JWTDecoder;
+import com.example.shuttlemobile.passenger.services.PassengerMessageService;
+import com.example.shuttlemobile.passenger.services.PassengerRideService;
+import com.example.shuttlemobile.unregistered.LoginActivity;
+import com.example.shuttlemobile.user.IUserService;
+import com.example.shuttlemobile.user.services.UserMessageService;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.util.Utils;
 
@@ -109,8 +111,34 @@ public class PassengerAccountInfo extends GenericUserFragment {
             @Override
             public void onClick(View view) {
                 if(valid()){
+
                     updatePassenger();
+
                 }
+            }
+        });
+
+        Button btnLogout = getActivity().findViewById(R.id.btn_passenger_logout);
+        btnLogout.setOnClickListener(view -> logout());
+    }
+
+    private void logout() {
+        IUserService.service.setInactive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), PassengerRideService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), PassengerMessageService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), UserMessageService.class));
+
+                SettingsUtil.clearUser();
+                Intent toLogin = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                startActivity(toLogin);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Toast.makeText(getActivity().getApplicationContext(), "Could not log out.", Toast.LENGTH_SHORT);
             }
         });
     }
@@ -170,8 +198,10 @@ public class PassengerAccountInfo extends GenericUserFragment {
             @Override
             public void onResponse(Call<PassengerDTO> call, Response<PassengerDTO> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Your changes have been posted", Toast.LENGTH_LONG).show();
+
                     passenger = response.body();
+                    SettingsUtil.put(SettingsUtil.KEY_ACCESS_TOKEN,passenger.getJwt());
+                    Toast.makeText(getContext(), "Changes posted", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getContext(), response.message(), Toast.LENGTH_LONG).show();
                 }

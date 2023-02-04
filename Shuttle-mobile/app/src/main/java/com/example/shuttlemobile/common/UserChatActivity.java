@@ -82,14 +82,16 @@ public class UserChatActivity extends SimpleToolbarActivity {
     }
 
     private void initMessageReceiver() {
+        messages = new ArrayList<>();
         Long myId = SettingsUtil.getUserJWT().getId();
         messageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 ListDTO<MessageDTO> msgs = (ListDTO<MessageDTO>)intent.getSerializableExtra(UserMessageService.INTENT_MESSAGE_KEY);
+
                 messages = msgs.getResults().stream().filter(m -> {
-                    boolean senderOk = m.getSenderId().equals(otherId) || m.getSenderId().equals(myId);
-                    boolean receiverOk = m.getReceiverId().equals(otherId) || m.getReceiverId().equals(myId);
+                    boolean senderOk = (m.getSenderId().equals(otherId)/* || otherId == -1*/) || m.getSenderId().equals(myId);
+                    boolean receiverOk = (m.getReceiverId().equals(otherId)/* || otherId == -1*/) || m.getReceiverId().equals(myId);
 
                     return senderOk && receiverOk;
                 }).collect(Collectors.toList());
@@ -156,6 +158,7 @@ public class UserChatActivity extends SimpleToolbarActivity {
             public void onResponse(Call<MessageDTO> call, Response<MessageDTO> response) {
                 if (response.code() == 200) {
                     addMessageToScreen(response.body());
+                    otherId = response.body().getReceiverId();
                 } else {
                     Log.e("?", response.toString());
                 }
@@ -248,7 +251,7 @@ public class UserChatActivity extends SimpleToolbarActivity {
                 txtMessage.setText(m.getMessage());
 
                 LocalDateTime ldt = LocalDateTime.parse(m.getTimeOfSending());
-                txtDate.setText(ldt.format(DateTimeFormatter.ofPattern("DD/MM/YYYY")));
+                txtDate.setText(ldt.format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
                 txtTime.setText(ldt.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 
                 return v;

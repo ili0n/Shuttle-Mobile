@@ -43,7 +43,7 @@ public class SettingsUtil {
                     JWTDecoder.getPayloadJSON(SettingsUtil.get(SettingsUtil.KEY_ACCESS_TOKEN, "no-token")),
                     JWT.class
             );
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -79,6 +79,10 @@ public class SettingsUtil {
         return new User(id, name, lastName, location, phone, email, "", pfp, blocked, active, role);
     }
 */
+
+    public static void clearUser(){
+        prefs.edit().clear().commit();
+    }
     public static void put(String key, String value) {
         prefs.edit().putString(key, value).commit();
     }

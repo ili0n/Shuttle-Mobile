@@ -42,9 +42,15 @@ import android.widget.Toast;
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.common.GenericUserFragment;
 import com.example.shuttlemobile.common.SessionContext;
+import com.example.shuttlemobile.common.SettingsActivity;
 import com.example.shuttlemobile.driver.DriverDTO;
 import com.example.shuttlemobile.driver.IDriverService;
+import com.example.shuttlemobile.driver.services.DriverMessageService;
+import com.example.shuttlemobile.driver.services.DriverRideService;
+import com.example.shuttlemobile.unregistered.LoginActivity;
+import com.example.shuttlemobile.user.IUserService;
 import com.example.shuttlemobile.user.JWT;
+import com.example.shuttlemobile.user.services.UserMessageService;
 import com.example.shuttlemobile.util.SettingsUtil;
 import com.example.shuttlemobile.vehicle.VehicleDTO;
 
@@ -124,11 +130,8 @@ public class DriverAccountInfo extends GenericUserFragment {
             }
         });
 
-//        editName.setText(session.getUser().getName());
-//        editSurname.setText(session.getUser().getLastName());
-//        editAddress.setText(session.getUser().getLocation());
-//        editPhone.setText(session.getUser().getPhone());
-        // editPfp.
+        Button btnLogout = getActivity().findViewById(R.id.btn_driver_logout);
+        btnLogout.setOnClickListener(view -> logout());
 
         // TODO: If all the input fields are the same as the current user data, disable the button.
         // You have to use listeners for each edit text.
@@ -136,6 +139,27 @@ public class DriverAccountInfo extends GenericUserFragment {
         btnSubmit.setActivated(canSubmit);
         btnSubmit.setOnClickListener(view1 -> pushChanges(editName, editSurname, editAddress, editPhone,
                 editModel, editPlate, babySwitch, petSwitch, seatSpinner, typeSpinner, jwt));
+    }
+
+    private void logout() {
+        IUserService.service.setInactive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), DriverMessageService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), DriverRideService.class));
+                getActivity().stopService(new Intent(getActivity().getApplicationContext(), UserMessageService.class));
+
+                SettingsUtil.clearUser();
+                Intent toLogin = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                startActivity(toLogin);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Toast.makeText(getActivity().getApplicationContext(), "Could not log out.", Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     private void setVehicleDataFields(EditText editModel, EditText editPlate, Switch babySwitch, Switch petSwitch, Spinner seatSpinner, Spinner typeSpinner, JWT jwt) {
@@ -292,13 +316,13 @@ public class DriverAccountInfo extends GenericUserFragment {
     }
 
     private boolean checkDriverDTO(EditText editName, EditText editSurname, EditText editAddress, EditText editPhone) {
-        if (!driverDTO.getAddress().equals(editAddress.getText().toString()) && !editAddress.getText().toString().isEmpty())
+        if (!editAddress.getText().toString().equals(driverDTO.getAddress()) && !editAddress.getText().toString().isEmpty())
             return true;
-        if (!driverDTO.getName().equals(editName.getText().toString()) && !editName.getText().toString().isEmpty())
+        if (!editName.getText().toString().equals(driverDTO.getName()) && !editName.getText().toString().isEmpty())
             return true;
-        if (!driverDTO.getSurname().equals(editSurname.getText().toString()) && !editSurname.getText().toString().isEmpty())
+        if (!editSurname.getText().toString().equals(driverDTO.getSurname()) && !editSurname.getText().toString().isEmpty())
             return true;
-        if (!driverDTO.getTelephoneNumber().equals(editPhone.getText().toString()) && !editPhone.getText().toString().isEmpty())
+        if (!editPhone.getText().toString().equals(driverDTO.getTelephoneNumber()) && !editPhone.getText().toString().isEmpty())
             return true;
         if (!currentImage.equals(driverDTO.getProfilePicture()))
             return true;

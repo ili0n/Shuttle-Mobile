@@ -10,9 +10,10 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
+import com.example.shuttlemobile.review.IReviewService;
 import com.example.shuttlemobile.ride.IRideService;
-import com.example.shuttlemobile.ride.dto.ReviewDTO;
-import com.example.shuttlemobile.ride.dto.ReviewSendDTO;
+import com.example.shuttlemobile.review.ReviewDTO;
+import com.example.shuttlemobile.review.ReviewSendDTO;
 import com.example.shuttlemobile.ride.dto.RideDTO;
 
 import retrofit2.Call;
@@ -72,7 +73,7 @@ public class PassengerRateRidePromptActivity extends AppCompatActivity {
                 (long)ratingVehicle.getRating(),
                 txtCommentVehicle.getText().toString()
         );
-        IRideService.service.leaveReviewVehicle(ride.getId(), reviewVehicle).enqueue(new Callback<ReviewDTO>() {
+        IReviewService.service.leaveReviewVehicle(ride.getId(), reviewVehicle).enqueue(new Callback<ReviewDTO>() {
             @Override
             public void onResponse(Call<ReviewDTO> call, Response<ReviewDTO> response) {
                 sendReviewDriver();
@@ -90,7 +91,7 @@ public class PassengerRateRidePromptActivity extends AppCompatActivity {
                 (long)ratingDriver.getRating(),
                 txtCommentDriver.getText().toString()
         );
-        IRideService.service.leaveReviewDriver(ride.getId(), reviewDriver).enqueue(new Callback<ReviewDTO>() {
+        IReviewService.service.leaveReviewDriver(ride.getId(), reviewDriver).enqueue(new Callback<ReviewDTO>() {
             @Override
             public void onResponse(Call<ReviewDTO> call, Response<ReviewDTO> response) {
                 PassengerRateRidePromptActivity.this.finish();

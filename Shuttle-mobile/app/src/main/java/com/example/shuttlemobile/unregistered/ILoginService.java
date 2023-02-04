@@ -2,7 +2,7 @@ package com.example.shuttlemobile.unregistered;
 
 import com.example.shuttlemobile.unregistered.login.LoginDTO;
 import com.example.shuttlemobile.unregistered.login.TokenDTO;
-import com.example.shuttlemobile.user.PasswordResetDTO;
+import com.example.shuttlemobile.user.dto.PasswordResetDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
 

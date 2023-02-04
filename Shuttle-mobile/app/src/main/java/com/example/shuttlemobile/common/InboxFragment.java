@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -26,6 +29,8 @@ import com.example.shuttlemobile.common.receiver.InboxFragmentMessageReceiver;
 import com.example.shuttlemobile.message.Chat;
 import com.example.shuttlemobile.message.Message;
 import com.example.shuttlemobile.message.MessageDTO;
+import com.example.shuttlemobile.user.IUserService;
+import com.example.shuttlemobile.user.dto.UserChatDataDTO;
 import com.example.shuttlemobile.user.services.UserMessageService;
 import com.example.shuttlemobile.util.ListDTO;
 import com.example.shuttlemobile.util.NotificationUtil;
@@ -35,10 +40,15 @@ import com.example.shuttlemobile.util.ShakePack;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Inbox fragment is shared between all users.
@@ -54,6 +64,10 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
 
     private BroadcastReceiver gotNewMessageReceiver;
     private BroadcastReceiver messageReceiver;
+
+    int adminColor = Color.parseColor("#9780A6");
+    int driverColor = Color.parseColor("#3554C0");
+    int passengerColor = Color.parseColor("#4393CD");
 
     public static InboxFragment newInstance(SessionContext session) {
         InboxFragment fragment = new InboxFragment();
@@ -89,7 +103,7 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
         messageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                ListDTO<MessageDTO> msgs = (ListDTO<MessageDTO>)intent.getSerializableExtra(UserMessageService.INTENT_MESSAGE_KEY);
+                ListDTO<MessageDTO> msgs = (ListDTO<MessageDTO>) intent.getSerializableExtra(UserMessageService.INTENT_MESSAGE_KEY);
                 onFetchMessages(msgs);
             }
         };
@@ -123,15 +137,15 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
         }));
 
         Map<Long, MessageDTO> messageGroupsLastMsgOnly = messageGroups.entrySet().stream().collect(Collectors.toMap(
-            e -> e.getKey(),
-            e -> e.getValue().stream().max(
-                (msg1, msg2) -> {
-                    LocalDateTime ldt1 = LocalDateTime.parse(msg1.getTimeOfSending(), DateTimeFormatter.ISO_DATE_TIME);
-                    LocalDateTime ldt2 = LocalDateTime.parse(msg2.getTimeOfSending(), DateTimeFormatter.ISO_DATE_TIME);
+                e -> e.getKey(),
+                e -> e.getValue().stream().max(
+                        (msg1, msg2) -> {
+                            LocalDateTime ldt1 = LocalDateTime.parse(msg1.getTimeOfSending(), DateTimeFormatter.ISO_DATE_TIME);
+                            LocalDateTime ldt2 = LocalDateTime.parse(msg2.getTimeOfSending(), DateTimeFormatter.ISO_DATE_TIME);
 
-                    return ldt1.compareTo(ldt2);
-                }
-            ).get()));
+                            return ldt1.compareTo(ldt2);
+                        }
+                ).get()));
 
         lastChats = messageGroupsLastMsgOnly.entrySet().stream().map(e -> e.getValue())
                 .sorted(
@@ -142,9 +156,23 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
                         }
                 ).collect(Collectors.toList());
 
-        // TODO: Pin support.
+        pinSupportToTop();
 
-        ((BaseAdapter)(listView.getAdapter())).notifyDataSetChanged();
+        ((BaseAdapter) (listView.getAdapter())).notifyDataSetChanged();
+    }
+
+    private void pinSupportToTop() {
+        MessageDTO support = null;
+        for (int i = 0; i < lastChats.size(); i++) {
+            if (lastChats.get(i).getType().equals("SUPPORT")) support = lastChats.get(i);
+        }
+        if (support != null) {
+            lastChats.remove(support);
+            lastChats.add(0, support);
+        }
+        else {
+            addSupport();
+        }
     }
 
     @Override
@@ -183,6 +211,7 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
     }
 
     private void initListView() {
+
         listView = getActivity().findViewById(R.id.list_u_inbox);
         listView.setAdapter(new EasyListAdapter<MessageDTO>() {
             @Override
@@ -221,17 +250,56 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
                 LocalDateTime ldt = LocalDateTime.parse(obj.getTimeOfSending());
                 lastMsgDate.setText(ldt.format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
                 lastMsgTime.setText(ldt.format(DateTimeFormatter.ofPattern("HH:mm")));
-                otherName.setText("Name Surname");
+                if (obj.getType().equals("SUPPORT")) {
+                    otherName.setText("Support");
+                    otherRoleBullet.setTextColor(adminColor);
+                } else {
+                    IUserService.service.getChatData(otherId).enqueue(new Callback<UserChatDataDTO>() {
+                        @Override
+                        public void onResponse(Call<UserChatDataDTO> call, Response<UserChatDataDTO> response) {
+                            if (response.isSuccessful()) {
+                                UserChatDataDTO dto = response.body();
+                                otherName.setText(dto.getEmail());
+                                otherPfp.setImageBitmap(getImage(dto.getPfp()));
+                                switch (dto.getPrimaryRole()) {
+                                    case "admin":
+                                        otherRoleBullet.setTextColor(adminColor);
+                                    case "driver":
+                                        otherRoleBullet.setTextColor(driverColor);
+                                    default:
+                                        otherRoleBullet.setTextColor(passengerColor);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserChatDataDTO> call, Throwable t) {
+
+                        }
+                    });
+
+                }
             }
         });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                MessageDTO obj = (MessageDTO)listView.getItemAtPosition(i);
+                MessageDTO obj = (MessageDTO) listView.getItemAtPosition(i);
                 openChatActivity(obj);
             }
         });
+    }
+
+    private void addSupport() {
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setReceiverId(-1L);
+        messageDTO.setSenderId(SettingsUtil.getUserJWT().getId());
+        messageDTO.setRideId(0L);
+        messageDTO.setType("SUPPORT");
+        messageDTO.setTimeOfSending(LocalDateTime.now().toString());
+        messageDTO.setMessage("");
+        lastChats.add(0, messageDTO);
     }
 
     private void openChatActivity(MessageDTO lastMessage) {
@@ -259,10 +327,17 @@ public class InboxFragment extends GenericUserFragment implements SensorEventLis
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {}
+    public void onAccuracyChanged(Sensor sensor, int i) {
+    }
 
     private void onShake() {
         Collections.reverse(lastChats);
+        pinSupportToTop();
         Toast.makeText(getActivity(), "Shaking detected.", Toast.LENGTH_SHORT).show();
+    }
+
+    public Bitmap getImage(String imageBase64) {
+        byte[] decodedString = Base64.getDecoder().decode(imageBase64);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }

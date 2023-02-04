@@ -37,7 +37,7 @@
         android:id="@+id/list_p_history_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-black"
         android:text="26/11/22"
@@ -51,7 +51,7 @@
         android:id="@+id/list_p_history_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:fontFamily="sans-serif-black"
         android:text="18:12"
         android:textSize="16sp"
@@ -62,21 +62,11 @@
         android:id="@+id/list_p_history_dname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/list_p_history_dpfp"
-        app:layout_constraintStart_toEndOf="@+id/list_p_history_dpfp"
-        app:layout_constraintTop_toTopOf="@+id/list_p_history_dpfp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/list_p_history_date"
+        app:layout_constraintStart_toStartOf="parent"
         android:text="Driver Driveson" />
 
-    <ImageView
-        android:id="@+id/list_p_history_dpfp"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/list_p_history_date"
-        app:layout_constraintTop_toBottomOf="@+id/list_p_history_date"
-        android:src="@drawable/ic_baseline_account_box_24"
-        app:tint="?colorPrimary"/>
 
     <TextView
         android:id="@+id/list_p_history_cost"

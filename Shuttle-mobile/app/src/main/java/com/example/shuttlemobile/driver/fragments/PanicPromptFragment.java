@@ -19,7 +19,7 @@ import com.example.shuttlemobile.common.UserChatActivity;
 
 public class PanicPromptFragment extends DialogFragment {
 
-    public static PanicPromptFragment newInstance(String param1, String param2) {
+    public static PanicPromptFragment newInstance() {
         PanicPromptFragment fragment = new PanicPromptFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);

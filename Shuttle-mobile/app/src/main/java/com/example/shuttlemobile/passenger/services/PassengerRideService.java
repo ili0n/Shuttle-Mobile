@@ -17,6 +17,8 @@ import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,19 +30,26 @@ public class PassengerRideService extends Service {
 
     public PassengerRideService() {
     }
+    final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     public void onCreate() {
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
-        final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 1000;
 
-        executorService.execute(new Runnable() {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        final int delay = 500;
+
+        executorService.submit(new Runnable() {
                 @Override
                 public void run() {
+                    if (Thread.currentThread().isInterrupted()) {
+                        return;
+                    }
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            if (Thread.currentThread().isInterrupted()) {
+                                return;
+                            }
                             fetchRide();
                             handler.postDelayed(this, delay);
                         }
@@ -56,7 +65,18 @@ public class PassengerRideService extends Service {
     }
 
     private void fetchRide() {
-        final JWT jwt = SettingsUtil.getUserJWT();
+        JWT jwt;
+        try {
+            jwt = SettingsUtil.getUserJWT();
+        } catch (Exception e) {
+            stopSelf();
+            return;
+        }
+        if (jwt == null) {
+            stopSelf();
+            return;
+        }
+
         Call<RideDTO> call = IRideService.service.getActiveRidePassenger(jwt.getId());
         call.enqueue(new Callback<RideDTO>() {
             @Override

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -12,9 +11,8 @@ import android.widget.Toast;
 
 import com.example.shuttlemobile.R;
 import com.example.shuttlemobile.user.IUserService;
-import com.example.shuttlemobile.user.PasswordResetDTO;
-import com.example.shuttlemobile.user.UserEmailDTO;
-import com.example.shuttlemobile.util.SettingsUtil;
+import com.example.shuttlemobile.user.dto.PasswordResetDTO;
+import com.example.shuttlemobile.user.dto.UserEmailDTO;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -82,6 +80,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 } else if (response.code() == 404) {
                     Toast.makeText(ForgotPasswordActivity.this, "Could not send email. Please check your address.", Toast.LENGTH_SHORT).show();
                 } else {
+                    Log.e("?", response.toString());
                     Log.e("?", "" + response.code());
                 }
             }
@@ -111,6 +110,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 } else if (response.code() == 404) {
                     Toast.makeText(ForgotPasswordActivity.this, "Code is expired or not correct!", Toast.LENGTH_SHORT).show();
                 } else {
+                    Log.e("?", response.toString());
                     Log.e("?", "" + response.code());
                 }
             }

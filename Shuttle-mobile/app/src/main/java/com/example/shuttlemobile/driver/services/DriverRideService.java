@@ -61,7 +61,17 @@ public class DriverRideService extends Service {
     }
 
     private void fetchRide() {
-        final JWT jwt = SettingsUtil.getUserJWT();
+        JWT jwt;
+        try {
+            jwt = SettingsUtil.getUserJWT();
+        } catch (Exception e) {
+            stopSelf();
+            return;
+        }
+        if (jwt == null) {
+            stopSelf();
+            return;
+        }
         Call<RideDTO> call = IRideService.service.getActiveRideDriver(jwt.getId());
         call.enqueue(new Callback<RideDTO>() {
             @Override
@@ -86,18 +96,23 @@ public class DriverRideService extends Service {
     }
 
     private void fetchActiveState() {
-        IUserService.service.getActive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                Intent intent = new Intent(ACTIVE_CHANNEL);
-                intent.putExtra(INTENT_IS_ACTIVE_KEY, response.body());
-                sendBroadcast(intent);
-            }
+        try {
+            IUserService.service.getActive(SettingsUtil.getUserJWT().getId()).enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    Intent intent = new Intent(ACTIVE_CHANNEL);
+                    intent.putExtra(INTENT_IS_ACTIVE_KEY, response.body());
+                    sendBroadcast(intent);
+                }
 
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-                Log.e("REST ERROR", t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    Log.e("REST ERROR", t.toString());
+                }
+            });
+        } catch (Exception e) {
+            stopSelf();
+            return;
+        }
     }
 }

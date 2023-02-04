@@ -1,6 +1,7 @@
 package com.example.shuttlemobile.passenger.dto;
 
 import com.example.shuttlemobile.route.RouteDTO;
+import com.example.shuttlemobile.user.dto.UserEmailDTO;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class FavoriteRouteDTO {
     private long id;
     private String favoriteName;
     private List<RouteDTO> locations;
-    private List<BasicUserInfoDTO> passengers;
+    private List<UserEmailDTO> passengers;
     private String vehicleType;
     private boolean babyTransport;
     private boolean petTransport;
@@ -38,11 +39,11 @@ public class FavoriteRouteDTO {
         this.locations = locations;
     }
 
-    public List<BasicUserInfoDTO> getPassengers() {
+    public List<UserEmailDTO> getPassengers() {
         return passengers;
     }
 
-    public void setPassengers(List<BasicUserInfoDTO> passengers) {
+    public void setPassengers(List<UserEmailDTO> passengers) {
         this.passengers = passengers;
     }
 

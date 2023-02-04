@@ -1,50 +1,50 @@
 package com.example.shuttlemobile.driver;
 
 public class DriverStatsDTO {
-    int hours;
-    int rejections;
-    int rides;
-    int money;
+    double rejections;
+    double rides;
+    double hoursWorked;
+    double moneyEarned;
 
     public DriverStatsDTO() {
     }
 
-    public DriverStatsDTO(int hours, int rejections, int rides, int money) {
-        this.hours = hours;
+    public DriverStatsDTO(double rejections, double rides, double hoursWorked, double moneyEarned) {
         this.rejections = rejections;
         this.rides = rides;
-        this.money = money;
+        this.hoursWorked = hoursWorked;
+        this.moneyEarned = moneyEarned;
     }
 
-    public void setHours(int hours) {
-        this.hours = hours;
-    }
-
-    public void setRejections(int rejections) {
+    public void setRejections(double rejections) {
         this.rejections = rejections;
     }
 
-    public void setRides(int rides) {
+    public void setRides(double rides) {
         this.rides = rides;
     }
 
-    public void setMoney(int money) {
-        this.money = money;
+    public void setHoursWorked(double hoursWorked) {
+        this.hoursWorked = hoursWorked;
     }
 
-    public int getHours() {
-        return hours;
+    public void setMoneyEarned(double moneyEarned) {
+        this.moneyEarned = moneyEarned;
     }
 
-    public int getRejections() {
+    public double getRejections() {
         return rejections;
     }
 
-    public int getRides() {
+    public double getRides() {
         return rides;
     }
 
-    public int getMoney() {
-        return money;
+    public double getHoursWorked() {
+        return hoursWorked;
+    }
+
+    public double getMoneyEarned() {
+        return moneyEarned;
     }
 }

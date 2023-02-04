@@ -1,12 +1,12 @@
 package com.example.shuttlemobile.user;
 
-import com.example.shuttlemobile.driver.IDriverService;
 import com.example.shuttlemobile.message.MessageDTO;
 import com.example.shuttlemobile.message.SendMessageDTO;
+import com.example.shuttlemobile.user.dto.UserChatDataDTO;
+import com.example.shuttlemobile.user.dto.UserEmailDTO;
 import com.example.shuttlemobile.util.ListDTO;
 import com.example.shuttlemobile.util.RetrofitUtils;
 import com.example.shuttlemobile.util.Utils;
-import com.example.shuttlemobile.vehicle.VehicleDTO;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -34,6 +34,9 @@ public interface IUserService {
     @GET("/api/user/{id}/message")
     Call<ListDTO<MessageDTO>> getMessages(@Path("id") Long id);
 
+    @GET("/api/user/{id}/message/data")
+    Call<UserChatDataDTO> getChatData(@Path("id") Long id);
+
     @GET("/api/user/email")
     Call<UserEmailDTO> findByEmail(@Query("email") String email);
 
@@ -43,4 +46,6 @@ public interface IUserService {
             .client(RetrofitUtils.basicJsonJwtClient())
             .build();
     IUserService service = retrofit.create(IUserService.class);
+
+
 }

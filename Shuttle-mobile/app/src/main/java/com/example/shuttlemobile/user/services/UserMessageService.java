@@ -17,6 +17,8 @@ import com.example.shuttlemobile.util.SettingsUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,21 +28,29 @@ public class UserMessageService extends Service {
     public static String BROADCAST_CHANNEL = "user_service_broadcast_channel";
     public static String INTENT_MESSAGE_KEY = "message";
 
+    final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
     public UserMessageService() {
     }
 
     @Override
     public void onCreate() {
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
-        final Handler handler = new Handler(Looper.getMainLooper());
-        final int delay = 2000;
 
-        executorService.execute(new Runnable() {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        final int delay = 1000;
+
+         executorService.submit(new Runnable() {
                 @Override
                 public void run() {
+                    if (Thread.currentThread().isInterrupted()) {
+                        return;
+                    }
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            if (Thread.currentThread().isInterrupted()) {
+                                return;
+                            }
                             fetchMessages();
                             handler.postDelayed(this, delay);
                         }
@@ -57,7 +67,17 @@ public class UserMessageService extends Service {
     }
 
     private void fetchMessages() {
-        final JWT jwt = SettingsUtil.getUserJWT();
+        JWT jwt;
+        try {
+            jwt = SettingsUtil.getUserJWT();
+        } catch (Exception e) {
+            stopSelf();
+            return;
+        }
+        if (jwt == null) {
+            stopSelf();
+            return;
+        }
         IUserService.service.getMessages(jwt.getId()).enqueue(new Callback<ListDTO<MessageDTO>>() {
             @Override
             public void onResponse(Call<ListDTO<MessageDTO>> call, Response<ListDTO<MessageDTO>> response) {

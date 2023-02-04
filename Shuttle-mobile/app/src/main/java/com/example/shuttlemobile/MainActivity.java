@@ -10,10 +10,14 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +28,7 @@ import androidx.core.app.ActivityCompat;
 import com.example.shuttlemobile.unregistered.LoginActivity;
 import com.example.shuttlemobile.util.NotificationUtil;
 import com.example.shuttlemobile.util.SettingsUtil;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,12 +36,14 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
+    private boolean openingLogin = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkForNetworkConnection();
         createNotificationChannels();
         initLocationListener();
         initLocationManager();
@@ -47,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
             getSharedPreferences(SettingsUtil.PREF_FILE, Context.MODE_PRIVATE)
         );
     }
-
 
     @Override
     protected void onResume() {
@@ -60,6 +66,25 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         disableLocationListening();
     }
+
+    private void checkForNetworkConnection() {
+        ConnectivityManager mng = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkCapabilities networkCapabilities = mng.getNetworkCapabilities(mng.getActiveNetwork());
+
+        if (networkCapabilities == null) {
+            Toast.makeText(this, "Your device is offline.", Toast.LENGTH_SHORT).show();
+        } else {
+            if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                    networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) &&
+                    networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED)
+            ) {
+                Toast.makeText(this, "You are connected.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Your device is offline.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     private void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -101,14 +126,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void initLocationManager() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.e("", "No location permission, asking");
             ActivityCompat.requestPermissions(this, new String[] {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
             }, 13579);
-            return;
         }
+        enableLocationListening();
         createLocationRequest();
     }
 
@@ -118,19 +145,11 @@ public class MainActivity extends AppCompatActivity {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000L, (float) 0.1, locationListener);
         enableLocationListening();
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                finish();
-            }
-        }, 3000);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         Log.e("", "onRequestPermissionsResult()");
         if (requestCode == 13579) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -147,17 +166,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void onHasLocations() {
+        if (openingLogin) {
+            return;
+        }
+        openingLogin = true;
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
+            }
+        }, 3000);
+    }
+
     private void enableLocationListening() {
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!gps_enabled && !network_enabled) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Enable Location");
-            alertDialog.setMessage("Your locations setting is not enabled. Please enabled it.");
+            alertDialog.setMessage("This app requires for your location to be turned on.");
             alertDialog.setPositiveButton("Location Settings", (dialog, which) -> {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
+                enableLocationListening();
             });
-            alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            alertDialog.setNegativeButton("Cancel", (dialog, which) -> MainActivity.this.finishAffinity());
             alertDialog.create().show();
+        } else {
+            onHasLocations();
         }
     }
 

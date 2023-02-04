@@ -4,6 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +41,7 @@ import com.example.shuttlemobile.ride.dto.VehicleLocationDTO;
 import com.example.shuttlemobile.route.LocationDTO;
 import com.example.shuttlemobile.user.IUserService;
 import com.example.shuttlemobile.util.SettingsUtil;
+import com.example.shuttlemobile.util.ShakePack;
 import com.mapbox.geojson.Point;
 
 import java.util.List;
@@ -44,13 +50,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DriverHome extends GenericUserMapFragment {
+public class DriverHome extends GenericUserMapFragment implements SensorEventListener {
     private boolean initiallyMovedToLocation = false;
     private FragmentContainerView fragmentContainerView;
     private BroadcastReceiver rideReceiver;
     private BroadcastReceiver isActiveReceiver;
     private BroadcastReceiver driversLocationReceiver;
     private Switch activeSwitch;
+    private TextView speed;
+    private ShakePack shakePack = new ShakePack(12);
+    private SensorManager sensorManager;
 
     private BlankFragment blankFragment;
     private DriverCurrentRide currentRideFragment;
@@ -72,6 +81,7 @@ public class DriverHome extends GenericUserMapFragment {
         super.onViewCreated(view, savedInstanceState);
         initViewElements(view);
         initFragments();
+        initSensorManager();
 
         initRideReceiver();
         initIsActiveReceiver();
@@ -124,6 +134,7 @@ public class DriverHome extends GenericUserMapFragment {
     private void initViewElements(@NonNull View view) {
         fragmentContainerView = view.findViewById(R.id.driver_home_fragment_frame_home);
         activeSwitch = view.findViewById(R.id.switch_is_active);
+        speed = view.findViewById(R.id.txt_driver_speed);
         initSwitchToggle();
     }
 
@@ -134,6 +145,8 @@ public class DriverHome extends GenericUserMapFragment {
         getActivity().unregisterReceiver(rideReceiver);
         getActivity().unregisterReceiver(isActiveReceiver);
         getActivity().unregisterReceiver(driversLocationReceiver);
+
+        sensorManager.unregisterListener(this);
     }
 
     @Override
@@ -143,6 +156,12 @@ public class DriverHome extends GenericUserMapFragment {
         subscribeToRideReceiver();
         subscribeToIsActiveReceiver();
         subscribeToDriversLocationReceiver();
+
+        sensorManager.registerListener(
+                this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_UI
+        );
     }
 
     private void initFragments() {
@@ -251,7 +270,6 @@ public class DriverHome extends GenericUserMapFragment {
 
     private void determineSubFragment(RideDTO dto) {
         if (dto == null) {
-            Log.e("A", "BBBBBBBBBBBBBBBBBBBBBBBBBBB");
             setSubFragmentIfDifferent(blankFragment);
             removeRoute();
             return;
@@ -260,11 +278,11 @@ public class DriverHome extends GenericUserMapFragment {
         Ride.State state = Ride.State.valueOf(dto.getStatus().toUpperCase());
 
         switch (state) {
-            case PENDING:
+            case PENDING: case ACCEPTED:
                 setSubFragmentIfDifferent(fragmentAcceptance);
                 break;
-            case STARTED: case ACCEPTED:
-                setSubFragmentIfDifferent(currentRideFragment); // TODO: Use fragmentCurrentRide.
+            case STARTED:
+                setSubFragmentIfDifferent(currentRideFragment);
                 break;
             case CANCELED: case FINISHED: case REJECTED:
                 setSubFragmentIfDifferent(blankFragment);
@@ -305,5 +323,28 @@ public class DriverHome extends GenericUserMapFragment {
                 }
             }
         });
+    }
+
+    private void initSensorManager() {
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(
+                this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_UI
+        );
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            shakePack.update(sensorEvent.values);
+            String spdFormatted = String.format("%.1f", shakePack.getAcc() * 1000.0 / 3600.0);
+            speed.setText(spdFormatted + " km/h");
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }

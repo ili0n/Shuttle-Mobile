@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class PassengerMessageService extends Service {
     private ExecutorService executorService;
@@ -52,22 +54,28 @@ public class PassengerMessageService extends Service {
             return;
         }
         if (message_sync_interval.equals(possibleValues[1])) {
-            delay_ = 3000;
+            delay_ = 30000;
         }
         if (message_sync_interval.equals(possibleValues[2])) {
-            delay_ = 6000;
+            delay_ = 60000;
         }
         if (message_sync_interval.equals(possibleValues[3])) {
-            delay_ = 9000;
+            delay_ = 90000;
         }
 
-        final int delay = delay_;
-        executorService.execute(new Runnable() {
+        final int delay = 1000;
+        executorService.submit(new Runnable() {
                 @Override
                 public void run() {
+                    if (Thread.currentThread().isInterrupted()) {
+                        return;
+                    }
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            if (Thread.currentThread().isInterrupted()) {
+                                return;
+                            }
                             fetchNewMessages();
                             handler.postDelayed(this, delay);
                         }
