@@ -78,6 +78,7 @@ public class RegisterActivity extends SimpleToolbarActivity {
                         public void onResponse(Call<UserDTONoPassword> call, Response<UserDTONoPassword> response) {
                             if (response.isSuccessful()) {
                                 Toast.makeText(getApplicationContext(), "Confirm your mali to continue", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                             else {
                                 Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_SHORT).show();
