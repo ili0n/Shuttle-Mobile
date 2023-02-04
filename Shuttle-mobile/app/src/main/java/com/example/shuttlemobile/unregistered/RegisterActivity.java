@@ -41,12 +41,14 @@ public class RegisterActivity extends SimpleToolbarActivity {
         EditText surnameText = findViewById(R.id.txt_un_reg_surname);
         EditText addressText = findViewById(R.id.txt_un_reg_address);
         EditText phoneText = findViewById(R.id.txt_un_reg_phone);
+        EditText confirmText = findViewById(R.id.txt_un_reg_cfrm_password);
 
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
+
                     PassengerDTO dto = new PassengerDTO();
                     dto.setName(nameText.getText().toString());
                     dto.setSurname(surnameText.getText().toString());
@@ -60,12 +62,16 @@ public class RegisterActivity extends SimpleToolbarActivity {
                     MyValidator.validateRequired(dto.getAddress(), "address");
                     MyValidator.validateRequired(dto.getPassword(), "password");
 
+                    MyValidator.validateMatchingPassword(dto.getPassword(),confirmText.getText().toString());
+
                     MyValidator.validateLength(dto.getName(), "name", 100);
                     MyValidator.validateLength(dto.getSurname(), "surname", 100);
                     MyValidator.validateLength(dto.getTelephoneNumber(), "telephoneNumber", 18);
                     MyValidator.validateLength(dto.getEmail(), "email", 100);
                     MyValidator.validateLength(dto.getAddress(), "address", 100);
                     MyValidator.validatePattern(dto.getPassword(), "password", "^(?=.*\\d)(?=.*[A-Z])(?!.*[^a-zA-Z0-9@#$^+=])(.{8,15})$");
+
+
 
                     IPassengerService.service.registerPassenger(dto).enqueue(new Callback<UserDTONoPassword>() {
                         @Override
@@ -85,7 +91,7 @@ public class RegisterActivity extends SimpleToolbarActivity {
                     });
 
                 } catch (MyValidatorException e1) {
-                    Toast.makeText(getApplicationContext(), "Invalid data input", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), e1.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }
