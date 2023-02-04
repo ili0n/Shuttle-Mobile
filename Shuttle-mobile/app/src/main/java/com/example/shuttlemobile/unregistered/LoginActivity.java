@@ -32,9 +32,9 @@ public class LoginActivity extends AppCompatActivity {
         initButtonCallbacks();
         Log.e("A", "B");
 
-        if (openHomeActivityFromJwtInSharedPrefs()) {
-            finish();
-        }
+//        if (openHomeActivityFromJwtInSharedPrefs()) {
+//            finish();
+//        }
     }
 
     private void initButtonCallbacks() {
